@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PI 학생 분석 리포트 | Poly AI Agent</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/common.css">
+  <style>
+    body {
+      display: flex;
+      min-height: 100vh;
+      background: var(--color-bg-subtle);
+      overflow: hidden; /* 전체 스크롤 방지 — 패널 내부만 스크롤 */
+    }
+
+    /* ── 사이드바 ───────────────────────────── */
+    .poly-sidebar {
+      width: 240px; flex-shrink: 0;
+      background: var(--color-sidebar-bg);
+      border-right: var(--border-default);
+      display: flex; flex-direction: column;
+      padding: 0;
+      position: fixed; top: 0; left: 0; bottom: 0;
+      z-index: 100;
+    }
+    .poly-sidebar-logo { height: 56px; display: flex; align-items: center; padding: 0 var(--space-5); margin-bottom: 0; }
+    .poly-sidebar-brand { display: block; height: 28px; width: auto; }
+    .poly-sidebar-tagline { font-size: var(--text-xs); color: var(--color-text-tertiary); line-height: 1.3; }
+    .lnb-brand-switch { display: flex; margin: 0 var(--space-4) var(--space-6); background: var(--color-bg-muted); border-radius: var(--radius-md); padding: 3px; gap: 2px; }
+    .lnb-brand-btn { flex: 1; padding: 5px 0; border-radius: calc(var(--radius-md) - 2px); font-size: var(--text-xs); font-weight: var(--weight-medium); color: var(--color-text-secondary); cursor: pointer; border: none; background: transparent; transition: all 0.15s; }
+    .lnb-brand-btn.active { background: var(--color-bg); color: var(--color-primary); font-weight: var(--weight-semibold); }
+    .poly-new-chat {
+      display: flex; align-items: center; gap: var(--space-2);
+      margin: 0 var(--space-4) var(--space-5);
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-primary); color: #fff;
+      border: none; border-radius: var(--radius-md);
+      font-size: var(--text-sm); font-weight: var(--weight-medium);
+      cursor: pointer; transition: background 0.15s; text-decoration: none;
+    }
+    .poly-new-chat:hover { background: var(--color-primary-dark); }
+    .poly-new-chat svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .poly-nav-section { padding: 0 var(--space-3); margin-bottom: var(--space-2); }
+    .poly-nav-item {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-2) var(--space-3); border-radius: var(--radius-md);
+      color: var(--color-sidebar-text); text-decoration: none;
+      font-size: var(--text-sm); cursor: pointer; transition: background 0.12s, color 0.12s;
+    }
+    .poly-nav-item:hover { background: transparent; color: var(--color-text-primary); }
+    .poly-nav-item.active { background: var(--color-primary-light); color: var(--color-primary); font-weight: var(--weight-medium); }
+    .poly-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .poly-nav-item-row { display: flex; align-items: center; }
+    .poly-nav-item-row .poly-nav-item { flex: 1; }
+    .poly-nav-chevron { width: 24px; height: 28px; background: none; border: none; cursor: pointer; color: var(--color-sidebar-text); display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); flex-shrink: 0; transition: background 0.12s, color 0.12s; padding: 0; margin-right: var(--space-1); }
+    .poly-nav-chevron svg { width: 13px; height: 13px; transition: transform 0.2s; }
+    .poly-nav-chevron:hover { color: var(--color-text-primary); }
+    .poly-nav-group.open .poly-nav-chevron svg { transform: rotate(180deg); }
+    .poly-nav-group .poly-nav-item:hover { background: transparent; }
+    .poly-nav-group .poly-nav-item.active { background: transparent; }
+    .poly-nav-item-row:hover .poly-nav-item { color: var(--color-text-primary); }
+    .poly-nav-group.open .poly-nav-item-row { background: var(--color-primary-light); border-radius: var(--radius-md); }
+    .poly-nav-group.open .poly-nav-item { background: transparent; color: var(--color-primary); font-weight: var(--weight-medium); }
+    .poly-nav-group.open .poly-nav-chevron { color: var(--color-primary); }
+    .poly-nav-sub { display: none; margin-left: 20px; border-left: 1.5px solid var(--color-border); padding: var(--space-1) 0; }
+    .poly-nav-group.open .poly-nav-sub { display: block; }
+    .poly-nav-sub-item { display: block; padding: 5px 8px 5px 14px; font-size: 12px; color: var(--color-sidebar-text); border-radius: var(--radius-sm); white-space: nowrap; overflow: visible; transition: background 0.12s, color 0.12s; position: relative; }
+    .poly-nav-sub-item::before { content: ''; position: absolute; left: -4px; top: 50%; transform: translateY(-50%); width: 7px; height: 7px; background: var(--color-border); border-radius: 50%; box-shadow: 0 0 0 2px var(--color-sidebar-bg); z-index: 1; }
+    .poly-nav-sub-item:hover { background: transparent; color: var(--color-text-primary); }
+    .poly-nav-sub-item.active { color: var(--color-primary); font-weight: var(--weight-medium); }
+    .poly-nav-sub-item.active::before { content: ''; position: absolute; left: -4px; top: 50%; transform: translateY(-50%); width: 7px; height: 7px; background: var(--color-primary); border-radius: 50%; box-shadow: 0 0 0 2px var(--color-sidebar-bg); z-index: 1; }
+    .poly-history-section { flex: 1; overflow-y: auto; padding: 0 var(--space-3); }
+    .poly-nav-label { font-size: var(--text-xs); font-weight: var(--weight-medium); color: var(--color-sidebar-section); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-2) var(--space-2) var(--space-1); }
+    .poly-history-item { padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); font-size: 12px; color: var(--color-text-secondary); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.12s, color 0.12s; }
+    .poly-history-item:hover { background: var(--color-sidebar-hover); color: var(--color-text-primary); }
+    .poly-sidebar-footer { margin-top: auto; padding: var(--space-4) var(--space-5) var(--space-8); display: flex; align-items: center; gap: var(--space-3); }
+    .poly-user-avatar { width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--color-bg-muted); color: var(--color-text-primary); font-size: var(--text-xs); font-weight: var(--weight-semibold); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .poly-user-name { font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
+    .poly-user-role { font-size: var(--text-xs); color: var(--color-text-tertiary); }
+
+    /* ── 분할 레이아웃 ──────────────────────── */
+    .view-shell {
+      margin-left: 240px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* 상단바 */
+    .view-topbar {
+      background: var(--color-bg);
+      border-bottom: var(--border-default);
+      padding: 0 var(--space-8);
+      height: 56px;
+      min-height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      flex-shrink: 0;
+      z-index: 50;
+    }
+    .view-topbar-left { display: flex; align-items: center; gap: var(--space-3); }
+.view-topbar-title { font-size: var(--text-base); font-weight: var(--weight-semibold); color: var(--color-text-primary); }
+    .view-topbar-subtitle { font-size: var(--text-xs); color: var(--color-text-tertiary); }
+    .view-topbar-right { display: flex; align-items: center; gap: var(--space-2); }
+
+    /* 2-패널 컨테이너 */
+    .view-panels {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* 좌측 데이터 패널 */
+    .data-panel {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border-right: var(--border-default);
+      background: var(--color-bg-subtle);
+    }
+
+    .data-panel-header {
+      background: var(--color-bg);
+      border-bottom: var(--border-default);
+      padding: var(--space-4) var(--space-6);
+      flex-shrink: 0;
+    }
+    .data-panel-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-top: 4px;
+    }
+    .data-panel-meta-text {
+      font-size: var(--text-sm);
+      color: var(--color-text-tertiary);
+    }
+
+    .data-scroll {
+      flex: 1;
+      overflow: auto;
+      padding: var(--space-6) var(--space-8);
+    }
+
+    /* 테이블 스타일 개선 */
+    .data-table-card {
+      background: var(--color-bg);
+      border: var(--border-default);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .data-table-wrap { overflow-x: auto; }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--text-sm);
+      white-space: nowrap;
+    }
+    .data-table thead th {
+      background: var(--color-bg-subtle);
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: var(--weight-semibold);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      border-bottom: var(--border-default);
+      position: sticky;
+      top: 0;
+    }
+    /* 그룹 헤더 */
+    .data-table thead tr.group-header th {
+      background: var(--color-bg-subtle);
+      color: var(--color-text-primary);
+      text-align: center;
+      border-bottom: var(--border-default);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      padding: 8px 14px;
+    }
+    .data-table thead tr.sub-header th {
+      background: var(--color-bg-subtle);
+      color: var(--color-text-secondary);
+      font-size: var(--text-xs);
+      font-weight: var(--weight-medium);
+      border-bottom: var(--border-default);
+      text-align: center;
+    }
+    .data-table thead tr.group-header th.group-border {
+      border-left: 1px solid var(--color-border-strong);
+    }
+    .data-table thead tr.sub-header th.group-border {
+      border-left: 1px solid var(--color-border-strong);
+    }
+    .data-table tbody td {
+      padding: 10px 14px;
+      border-bottom: var(--border-default);
+      color: var(--color-text-primary);
+      vertical-align: middle;
+    }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table tbody tr:hover td { background: var(--color-bg-subtle); }
+    /* 소계 행 */
+    .data-table tbody tr.subtotal td {
+      background: var(--color-bg-subtle);
+      font-weight: var(--weight-semibold);
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      border-top: var(--border-default);
+    }
+    .data-table tbody tr.subtotal:hover td { background: var(--color-bg-muted); }
+    /* 양수·음수 */
+    .num-pos { color: var(--color-primary); font-weight: var(--weight-medium); }
+    .num-neg { color: var(--color-danger); font-weight: var(--weight-medium); }
+    .num-neutral { color: var(--color-text-secondary); }
+    .data-table thead small { font-size: 10px; opacity: 0.65; font-weight: var(--weight-regular); }
+    /* 데이터 패널 페이지 헤더 */
+    .data-page-header { margin-bottom: var(--space-6); }
+    .data-page-header h1 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); color: var(--color-text-primary); margin-bottom: 4px; }
+    .data-page-header p { font-size: var(--text-sm); color: var(--color-text-secondary); }
+
+    /* 고정 열 */
+    .data-table td.col-fixed, .data-table th.col-fixed { position: sticky; left: 0; background: var(--color-bg); z-index: 1; }
+    .data-table tr:hover td.col-fixed { background: var(--color-bg-subtle); }
+    .data-table tr.subtotal td.col-fixed { background: var(--color-bg-subtle); }
+    .data-table th.col-fixed { background: var(--color-bg-subtle); z-index: 2; }
+
+    /* ── AI 채팅 패널 ────────────────────────── */
+    .chat-panel {
+      width: 360px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      background: var(--color-bg);
+      transition: width 0.2s ease;
+      overflow: hidden;
+    }
+    .chat-panel.collapsed { width: 0; }
+
+    .chat-header {
+      padding: var(--space-4) var(--space-5);
+      border-bottom: var(--border-default);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .chat-header-left { display: flex; align-items: center; gap: var(--space-2); }
+    .chat-header-icon {
+      width: 28px; height: 28px;
+      background: var(--color-primary);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+    }
+    .chat-header-icon svg { width: 14px; height: 14px; }
+    .chat-header-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text-primary); }
+    .chat-header-sub { font-size: var(--text-xs); color: var(--color-text-tertiary); }
+
+    /* 채팅 컨텍스트 배너 */
+    .chat-context-banner {
+      margin: var(--space-3) var(--space-4);
+      padding: var(--space-3);
+      background: var(--color-primary-light);
+      border-radius: var(--radius-md);
+      font-size: var(--text-xs);
+      color: var(--color-primary);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-2);
+      flex-shrink: 0;
+    }
+    .chat-context-banner svg { width: 12px; height: 12px; flex-shrink: 0; margin-top: 1px; }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-4) var(--space-4) var(--space-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+    }
+
+    /* 메시지 버블 */
+    .msg { display: flex; flex-direction: column; gap: var(--space-1); }
+    .msg.user { align-items: flex-end; }
+    .msg.ai { align-items: flex-start; }
+    .msg-bubble {
+      max-width: 90%;
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-lg);
+      font-size: var(--text-sm);
+      line-height: 1.6;
+    }
+    .msg.user .msg-bubble {
+      background: var(--color-primary);
+      color: #fff;
+      border-bottom-right-radius: var(--radius-sm);
+    }
+    .msg.ai .msg-bubble {
+      background: var(--color-bg-subtle);
+      color: var(--color-text-primary);
+      border-bottom-left-radius: var(--radius-sm);
+      border: var(--border-default);
+    }
+    .msg-time { font-size: 10px; color: var(--color-text-tertiary); padding: 0 4px; }
+
+    /* AI 인사이트 태그 */
+    .msg-insight {
+      max-width: 90%;
+      margin-top: var(--space-2);
+      padding: var(--space-3);
+      background: var(--color-bg);
+      border: var(--border-default);
+      border-radius: var(--radius-md);
+      border-left: 1px solid var(--color-border);
+    }
+    .msg-insight-label { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-primary); margin-bottom: var(--space-2); display: flex; align-items: center; gap: 4px; }
+    .msg-insight-label svg { width: 12px; height: 12px; }
+    .msg-insight ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: var(--space-1); }
+    .msg-insight li { font-size: var(--text-xs); color: var(--color-text-secondary); padding-left: var(--space-3); position: relative; line-height: 1.5; }
+    .msg-insight li::before { content: '•'; position: absolute; left: 0; color: var(--color-text-tertiary); }
+
+    /* 후속 질문 칩 */
+    .msg-followups {
+      max-width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+      margin-top: var(--space-1);
+    }
+    .followup-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 5px 10px;
+      background: var(--color-bg);
+      border: var(--border-default);
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      transition: all 0.12s;
+    }
+    .followup-chip:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
+
+    /* AI 로딩 */
+    .msg-loading { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+    .msg-loading span {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--color-primary);
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+    .msg-loading span:nth-child(2) { animation-delay: 0.2s; }
+    .msg-loading span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,80%,100%{transform:scale(0.6);opacity:0.4} 40%{transform:scale(1);opacity:1} }
+
+    /* 채팅 입력 */
+    .chat-input-area {
+      padding: var(--space-3) var(--space-4) var(--space-4);
+      border-top: var(--border-default);
+      flex-shrink: 0;
+    }
+    .chat-input-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: var(--space-2);
+      background: var(--color-bg-subtle);
+      border: var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: var(--space-3);
+      transition: border-color 0.15s;
+    }
+    .chat-input-wrap:focus-within { border-color: var(--color-primary); }
+    .chat-textarea {
+      flex: 1; border: none; outline: none; background: transparent;
+      font-size: var(--text-sm); font-family: var(--font-sans);
+      color: var(--color-text-primary); resize: none; min-height: 36px; max-height: 120px;
+      line-height: 1.5;
+    }
+    .chat-textarea::placeholder { color: var(--color-text-tertiary); }
+    .chat-send-btn {
+      width: 32px; height: 32px; flex-shrink: 0;
+      background: var(--color-primary); color: #fff;
+      border: none; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .chat-send-btn:hover { background: var(--color-primary-dark); }
+    .chat-send-btn svg { width: 14px; height: 14px; }
+    .chat-input-hint {
+      font-size: 10px; color: var(--color-text-tertiary);
+      text-align: center; margin-top: var(--space-2);
+    }
+
+    /* ── 뷰 선택 바 ─────────────────────── */
+    .view-selector-inner {
+      background: var(--color-bg-muted);
+      border-radius: var(--radius-lg);
+      padding: var(--space-2) var(--space-4);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+    [data-theme="dark"] .view-selector-inner { background: var(--color-bg-subtle); }
+    .view-dropdown-wrap { position: relative; }
+    .view-selector-dropdown {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: 0 var(--space-4);
+      border: var(--border-default); border-radius: var(--radius-lg);
+      background: var(--color-bg); cursor: pointer; height: 44px;
+      font-size: var(--text-sm); color: var(--color-text-primary);
+      transition: border-color 0.15s, box-shadow 0.15s; min-width: 300px; user-select: none;
+    }
+    .view-selector-dropdown:hover { border-color: var(--color-primary); }
+    .view-selector-dropdown:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-a08);
+    }
+    .view-selector-label { flex: 1; font-weight: var(--weight-medium); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .view-dropdown-menu {
+      position: absolute; top: calc(100% + 4px); left: 0;
+      background: var(--color-bg); border: var(--border-default);
+      border-radius: var(--radius-lg); box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+      min-width: 300px; z-index: 200; padding: var(--space-2) 0; display: none;
+    }
+    .view-dropdown-menu.open { display: block; }
+    .view-dropdown-group-label {
+      padding: var(--space-2) var(--space-4) var(--space-1);
+      font-size: 11px; font-weight: var(--weight-semibold);
+      color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .view-dropdown-item {
+      display: flex; align-items: center; gap: var(--space-2); width: 100%; text-align: left;
+      padding: var(--space-2) var(--space-4); font-size: var(--text-sm);
+      color: var(--color-text-secondary); background: none; border: none;
+      cursor: pointer; transition: background 0.1s, color 0.1s;
+    }
+    .view-dropdown-item:hover { background: var(--color-bg-subtle); color: var(--color-text-primary); }
+    .view-dropdown-item.active { color: var(--color-primary); font-weight: var(--weight-medium); }
+    .view-dropdown-item.active::after { content: '✓'; margin-left: auto; font-size: 13px; }
+    .view-selector-right { display: flex; align-items: center; gap: var(--space-2); }
+    .view-count-badge { font-size: var(--text-xs); color: var(--color-text-tertiary); white-space: nowrap; }
+
+
+    /* ── 채팅 패널 헤더/인트로 ──────────── */
+    .chat-close-btn { width: 28px; height: 28px; border: none; background: none; cursor: pointer; color: var(--color-text-tertiary); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; transition: background 0.12s, color 0.12s; }
+    .chat-close-btn:hover { background: var(--color-bg-subtle); color: var(--color-text-primary); }
+    .chat-close-btn svg { width: 14px; height: 14px; }
+    .chat-intro { padding: var(--space-5) var(--space-4) var(--space-4); display: flex; flex-direction: column; align-items: center; text-align: center; gap: var(--space-3); border-bottom: var(--border-default); flex-shrink: 0; }
+    .chat-intro-icon { width: 48px; height: 48px; background: var(--color-primary-light); border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; }
+    .chat-intro-icon svg { width: 22px; height: 22px; color: var(--color-primary); }
+    .chat-intro-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text-primary); }
+    .chat-intro-desc { font-size: var(--text-xs); color: var(--color-text-tertiary); line-height: 1.5; }
+    .chat-insight-btn { display: flex; align-items: center; gap: var(--space-2); padding: var(--space-3) var(--space-4); background: var(--color-bg-subtle); border: var(--border-default); border-radius: var(--radius-md); font-size: var(--text-sm); color: var(--color-text-secondary); cursor: pointer; transition: all 0.12s; width: 100%; text-align: left; }
+    .chat-insight-btn:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
+    .chat-insight-btn svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--color-primary); }
+
+    /* 플로팅 채팅 버튼 (패널 닫혀있을 때) */
+    .chat-fab {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(0,102,255,0.35);
+      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+      z-index: 200;
+    }
+    .chat-fab:hover { background: var(--color-primary-dark); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,102,255,0.45); }
+    .chat-fab svg { width: 22px; height: 22px; }
+    .chat-fab.visible { display: flex; }
+
+
+    /* 빈 AI 상태 */
+    .chat-empty {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      flex: 1; padding: var(--space-8) var(--space-5); text-align: center; color: var(--color-text-tertiary);
+      gap: var(--space-3);
+    }
+    .chat-empty svg { width: 40px; height: 40px; opacity: 0.3; }
+    .chat-empty p { font-size: var(--text-sm); }
+    .chat-empty-suggestions { display: flex; flex-direction: column; gap: var(--space-2); width: 100%; }
+    .chat-empty-chip {
+      padding: var(--space-3); background: var(--color-bg-subtle); border: var(--border-default);
+      border-radius: var(--radius-md); font-size: var(--text-xs); color: var(--color-text-secondary);
+      cursor: pointer; text-align: left; transition: all 0.12s;
+    }
+    .chat-empty-chip:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
+
+    /* ── 인쇄 스타일 ──────────────────────── */
+    @media print {
+      .poly-sidebar, .view-topbar, .chat-panel, .view-selector-inner,
+      .data-panel-header { display: none !important; }
+      body, .view-shell, .view-panels { display: block !important; }
+      .data-panel { width: 100% !important; overflow: visible !important; }
+      .data-scroll { overflow: visible !important; padding: 0 !important; }
+      .data-table-card { border: none !important; box-shadow: none !important; }
+      .data-table { font-size: 11px !important; }
+      .data-table th, .data-table td { padding: 4px 6px !important; }
+      @page { margin: 1.5cm; size: A4 landscape; }
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .chart-card {
+      background: var(--color-bg); border: var(--border-default);
+      border-radius: var(--radius-lg); padding: var(--space-5);
+      margin-bottom: var(--space-4);
+    }
+    .chart-card-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: var(--space-4);
+    }
+    .chart-card-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text-primary); }
+    .chart-legend { display: flex; align-items: center; gap: var(--space-4); }
+    .chart-legend-item { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-xs); color: var(--color-text-secondary); }
+    .chart-legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .chart-wrap { position: relative; height: 320px; }
+  </style>
+</head>
+<body>
+
+<!-- 사이드바 -->
+<aside class="poly-sidebar">
+  <div class="poly-sidebar-logo">
+    <a href="home.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+      <img src="https://www.polyinspiration.com/img/main/logo.png" alt="POLY" class="poly-sidebar-brand">
+      <span class="poly-sidebar-tagline">AI 경영 분석 플랫폼</span>
+    </a>
+  </div>
+  <div class="lnb-brand-switch">
+    <button class="lnb-brand-btn" data-brand="poly">POLY</button>
+    <button class="lnb-brand-btn" data-brand="canb">CANB</button>
+    <button class="lnb-brand-btn" data-brand="all">전체</button>
+  </div>
+
+  <a href="home.html" class="poly-new-chat">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    새 채팅
+  </a>
+  <div class="poly-nav-section">
+    <a href="chat-list.html" class="poly-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      채팅
+    </a>
+    <div class="poly-nav-group">
+      <div class="poly-nav-item-row">
+        <a href="projects.html" class="poly-nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          프로젝트
+        </a>
+        <button class="poly-nav-chevron" onclick="toggleSubNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+      <div class="poly-nav-sub">
+        <a href="project-detail.html" class="poly-nav-sub-item">목동 학생 감소 원인 분석</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">2026 상반기 재학생 추이 보고서</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">TEST</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">CANB 캠퍼스 학급 편성 최적화</a>
+      </div>
+    </div>
+    <div class="poly-nav-group open">
+      <div class="poly-nav-item-row">
+        <a href="reports.html" class="poly-nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          리포트
+        </a>
+        <button class="poly-nav-chevron" onclick="toggleSubNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+      <div class="poly-nav-sub">
+        <a href="report-view.html" class="poly-nav-sub-item active">PI 학생 분석 리포트</a>
+        <a href="report-view.html" class="poly-nav-sub-item">교육과정별 3개년 학생 수 분석</a>
+        <a href="report-view.html" class="poly-nav-sub-item">학급 편성 대시보드</a>
+        <a href="report-view.html" class="poly-nav-sub-item">ESC 학생 현황</a>
+        <a href="report-view.html" class="poly-nav-sub-item">재학생 추이 분석</a>
+      </div>
+    </div>
+  </div>
+  <div class="poly-history-section">
+    <div class="poly-nav-label">최근 채팅</div>
+    <div class="poly-history-item" style="color:var(--color-primary);font-weight:var(--weight-medium);">PI 학생 분석 리포트 열람</div>
+    <div class="poly-history-item">목동 캠퍼스 학생수 감소 원인</div>
+    <div class="poly-history-item">오늘 재원생 수 현황</div>
+    <div class="poly-history-item">전년 대비 캠퍼스별 증감 비교</div>
+  </div>
+  <div class="poly-sidebar-footer">
+    <div class="poly-user-avatar">이진</div>
+    <div>
+      <div class="poly-user-name">이진희</div>
+      <div class="poly-user-role">관리자</div>
+    </div>
+    <a href="login.html" class="icon-btn" style="margin-left:auto;text-decoration:none;" title="나가기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </a>
+  </div>
+</aside>
+
+<!-- 뷰 셸 -->
+<div class="view-shell" id="viewShell">
+
+  <!-- 상단바 -->
+  <header class="view-topbar">
+    <div class="view-topbar-left">
+      <a href="reports.html" class="icon-btn" style="text-decoration:none;flex-shrink:0;" title="리포트 목록">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </a>
+      <span class="view-topbar-title">PI 학생 분석 리포트</span>
+    </div>
+    <div class="view-topbar-right">
+      <button class="icon-btn" title="레이아웃">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </button>
+      <button id="theme-toggle-2" class="icon-btn" title="다크 모드">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- 2-패널 -->
+  <div class="view-panels" style="position:relative;">
+
+    <!-- 플로팅 채팅 열기 버튼 (패널 닫혀있을 때만 표시) -->
+    <button class="chat-fab" id="chatFab" onclick="toggleChat()" title="AI 채팅 열기" aria-label="AI 채팅 패널 열기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </button>
+
+    <!-- 좌측: 데이터 패널 -->
+    <div class="data-panel" id="dataPanel">
+
+      <div class="data-scroll">
+
+        <!-- 뷰 선택 박스 -->
+        <div class="view-selector-inner">
+          <div class="view-dropdown-wrap">
+            <div class="view-selector-dropdown" onclick="toggleViewDropdown()" id="viewDropdown">
+              <span class="view-selector-label" id="viewSelectorLabel">전년 대비 증감 추이 분석 (캠퍼스별)</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;color:var(--color-text-tertiary);transition:transform 0.2s" id="viewDropdownChevron"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="view-dropdown-menu" id="viewDropdownMenu">
+              <div class="view-dropdown-group-label">학생 분석</div>
+              <button class="view-dropdown-item active" onclick="selectView(this,'전년 대비 증감 추이 분석 (캠퍼스별)')">전년 대비 증감 추이 분석 (캠퍼스별)</button>
+              <button class="view-dropdown-item" onclick="selectView(this,'재학생 월별 추이')">재학생 월별 추이</button>
+              <button class="view-dropdown-item" onclick="selectView(this,'신규 등록 현황')">신규 등록 현황</button>
+              <button class="view-dropdown-item" onclick="selectView(this,'이탈 현황 분석')">이탈 현황 분석</button>
+              <div class="view-dropdown-group-label" style="margin-top:var(--space-1);">기간 비교</div>
+              <button class="view-dropdown-item" onclick="selectView(this,'전년 동기 비교 (권역별)')">전년 동기 비교 (권역별)</button>
+              <button class="view-dropdown-item" onclick="selectView(this,'3개년 추이')">3개년 추이</button>
+            </div>
+          </div>
+          <div class="view-selector-right">
+            <span class="view-count-badge" id="viewCountBadge">기준일 2026-05-15 · 77개 캠퍼스</span>
+            <button class="btn btn-secondary" style="height:44px;border-radius:var(--radius-lg);" onclick="printReport()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              인쇄
+            </button>
+            <button class="btn btn-secondary" style="height:44px;border-radius:var(--radius-lg);" onclick="downloadExcel()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Excel
+            </button>
+          </div>
+        </div>
+
+        <!-- 전년/금년 비교 차트 -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <span class="chart-card-title">전년 vs 금년 당월 학생 수 비교 (캠퍼스별)</span>
+            <div class="chart-legend">
+              <div class="chart-legend-item">
+                <div class="chart-legend-dot" style="background:rgba(0,102,255,0.35)"></div>전년 당월
+              </div>
+              <div class="chart-legend-item">
+                <div class="chart-legend-dot" style="background:rgba(0,102,255,0.85)"></div>금년 당월
+              </div>
+            </div>
+          </div>
+          <div class="chart-wrap"><canvas id="compareChart"></canvas></div>
+        </div>
+
+        <div class="data-table-card">
+          <div class="data-table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr class="group-header">
+                  <th rowspan="2" class="col-fixed" style="min-width:60px;">운영구분</th>
+                  <th rowspan="2" class="col-fixed" style="min-width:52px;left:60px;">권역</th>
+                  <th rowspan="2" style="min-width:90px;">캠퍼스명</th>
+                  <th colspan="4" style="text-align:center;border-left:1px solid var(--color-border-strong);">전년</th>
+                  <th colspan="4" style="text-align:center;border-left:1px solid var(--color-border-strong);">금년</th>
+                  <th colspan="2" style="text-align:center;border-left:1px solid var(--color-border-strong);">전년→금년 월별</th>
+                  <th colspan="2" style="text-align:center;border-left:1px solid var(--color-border-strong);">전월 연간</th>
+                  <th colspan="2" style="text-align:center;border-left:1px solid var(--color-border-strong);">당월 연간</th>
+                </tr>
+                <tr class="sub-header">
+                  <th class="group-border">전월</th>
+                  <th>당월</th>
+                  <th>월별 중감<br><small>(B-A)</small></th>
+                  <th>월별 중감율<br><small>(B/A)</small></th>
+                  <th class="group-border">전월</th>
+                  <th>당월</th>
+                  <th>월별 중감<br><small>(F-E)</small></th>
+                  <th>월별 중감율<br><small>(F/E)</small></th>
+                  <th class="group-border">중감 차<br><small>(G-C)</small></th>
+                  <th>중감율 차<br><small>(H-D)</small></th>
+                  <th class="group-border">중감<br><small>(E-A)</small></th>
+                  <th>중감율<br><small>(E/A)</small></th>
+                  <th class="group-border">중감<br><small>(F-B)</small></th>
+                  <th>중감율<br><small>(F/B)</small></th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- ── 서울권 ── -->
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
+                  <td>대치폴리마그넷</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">186</td>
+                  <td class="num-neutral" style="text-align:right;">182</td>
+                  <td class="num-neg" style="text-align:right;">-4</td>
+                  <td class="num-neg" style="text-align:right;">-2.20%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">137</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">128</td>
+                  <td class="num-neg" style="text-align:right;">-9</td>
+                  <td class="num-neg" style="text-align:right;">-6.60%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-5</td>
+                  <td class="num-neg" style="text-align:right;">-4.4%p</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-49</td>
+                  <td class="num-neg" style="text-align:right;">-26.30%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-54</td>
+                  <td class="num-neg" style="text-align:right;">-29.70%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
+                  <td>목동</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">962</td>
+                  <td class="num-neutral" style="text-align:right;">967</td>
+                  <td class="num-pos" style="text-align:right;">+5</td>
+                  <td class="num-pos" style="text-align:right;">0.50%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">878</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">873</td>
+                  <td class="num-neg" style="text-align:right;">-5</td>
+                  <td class="num-neg" style="text-align:right;">-0.60%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-10</td>
+                  <td class="num-neg" style="text-align:right;">-1.1%p</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-84</td>
+                  <td class="num-neg" style="text-align:right;">-8.70%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-94</td>
+                  <td class="num-neg" style="text-align:right;">-9.70%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
+                  <td>목동에그넷</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">360</td>
+                  <td class="num-neutral" style="text-align:right;">356</td>
+                  <td class="num-neg" style="text-align:right;">-4</td>
+                  <td class="num-neg" style="text-align:right;">-1.10%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">345</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">335</td>
+                  <td class="num-neg" style="text-align:right;">-10</td>
+                  <td class="num-neg" style="text-align:right;">-2.90%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-6</td>
+                  <td class="num-neg" style="text-align:right;">-1.8%p</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-15</td>
+                  <td class="num-neg" style="text-align:right;">-4.20%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-21</td>
+                  <td class="num-neg" style="text-align:right;">-5.90%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
+                  <td>목동엠폴리</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">440</td>
+                  <td class="num-neutral" style="text-align:right;">435</td>
+                  <td class="num-neg" style="text-align:right;">-5</td>
+                  <td class="num-neg" style="text-align:right;">-1.10%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">438</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">423</td>
+                  <td class="num-neg" style="text-align:right;">-15</td>
+                  <td class="num-neg" style="text-align:right;">-3.40%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-10</td>
+                  <td class="num-neg" style="text-align:right;">-2.3%p</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-2</td>
+                  <td class="num-neg" style="text-align:right;">-0.50%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-12</td>
+                  <td class="num-neg" style="text-align:right;">-2.80%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
+                  <td>송파</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">488</td>
+                  <td class="num-neutral" style="text-align:right;">486</td>
+                  <td class="num-neg" style="text-align:right;">-2</td>
+                  <td class="num-neg" style="text-align:right;">-0.40%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">503</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">491</td>
+                  <td class="num-neg" style="text-align:right;">-12</td>
+                  <td class="num-neg" style="text-align:right;">-2.40%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-10</td>
+                  <td class="num-neg" style="text-align:right;">-2%p</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+15</td>
+                  <td class="num-pos" style="text-align:right;">3.10%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+5</td>
+                  <td class="num-pos" style="text-align:right;">1.00%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
+                  <td>엠아이엘</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">153</td>
+                  <td class="num-neutral" style="text-align:right;">162</td>
+                  <td class="num-pos" style="text-align:right;">+9</td>
+                  <td class="num-pos" style="text-align:right;">5.90%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">194</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">190</td>
+                  <td class="num-neg" style="text-align:right;">-4</td>
+                  <td class="num-neg" style="text-align:right;">-2.10%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-13</td>
+                  <td class="num-neg" style="text-align:right;">-8%p</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+41</td>
+                  <td class="num-pos" style="text-align:right;">26.80%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+28</td>
+                  <td class="num-pos" style="text-align:right;">17.30%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
+                  <td>위례</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">372</td>
+                  <td class="num-neutral" style="text-align:right;">365</td>
+                  <td class="num-neg" style="text-align:right;">-7</td>
+                  <td class="num-neg" style="text-align:right;">-1.90%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">374</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">365</td>
+                  <td class="num-neg" style="text-align:right;">-9</td>
+                  <td class="num-neg" style="text-align:right;">-2.40%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-2</td>
+                  <td class="num-neg" style="text-align:right;">-0.5%p</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+2</td>
+                  <td class="num-pos" style="text-align:right;">0.50%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">0</td>
+                  <td class="num-neutral" style="text-align:right;">0.00%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
+                  <td>중계</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">379</td>
+                  <td class="num-neutral" style="text-align:right;">377</td>
+                  <td class="num-neg" style="text-align:right;">-2</td>
+                  <td class="num-neg" style="text-align:right;">-0.50%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">300</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">299</td>
+                  <td class="num-neg" style="text-align:right;">-1</td>
+                  <td class="num-neg" style="text-align:right;">-0.30%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+1</td>
+                  <td class="num-pos" style="text-align:right;">0.2%p</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-79</td>
+                  <td class="num-neg" style="text-align:right;">-20.80%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-78</td>
+                  <td class="num-neg" style="text-align:right;">-20.70%</td>
+                </tr>
+                <!-- 소계 행 -->
+                <tr class="subtotal">
+                  <td class="col-fixed">-</td>
+                  <td class="col-fixed" style="left:60px;">-</td>
+                  <td>직영 / 서울권(8개) 소계</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">3,340</td>
+                  <td class="num-neutral" style="text-align:right;">3,330</td>
+                  <td class="num-neg" style="text-align:right;">-10</td>
+                  <td class="num-neg" style="text-align:right;">-0.30%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">3,169</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">3,104</td>
+                  <td class="num-neg" style="text-align:right;">-65</td>
+                  <td class="num-neg" style="text-align:right;">-2.10%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-55</td>
+                  <td class="num-neg" style="text-align:right;">-1.8%p</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-171</td>
+                  <td class="num-neg" style="text-align:right;">-5.10%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-226</td>
+                  <td class="num-neg" style="text-align:right;">-6.80%</td>
+                </tr>
+                <!-- ── 경인권 ── -->
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
+                  <td>광교</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">381</td>
+                  <td class="num-neutral" style="text-align:right;">375</td>
+                  <td class="num-neg" style="text-align:right;">-6</td>
+                  <td class="num-neg" style="text-align:right;">-1.60%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">379</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">372</td>
+                  <td class="num-neg" style="text-align:right;">-7</td>
+                  <td class="num-neg" style="text-align:right;">-1.80%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-1</td>
+                  <td class="num-neg" style="text-align:right;">-0.2%p</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-2</td>
+                  <td class="num-neg" style="text-align:right;">-0.50%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-3</td>
+                  <td class="num-neg" style="text-align:right;">-0.80%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
+                  <td>광명</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">352</td>
+                  <td class="num-neutral" style="text-align:right;">349</td>
+                  <td class="num-neg" style="text-align:right;">-3</td>
+                  <td class="num-neg" style="text-align:right;">-0.90%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">362</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">365</td>
+                  <td class="num-pos" style="text-align:right;">+3</td>
+                  <td class="num-pos" style="text-align:right;">0.80%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+6</td>
+                  <td class="num-pos" style="text-align:right;">1.7%p</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+10</td>
+                  <td class="num-pos" style="text-align:right;">2.80%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+16</td>
+                  <td class="num-pos" style="text-align:right;">4.60%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
+                  <td>분당</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">468</td>
+                  <td class="num-neutral" style="text-align:right;">460</td>
+                  <td class="num-neg" style="text-align:right;">-8</td>
+                  <td class="num-neg" style="text-align:right;">-1.70%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">404</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">393</td>
+                  <td class="num-neg" style="text-align:right;">-11</td>
+                  <td class="num-neg" style="text-align:right;">-2.70%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-3</td>
+                  <td class="num-neg" style="text-align:right;">-1%p</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-64</td>
+                  <td class="num-neg" style="text-align:right;">-13.70%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-67</td>
+                  <td class="num-neg" style="text-align:right;">-14.60%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
+                  <td>분당엠폴리</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">583</td>
+                  <td class="num-neutral" style="text-align:right;">576</td>
+                  <td class="num-neg" style="text-align:right;">-7</td>
+                  <td class="num-neg" style="text-align:right;">-1.20%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">600</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">596</td>
+                  <td class="num-neg" style="text-align:right;">-4</td>
+                  <td class="num-neg" style="text-align:right;">-0.70%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+3</td>
+                  <td class="num-pos" style="text-align:right;">0.5%p</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+17</td>
+                  <td class="num-pos" style="text-align:right;">2.90%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+20</td>
+                  <td class="num-pos" style="text-align:right;">3.50%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
+                  <td>송도</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">463</td>
+                  <td class="num-neutral" style="text-align:right;">459</td>
+                  <td class="num-neg" style="text-align:right;">-4</td>
+                  <td class="num-neg" style="text-align:right;">-0.90%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">412</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">403</td>
+                  <td class="num-neg" style="text-align:right;">-9</td>
+                  <td class="num-neg" style="text-align:right;">-2.20%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-5</td>
+                  <td class="num-neg" style="text-align:right;">-1.3%p</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-51</td>
+                  <td class="num-neg" style="text-align:right;">-11.00%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-56</td>
+                  <td class="num-neg" style="text-align:right;">-12.20%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
+                  <td>수지별관</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">211</td>
+                  <td class="num-neutral" style="text-align:right;">200</td>
+                  <td class="num-neg" style="text-align:right;">-11</td>
+                  <td class="num-neg" style="text-align:right;">-5.20%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">223</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">221</td>
+                  <td class="num-neg" style="text-align:right;">-2</td>
+                  <td class="num-neg" style="text-align:right;">-0.90%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+9</td>
+                  <td class="num-pos" style="text-align:right;">4.3%p</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+12</td>
+                  <td class="num-pos" style="text-align:right;">5.70%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+21</td>
+                  <td class="num-pos" style="text-align:right;">10.50%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
+                  <td>수지본관</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">434</td>
+                  <td class="num-neutral" style="text-align:right;">424</td>
+                  <td class="num-neg" style="text-align:right;">-10</td>
+                  <td class="num-neg" style="text-align:right;">-2.30%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">384</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">375</td>
+                  <td class="num-neg" style="text-align:right;">-9</td>
+                  <td class="num-neg" style="text-align:right;">-2.30%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+1</td>
+                  <td class="num-neutral" style="text-align:right;">0%p</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-50</td>
+                  <td class="num-neg" style="text-align:right;">-11.50%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-49</td>
+                  <td class="num-neg" style="text-align:right;">-11.60%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
+                  <td>영통엠폴리</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">276</td>
+                  <td class="num-neutral" style="text-align:right;">273</td>
+                  <td class="num-neg" style="text-align:right;">-3</td>
+                  <td class="num-neg" style="text-align:right;">-1.10%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">288</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">287</td>
+                  <td class="num-neg" style="text-align:right;">-1</td>
+                  <td class="num-neg" style="text-align:right;">-0.30%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+2</td>
+                  <td class="num-pos" style="text-align:right;">0.8%p</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+12</td>
+                  <td class="num-pos" style="text-align:right;">4.30%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+14</td>
+                  <td class="num-pos" style="text-align:right;">5.10%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
+                  <td>운정</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">225</td>
+                  <td class="num-neutral" style="text-align:right;">226</td>
+                  <td class="num-pos" style="text-align:right;">+1</td>
+                  <td class="num-pos" style="text-align:right;">0.40%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">293</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">285</td>
+                  <td class="num-neg" style="text-align:right;">-8</td>
+                  <td class="num-neg" style="text-align:right;">-2.70%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-9</td>
+                  <td class="num-neg" style="text-align:right;">-3.1%p</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+68</td>
+                  <td class="num-pos" style="text-align:right;">30.20%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+59</td>
+                  <td class="num-pos" style="text-align:right;">26.10%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
+                  <td>일산</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">338</td>
+                  <td class="num-neutral" style="text-align:right;">341</td>
+                  <td class="num-pos" style="text-align:right;">+3</td>
+                  <td class="num-pos" style="text-align:right;">0.90%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">297</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">293</td>
+                  <td class="num-neg" style="text-align:right;">-4</td>
+                  <td class="num-neg" style="text-align:right;">-1.30%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-7</td>
+                  <td class="num-neg" style="text-align:right;">-2.2%p</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-41</td>
+                  <td class="num-neg" style="text-align:right;">-12.10%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-48</td>
+                  <td class="num-neg" style="text-align:right;">-14.10%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
+                  <td>일산엠폴리</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">279</td>
+                  <td class="num-neutral" style="text-align:right;">265</td>
+                  <td class="num-neg" style="text-align:right;">-14</td>
+                  <td class="num-neg" style="text-align:right;">-5.00%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">278</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">270</td>
+                  <td class="num-neg" style="text-align:right;">-8</td>
+                  <td class="num-neg" style="text-align:right;">-2.90%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+6</td>
+                  <td class="num-pos" style="text-align:right;">2.1%p</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-1</td>
+                  <td class="num-neg" style="text-align:right;">-0.40%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+5</td>
+                  <td class="num-pos" style="text-align:right;">1.90%</td>
+                </tr>
+                <tr>
+                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
+                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
+                  <td>정발</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">424</td>
+                  <td class="num-neutral" style="text-align:right;">419</td>
+                  <td class="num-neg" style="text-align:right;">-5</td>
+                  <td class="num-neg" style="text-align:right;">-1.20%</td>
+                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">353</td>
+                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">352</td>
+                  <td class="num-neg" style="text-align:right;">-1</td>
+                  <td class="num-neg" style="text-align:right;">-0.30%</td>
+                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+4</td>
+                  <td class="num-pos" style="text-align:right;">0.9%p</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-71</td>
+                  <td class="num-neg" style="text-align:right;">-16.70%</td>
+                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-67</td>
+                  <td class="num-neg" style="text-align:right;">-16.00%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 우측: AI 채팅 패널 -->
+    <div class="chat-panel" id="chatPanel">
+
+      <div class="chat-header">
+        <div class="chat-header-left">
+          <div class="chat-header-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="chat-header-title">대화</div>
+        </div>
+        <button class="chat-close-btn" onclick="toggleChat()" title="닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="chat-intro" id="chatIntro">
+        <div class="chat-intro-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div>
+          <div class="chat-intro-title">Poly AI</div>
+          <div class="chat-intro-desc">PI 학생 분석 리포트 데이터를<br>기반으로 인사이트를 제공합니다</div>
+        </div>
+        <button class="chat-insight-btn" onclick="sendMsg('현재 데이터를 분석하여 인사이트를 제공해줘')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          분석하여 인사이트 얻기
+        </button>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+
+        <!-- AI 인사 메시지 -->
+        <div class="msg ai">
+          <div class="msg-bubble">
+            안녕하세요! PI 학생 분석 리포트를 열람 중이시네요.<br>
+            데이터에 대해 궁금한 점을 자유롭게 질문해 주세요.
+          </div>
+          <span class="msg-time">15:29</span>
+          <div class="msg-followups">
+            <button class="followup-chip" onclick="sendMsg('목동 캠퍼스 학생 수가 왜 줄었나요?')">목동 감소 원인</button>
+            <button class="followup-chip" onclick="sendMsg('서울권 전체 소계를 알려줘')">서울권 소계</button>
+            <button class="followup-chip" onclick="sendMsg('증가하고 있는 캠퍼스는 어디인가요?')">증가 캠퍼스</button>
+          </div>
+        </div>
+
+        <!-- 사용자 메시지 예시 -->
+        <div class="msg user">
+          <div class="msg-bubble">목동 캠퍼스 학생수?</div>
+          <span class="msg-time">15:31</span>
+        </div>
+
+        <!-- AI 응답 예시 -->
+        <div class="msg ai">
+          <div class="msg-bubble">
+            목동 관련 캠퍼스 3곳의 학생 수 현황입니다.
+          </div>
+          <div class="msg-insight">
+            <div class="msg-insight-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              주요 인사이트
+            </div>
+            <ul>
+              <li>목동 3개 캠퍼스 합산 현재 학생 수: 1,631명</li>
+              <li>3개 캠퍼스 모두 전년 동월 대비 감소 추세</li>
+              <li>목동 본원이 -94명(-9.7%)으로 감소폭이 가장 큼</li>
+              <li>올해 전월(1,661명) → 당월(1,631명)으로 -30명 하락세 지속</li>
+              <li>목동엠폴리는 감소율이 가장 낮아 상대적으로 안정적인 편</li>
+            </ul>
+          </div>
+          <span class="msg-time">15:31</span>
+          <div class="msg-followups">
+            <button class="followup-chip" onclick="sendMsg('목동 감소의 주요 원인은 무엇인가요?')">감소 원인 분석</button>
+            <button class="followup-chip" onclick="sendMsg('다른 지역과 비교해줘')">타 지역 비교</button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- AI 빈 상태 (숨겨져 있음) -->
+      <div class="chat-empty" id="chatEmpty" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <p>데이터에 대해 궁금한 점을 질문해보세요</p>
+        <div class="chat-empty-suggestions">
+          <button class="chat-empty-chip" onclick="sendMsg('서울권 캠퍼스 중 가장 많이 감소한 곳은?')">서울권 캠퍼스 중 가장 많이 감소한 곳은?</button>
+          <button class="chat-empty-chip" onclick="sendMsg('전년 대비 증가하고 있는 캠퍼스를 찾아줘')">전년 대비 증가하고 있는 캠퍼스를 찾아줘</button>
+          <button class="chat-empty-chip" onclick="sendMsg('경인권 소계를 알려줘')">경인권 소계를 알려줘</button>
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <div class="chat-input-wrap">
+          <textarea class="chat-textarea" id="chatInput" placeholder="대화 내에서 질문해보세요..." rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}"></textarea>
+          <button class="chat-send-btn" onclick="sendMsg()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* 테마 */
+  (function () {
+    const t = localStorage.getItem('epTheme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  })();
+
+  function _syncThemeBtns() {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const sunSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+    const moonSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+    const btn = document.getElementById('theme-toggle-2');
+    if (btn) { btn.innerHTML = dark ? sunSvg : moonSvg; btn.title = dark ? '라이트 모드' : '다크 모드'; }
+  }
+  function _toggleTheme() {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const next = dark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('epTheme', next);
+    _syncThemeBtns();
+  }
+  document.getElementById('theme-toggle-2').addEventListener('click', _toggleTheme);
+  _syncThemeBtns();
+
+  /* 패널 토글 */
+  let chatOpen = true;
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    const panel = document.getElementById('chatPanel');
+    const fab = document.getElementById('chatFab');
+    if (chatOpen) {
+      panel.classList.remove('collapsed');
+      fab.classList.remove('visible');
+    } else {
+      panel.classList.add('collapsed');
+      fab.classList.add('visible');
+    }
+  }
+
+  /* 채팅 전송 */
+  const AI_RESPONSES = {
+    '목동 캠퍼스 학생 수가 왜 줄었나요?': '목동 캠퍼스 감소의 주요 요인으로는 ① 주변 경쟁사 증가, ② 해당 학군 학생 수 자연 감소, ③ 이탈 학생 현황을 분석해야 정확한 파악이 가능합니다. 현재 데이터 기준으로는 전년 대비 -94명(-9.7%) 감소가 확인됩니다.',
+    '서울권 전체 소계를 알려줘': '직영 서울권 8개 캠퍼스 소계: 전월 3,330명 → 당월 3,104명. 전년 동기(3,330명) 대비 -65명(-2.1%) 감소했습니다.',
+    '증가하고 있는 캠퍼스는 어디인가요?': '현재 데이터에서 전년 대비 증가 중인 캠퍼스는 광명(+6명, +1.7%p)으로 확인됩니다. 대부분의 캠퍼스가 감소 추세에 있어 주목할 만합니다.',
+    '목동 감소의 주요 원인은 무엇인가요?': '데이터만으로는 정확한 원인 파악에 한계가 있습니다. 상담 이탈 데이터, 경쟁사 현황, 해당 학군 인구 변화 데이터를 함께 분석하시면 더 정확한 진단이 가능합니다.',
+    '다른 지역과 비교해줘': '경인권의 경우 광명이 유일하게 증가(+3명)하고 있으며, 광교·분당·수지 등은 감소 중입니다. 전반적으로 서울권과 유사한 감소 패턴을 보이고 있습니다.',
+    '서울권 캠퍼스 중 가장 많이 감소한 곳은?': '서울권에서 가장 많이 감소한 캠퍼스는 목동 본원으로, 전년 대비 -94명(-9.7%) 감소했습니다.',
+    '전년 대비 증가하고 있는 캠퍼스를 찾아줘': '현재 조회 범위에서 증가 캠퍼스는 광명(경인권, +6명), 영아이엘(서울권, 금년 월별 -4이나 전년 대비 전월 증가) 등이 있습니다. 전체 77개 캠퍼스 기준으로 조회 시 더 많은 정보를 확인할 수 있습니다.',
+    '경인권 소계를 알려줘': '직영 경인권 현재 조회 데이터 기준: 광교(372), 광명(365), 분당(393) 3개 캠퍼스의 당월 합계는 1,130명입니다. 전체 경인권 소계는 추가 데이터 로드 후 확인 가능합니다.',
+  };
+
+  function sendMsg(text) {
+    const input = document.getElementById('chatInput');
+    const msg = text || input.value.trim();
+    if (!msg) return;
+    input.value = '';
+
+    const intro = document.getElementById('chatIntro');
+    if (intro) intro.style.display = 'none';
+
+    const container = document.getElementById('chatMessages');
+
+    // 사용자 메시지
+    const userDiv = document.createElement('div');
+    userDiv.className = 'msg user';
+    const now = new Date();
+    const timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+    userDiv.innerHTML = `<div class="msg-bubble">${msg}</div><span class="msg-time">${timeStr}</span>`;
+    container.appendChild(userDiv);
+
+    // 로딩
+    const loadDiv = document.createElement('div');
+    loadDiv.className = 'msg ai';
+    loadDiv.innerHTML = `<div class="msg-bubble" style="padding:var(--space-3) var(--space-4);"><div class="msg-loading"><span></span><span></span><span></span></div></div>`;
+    container.appendChild(loadDiv);
+    container.scrollTop = container.scrollHeight;
+
+    // AI 응답 (지연)
+    setTimeout(() => {
+      container.removeChild(loadDiv);
+      const aiDiv = document.createElement('div');
+      aiDiv.className = 'msg ai';
+      const response = AI_RESPONSES[msg] || `"${msg}"에 대한 분석 결과입니다. 현재 PI 학생 분석 리포트 데이터를 기반으로 답변 드리겠습니다. 더 구체적인 질문을 해주시면 더 정확한 답변을 드릴 수 있습니다.`;
+      aiDiv.innerHTML = `<div class="msg-bubble">${response}</div><span class="msg-time">${timeStr}</span>`;
+      container.appendChild(aiDiv);
+      container.scrollTop = container.scrollHeight;
+    }, 1000);
+  }
+
+  /* LNB 브랜드 스위처 + 컬러 토큰 전환 */
+  const BRAND_TOKENS = {
+    poly: {
+      '--color-primary':        '#0066FF',
+      '--color-primary-light':  '#E8F0FF',
+      '--color-primary-dark':   '#0052CC',
+      '--color-primary-deeper': '#003D99',
+      '--color-success':        '#0066FF',
+      '--color-success-light':  '#E8F0FF',
+      '--color-sidebar-active': '#0066FF',
+      '--chart-1': 'rgba(0,102,255,0.85)',
+      '--chart-2': 'rgba(0,102,255,0.60)',
+      '--chart-3': 'rgba(0,102,255,0.38)',
+      '--chart-4': 'rgba(0,102,255,0.22)',
+      '--chart-5': 'rgba(0,102,255,0.13)',
+      '--chart-6': 'rgba(0,102,255,0.07)',
+      '--color-primary-a08': 'rgba(0,102,255,0.08)',
+      '--color-primary-a10': 'rgba(0,102,255,0.10)',
+      '--color-primary-a15': 'rgba(0,102,255,0.15)',
+      '--color-primary-a25': 'rgba(0,102,255,0.25)',
+      '--color-primary-a30': 'rgba(0,102,255,0.30)',
+      '--color-primary-a50': 'rgba(0,102,255,0.50)',
+    },
+    canb: {
+      '--color-primary':        '#BC216D',
+      '--color-primary-light':  '#FAEAF3',
+      '--color-primary-dark':   '#9A1D5E',
+      '--color-primary-deeper': '#6E1040',
+      '--color-success':        '#BC216D',
+      '--color-success-light':  '#FAEAF3',
+      '--color-sidebar-active': '#BC216D',
+      '--chart-1': 'rgba(212,46,120,0.85)',
+      '--chart-2': 'rgba(212,46,120,0.60)',
+      '--chart-3': 'rgba(212,46,120,0.38)',
+      '--chart-4': 'rgba(212,46,120,0.22)',
+      '--chart-5': 'rgba(212,46,120,0.13)',
+      '--chart-6': 'rgba(212,46,120,0.07)',
+      '--color-primary-a08': 'rgba(188,33,109,0.08)',
+      '--color-primary-a10': 'rgba(188,33,109,0.10)',
+      '--color-primary-a15': 'rgba(188,33,109,0.15)',
+      '--color-primary-a25': 'rgba(188,33,109,0.25)',
+      '--color-primary-a30': 'rgba(188,33,109,0.30)',
+      '--color-primary-a50': 'rgba(188,33,109,0.50)',
+    }
+  };
+  BRAND_TOKENS.all = BRAND_TOKENS.poly;
+
+  /* 전년/금년 비교 차트 */
+  const _chartLabels = ['대치폴리', '목동', '목동에그넷', '목동엠폴리', '송파', '엠아이엘', '위례', '중계', '광교', '광명', '분당', '분당엠폴리', '송도', '수지별관', '수지본관', '영통엠폴리', '운정', '일산', '일산엠폴리'];
+  const _prevYear    = [182, 967, 356, 435, 486, 162, 365, 377, 375, 349, 460, 576, 459, 200, 424, 273, 226, 341, 265];
+  const _thisYear    = [128, 873, 335, 423, 491, 190, 365, 299, 372, 365, 393, 596, 403, 221, 375, 287, 285, 293, 270];
+  let _compareChart = null;
+
+  function buildCompareChart() {
+    const ctx = document.getElementById('compareChart');
+    if (!ctx) return;
+    if (_compareChart) _compareChart.destroy();
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+    const tickColor = isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)';
+    _compareChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: _chartLabels,
+        datasets: [
+          {
+            label: '전년 당월',
+            data: _prevYear,
+            backgroundColor: 'rgba(0,102,255,0.30)',
+            borderRadius: 3,
+            barPercentage: 0.75,
+            categoryPercentage: 0.7,
+          },
+          {
+            label: '금년 당월',
+            data: _thisYear,
+            backgroundColor: 'rgba(0,102,255,0.82)',
+            borderRadius: 3,
+            barPercentage: 0.75,
+            categoryPercentage: 0.7,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              afterLabel: function(ctx) {
+                const prev = _prevYear[ctx.dataIndex];
+                const cur  = _thisYear[ctx.dataIndex];
+                const diff = cur - prev;
+                return '증감: ' + (diff >= 0 ? '+' : '') + diff + '명';
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: tickColor, font: { size: 11 }, maxRotation: 30 }
+          },
+          y: {
+            grid: { color: gridColor },
+            ticks: { color: tickColor, font: { size: 11 }, stepSize: 200 },
+            border: { display: false }
+          }
+        }
+      }
+    });
+  }
+
+  buildCompareChart();
+  window.addEventListener('themechange', buildCompareChart);
+
+  /* Excel 다운로드 */
+  function downloadExcel() {
+    const table = document.querySelector('.data-table');
+    if (!table || typeof XLSX === 'undefined') return;
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.table_to_sheet(table);
+    const label = document.getElementById('viewSelectorLabel');
+    const sheetName = label ? label.textContent.slice(0, 31) : 'Sheet1';
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    const badge = document.getElementById('viewCountBadge');
+    const dateStr = badge ? badge.textContent.match(/\d{4}-\d{2}-\d{2}/) : null;
+    const fileName = 'PI_학생분석_' + (dateStr ? dateStr[0] : '2026-05-15') + '.xlsx';
+    XLSX.writeFile(wb, fileName);
+  }
+
+  /* 인쇄 */
+  function printReport() {
+    window.print();
+  }
+
+  /* 뷰 선택 드롭다운 */
+  function toggleViewDropdown() {
+    const menu = document.getElementById('viewDropdownMenu');
+    const chevron = document.getElementById('viewDropdownChevron');
+    menu.classList.toggle('open');
+    chevron.style.transform = menu.classList.contains('open') ? 'rotate(180deg)' : '';
+  }
+  function selectView(btn, label) {
+    document.querySelectorAll('.view-dropdown-item').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('viewSelectorLabel').textContent = label;
+    const menu = document.getElementById('viewDropdownMenu');
+    menu.classList.remove('open');
+    document.getElementById('viewDropdownChevron').style.transform = '';
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#viewDropdown') && !e.target.closest('#viewDropdownMenu')) {
+      const menu = document.getElementById('viewDropdownMenu');
+      if (menu) {
+        menu.classList.remove('open');
+        document.getElementById('viewDropdownChevron').style.transform = '';
+      }
+    }
+  });
+
+  function toggleSubNav(btn) {
+    btn.closest('.poly-nav-group').classList.toggle('open');
+  }
+
+  function applyBrand(brand) {
+    const tokens = BRAND_TOKENS[brand] || BRAND_TOKENS.poly;
+    const root = document.documentElement;
+    Object.entries(tokens).forEach(([k, v]) => root.style.setProperty(k, v));
+    root.setAttribute('data-brand', brand);
+  }
+
+  (function() {
+    const intro = document.getElementById('chatIntro');
+    const msgs  = document.getElementById('chatMessages');
+    if (intro && msgs && msgs.querySelector('.msg')) intro.style.display = 'none';
+
+    const saved = localStorage.getItem('polyBrand') || 'poly';
+    applyBrand(saved);
+    document.querySelectorAll('.lnb-brand-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.brand === saved);
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.lnb-brand-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const brand = this.dataset.brand;
+        localStorage.setItem('polyBrand', brand);
+        applyBrand(brand);
+      });
+    });
+  })();
+</script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+</body>
+</html>

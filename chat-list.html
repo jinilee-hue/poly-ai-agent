@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>채팅 | Poly AI Agent</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="styles/common.css">
+  <style>
+    body { display: flex; min-height: 100vh; background: var(--color-bg-subtle); }
+
+    /* ── 사이드바 ───────────────────────────── */
+    .poly-sidebar {
+      width: 240px; flex-shrink: 0;
+      background: var(--color-sidebar-bg);
+      border-right: var(--border-default);
+      display: flex; flex-direction: column;
+      padding: 0;
+      position: fixed; top: 0; left: 0; bottom: 0;
+      z-index: 100;
+    }
+    .poly-sidebar-logo { height: 56px; display: flex; align-items: center; padding: 0 var(--space-5); margin-bottom: 0; }
+    .poly-sidebar-brand { display: block; height: 28px; width: auto; }
+    .poly-sidebar-tagline { font-size: var(--text-xs); color: var(--color-text-tertiary); line-height: 1.3; }
+    .lnb-brand-switch { display: flex; margin: 0 var(--space-4) var(--space-6); background: var(--color-bg-muted); border-radius: var(--radius-md); padding: 3px; gap: 2px; }
+    .lnb-brand-btn { flex: 1; padding: 5px 0; border-radius: calc(var(--radius-md) - 2px); font-size: var(--text-xs); font-weight: var(--weight-medium); color: var(--color-text-secondary); cursor: pointer; border: none; background: transparent; transition: all 0.15s; }
+    .lnb-brand-btn.active { background: var(--color-bg); color: var(--color-primary); font-weight: var(--weight-semibold); }
+    .poly-new-chat {
+      display: flex; align-items: center; gap: var(--space-2);
+      margin: 0 var(--space-4) var(--space-5);
+      padding: var(--space-3) var(--space-4);
+      background: var(--color-primary); color: #fff;
+      border: none; border-radius: var(--radius-md);
+      font-size: var(--text-sm); font-weight: var(--weight-medium);
+      cursor: pointer; transition: background 0.15s; text-decoration: none;
+    }
+    .poly-new-chat:hover { background: var(--color-primary-dark); }
+    .poly-new-chat svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .poly-nav-section { padding: 0 var(--space-3); margin-bottom: var(--space-2); }
+    .poly-nav-label { font-size: var(--text-xs); font-weight: var(--weight-medium); color: var(--color-sidebar-section); text-transform: uppercase; letter-spacing: 0.5px; padding: var(--space-2) var(--space-2) var(--space-1); }
+    .poly-nav-item {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-2) var(--space-3); border-radius: var(--radius-md);
+      color: var(--color-sidebar-text); text-decoration: none;
+      font-size: var(--text-sm); cursor: pointer; transition: background 0.12s, color 0.12s;
+    }
+    .poly-nav-item:hover { background: transparent; color: var(--color-text-primary); }
+    .poly-nav-item.active { background: var(--color-primary-light); color: var(--color-primary); font-weight: var(--weight-medium); }
+    .poly-nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .poly-nav-item-row { display: flex; align-items: center; }
+    .poly-nav-item-row .poly-nav-item { flex: 1; }
+    .poly-nav-chevron { width: 24px; height: 28px; background: none; border: none; cursor: pointer; color: var(--color-sidebar-text); display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); flex-shrink: 0; transition: background 0.12s, color 0.12s; padding: 0; margin-right: var(--space-1); }
+    .poly-nav-chevron svg { width: 13px; height: 13px; transition: transform 0.2s; }
+    .poly-nav-chevron:hover { color: var(--color-text-primary); }
+    .poly-nav-group.open .poly-nav-chevron svg { transform: rotate(180deg); }
+    .poly-nav-group .poly-nav-item:hover { background: transparent; }
+    .poly-nav-group .poly-nav-item.active { background: transparent; }
+    .poly-nav-item-row:hover .poly-nav-item { color: var(--color-text-primary); }
+    .poly-nav-group.open .poly-nav-item-row { background: var(--color-primary-light); border-radius: var(--radius-md); }
+    .poly-nav-group.open .poly-nav-item { background: transparent; color: var(--color-primary); font-weight: var(--weight-medium); }
+    .poly-nav-group.open .poly-nav-chevron { color: var(--color-primary); }
+    .poly-nav-sub { display: none; margin-left: 20px; border-left: 1.5px solid var(--color-border); padding: var(--space-1) 0; }
+    .poly-nav-group.open .poly-nav-sub { display: block; }
+    .poly-nav-sub-item { display: block; padding: 5px 8px 5px 14px; font-size: 12px; color: var(--color-sidebar-text); border-radius: var(--radius-sm); white-space: nowrap; overflow: visible; transition: background 0.12s, color 0.12s; position: relative; }
+    .poly-nav-sub-item::before { content: ''; position: absolute; left: -4px; top: 50%; transform: translateY(-50%); width: 7px; height: 7px; background: var(--color-border); border-radius: 50%; box-shadow: 0 0 0 2px var(--color-sidebar-bg); z-index: 1; }
+    .poly-nav-sub-item:hover { background: transparent; color: var(--color-text-primary); }
+    .poly-nav-sub-item.active { color: var(--color-primary); font-weight: var(--weight-medium); }
+    .poly-nav-sub-item.active::before { content: ''; position: absolute; left: -4px; top: 50%; transform: translateY(-50%); width: 7px; height: 7px; background: var(--color-primary); border-radius: 50%; box-shadow: 0 0 0 2px var(--color-sidebar-bg); z-index: 1; }
+    .poly-history-section { flex: 1; overflow-y: auto; padding: 0 var(--space-3); }
+    .poly-history-item { padding: var(--space-2) var(--space-3); border-radius: var(--radius-md); font-size: 12px; color: var(--color-text-secondary); cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: background 0.12s, color 0.12s; }
+    .poly-history-item:hover { background: var(--color-sidebar-hover); color: var(--color-text-primary); }
+    .poly-sidebar-footer { margin-top: auto; padding: var(--space-4) var(--space-5) var(--space-8); display: flex; align-items: center; gap: var(--space-3); }
+    .poly-user-avatar { width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--color-bg-muted); color: var(--color-text-primary); font-size: var(--text-xs); font-weight: var(--weight-semibold); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .poly-user-name { font-size: var(--text-sm); font-weight: var(--weight-medium); color: var(--color-text-primary); }
+    .poly-user-role { font-size: var(--text-xs); color: var(--color-text-tertiary); }
+
+    /* ── 메인 ───────────────────────────────── */
+    .poly-main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; overflow-y: auto; height: 100vh; }
+    .poly-topbar { background: var(--color-bg); border-bottom: var(--border-default); padding: 0 var(--space-8); height: 56px; min-height: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+    .poly-topbar-left { display: flex; align-items: center; gap: var(--space-2); }
+    .poly-topbar-title { font-size: var(--text-base); font-weight: var(--weight-semibold); color: var(--color-text-primary); }
+    .poly-topbar-right { display: flex; align-items: center; gap: var(--space-3); }
+    .poly-page { padding: var(--space-8); }
+    .reports-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-6); flex-wrap: wrap; gap: var(--space-4); }
+    .reports-header-left h1 { font-size: var(--text-2xl); font-weight: var(--weight-semibold); color: var(--color-text-primary); margin-bottom: 4px; }
+    .reports-header-left p { font-size: var(--text-sm); color: var(--color-text-secondary); }
+
+    /* ── 검색 + 필터 ─────────────────────────── */
+    .cl-search-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      margin-bottom: var(--space-6);
+      background: var(--color-bg-muted);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4) var(--space-6);
+    }
+    [data-theme="dark"] .cl-search-bar { background: var(--color-bg-subtle); }
+    .cl-search-box {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      background: var(--color-bg);
+      border: var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: 0 var(--space-4);
+      height: 44px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .cl-search-box:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-a08);
+    }
+    .cl-search-box svg { width: 16px; height: 16px; color: var(--color-text-tertiary); flex-shrink: 0; }
+    .cl-search-input {
+      flex: 1; border: none; outline: none; background: transparent;
+      font-size: var(--text-sm); color: var(--color-text-primary);
+      font-family: var(--font-sans);
+    }
+    .cl-search-input::placeholder { color: var(--color-text-tertiary); }
+    .cond-wrap { position: relative; flex-shrink: 0; }
+    .cond-trigger {
+      display: flex; align-items: center; gap: var(--space-2);
+      padding: 0 var(--space-3); height: 44px; min-width: 80px;
+      border: var(--border-default); border-radius: var(--radius-lg);
+      background: var(--color-bg); cursor: pointer;
+      font-size: var(--text-sm); color: var(--color-text-primary);
+      font-family: var(--font-sans); transition: border-color 0.15s;
+      user-select: none;
+    }
+    .cond-trigger:hover { border-color: var(--color-primary); }
+    .cond-trigger span { flex: 1; }
+    .cond-trigger svg { width: 13px; height: 13px; flex-shrink: 0; color: var(--color-text-tertiary); transition: transform 0.2s; }
+    .cond-menu {
+      position: absolute; top: calc(100% + 4px); left: 0;
+      background: var(--color-bg); border: var(--border-default);
+      border-radius: var(--radius-lg); box-shadow: var(--shadow-lg);
+      min-width: 100%; z-index: 200; padding: var(--space-1) 0; display: none;
+    }
+    .cond-menu.open { display: block; }
+    .cond-item {
+      display: flex; align-items: center; width: 100%; text-align: left;
+      padding: var(--space-2) var(--space-4); font-size: var(--text-sm);
+      color: var(--color-text-secondary); background: none; border: none;
+      cursor: pointer; transition: background 0.1s, color 0.1s; font-family: var(--font-sans);
+    }
+    .cond-item:hover { background: var(--color-bg-subtle); color: var(--color-text-primary); }
+    .cond-item.active { color: var(--color-primary); font-weight: var(--weight-medium); }
+    .cond-item.active::after { content: '✓'; margin-left: auto; font-size: 13px; }
+    .date-box {
+      display: flex; align-items: center;
+      height: 44px; flex-shrink: 0;
+      border: var(--border-default); border-radius: var(--radius-lg);
+      background: var(--color-bg); overflow: hidden;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .date-box:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 3px var(--color-primary-a08); }
+    .date-input {
+      height: 44px; width: 110px;
+      border: none; background: transparent; font-size: var(--text-sm);
+      color: var(--color-text-primary); font-family: var(--font-sans);
+      padding: 0 var(--space-3); outline: none;
+    }
+    .date-input::placeholder { color: var(--color-text-tertiary); }
+    .date-cal-btn {
+      height: 44px; width: 40px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      border: none;
+      background: transparent; color: var(--color-text-tertiary);
+      cursor: pointer; transition: color 0.15s, background 0.15s;
+    }
+    .date-cal-btn:hover { color: var(--color-primary); background: var(--color-primary-light); }
+    .date-cal-btn svg { width: 15px; height: 15px; }
+    .cl-search-clear {
+      display: none;
+      background: none; border: none; cursor: pointer;
+      color: var(--color-text-tertiary); padding: 2px;
+      border-radius: var(--radius-full);
+    }
+    .cl-search-clear:hover { color: var(--color-text-primary); background: var(--color-bg-muted); }
+    .cl-search-clear svg { width: 14px; height: 14px; display: block; }
+    .cl-search-submit {
+      height: 44px;
+      width: 44px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: var(--border-default);
+      border-radius: var(--radius-lg);
+      background: var(--color-bg);
+      color: var(--color-text-tertiary);
+      cursor: pointer;
+      transition: color 0.15s, background 0.15s, border-color 0.15s;
+    }
+    .cl-search-submit:hover { color: var(--color-primary); border-color: var(--color-primary); background: var(--color-primary-light); }
+    .cl-search-submit svg { width: 16px; height: 16px; }
+
+    /* ── 채팅 그룹 ──────────────────────────── */
+    .cl-group { margin-bottom: var(--space-8); }
+    .cl-group-label {
+      font-size: var(--text-xs);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: var(--space-3);
+      padding-left: 2px;
+    }
+    .cl-list { display: flex; flex-direction: column; gap: var(--space-2); }
+
+    /* ── 채팅 아이템 ────────────────────────── */
+    .cl-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-4);
+      background: var(--color-bg);
+      border: var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4) var(--space-5);
+      text-decoration: none;
+      cursor: pointer;
+      transition: box-shadow 0.12s, border-color 0.12s;
+    }
+    .cl-item:hover { box-shadow: var(--shadow-sm); border-color: var(--color-primary-a25); }
+    .cl-item.hidden { display: none; }
+
+    .cl-item-icon {
+      width: 40px; height: 40px; flex-shrink: 0;
+      background: var(--color-bg-subtle);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--color-text-tertiary);
+      transition: background 0.12s, color 0.12s;
+    }
+    .cl-item:hover .cl-item-icon { background: var(--color-primary-light); color: var(--color-primary); }
+    .cl-item-icon svg { width: 18px; height: 18px; }
+
+    .cl-item-body { flex: 1; min-width: 0; }
+    .cl-item-title {
+      font-size: var(--text-sm);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text-primary);
+      margin-bottom: 4px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .cl-item-preview {
+      font-size: var(--text-xs);
+      color: var(--color-text-secondary);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      line-height: 1.5;
+    }
+    /* 검색 하이라이트 */
+    .cl-item-title mark, .cl-item-preview mark {
+      background: var(--color-primary-a15);
+      color: var(--color-primary);
+      border-radius: 2px;
+      padding: 0 1px;
+    }
+
+    .cl-item-right {
+      display: flex; flex-direction: column;
+      align-items: flex-end; justify-content: center; gap: var(--space-2);
+      flex-shrink: 0; align-self: stretch;
+    }
+    .cl-item-date {
+      font-size: var(--text-xs);
+      color: var(--color-text-tertiary);
+      white-space: nowrap;
+    }
+    .cl-item-badges { display: flex; gap: var(--space-1); }
+
+    /* ── 빈 상태 ────────────────────────────── */
+    .cl-empty {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-16) var(--space-8);
+      text-align: center;
+      color: var(--color-text-tertiary);
+    }
+    .cl-empty.show { display: flex; }
+    .cl-empty svg { width: 48px; height: 48px; opacity: 0.3; margin-bottom: var(--space-4); }
+    .cl-empty-title { font-size: var(--text-base); font-weight: var(--weight-medium); margin-bottom: var(--space-2); }
+    .cl-empty-sub { font-size: var(--text-sm); }
+  </style>
+</head>
+<body>
+
+<!-- 사이드바 -->
+<aside class="poly-sidebar">
+  <div class="poly-sidebar-logo">
+    <a href="home.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+      <img src="https://www.polyinspiration.com/img/main/logo.png" alt="POLY" class="poly-sidebar-brand">
+      <span class="poly-sidebar-tagline">AI 경영 분석 플랫폼</span>
+    </a>
+  </div>
+  <div class="lnb-brand-switch">
+    <button class="lnb-brand-btn" data-brand="poly">POLY</button>
+    <button class="lnb-brand-btn" data-brand="canb">CANB</button>
+    <button class="lnb-brand-btn" data-brand="all">전체</button>
+  </div>
+
+  <a href="home.html" class="poly-new-chat">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    새 채팅
+  </a>
+  <div class="poly-nav-section">
+    <a href="chat-list.html" class="poly-nav-item active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      채팅
+    </a>
+    <div class="poly-nav-group">
+      <div class="poly-nav-item-row">
+        <a href="projects.html" class="poly-nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          프로젝트
+        </a>
+        <button class="poly-nav-chevron" onclick="toggleSubNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+      <div class="poly-nav-sub">
+        <a href="project-detail.html" class="poly-nav-sub-item">목동 학생 감소 원인 분석</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">2026 상반기 재학생 추이 보고서</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">TEST</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">CANB 캠퍼스 학급 편성 최적화</a>
+      </div>
+    </div>
+    <div class="poly-nav-group">
+      <div class="poly-nav-item-row">
+        <a href="reports.html" class="poly-nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          리포트
+        </a>
+        <button class="poly-nav-chevron" onclick="toggleSubNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+      <div class="poly-nav-sub">
+        <a href="report-view.html" class="poly-nav-sub-item">PI 학생 분석 리포트</a>
+        <a href="report-view.html" class="poly-nav-sub-item">교육과정별 3개년 학생 수 분석</a>
+        <a href="report-view.html" class="poly-nav-sub-item">학급 편성 대시보드</a>
+        <a href="report-view.html" class="poly-nav-sub-item">ESC 학생 현황</a>
+        <a href="report-view.html" class="poly-nav-sub-item">재학생 추이 분석</a>
+      </div>
+    </div>
+  </div>
+  <div class="poly-history-section">
+    <div class="poly-nav-label">최근 채팅</div>
+    <div class="poly-history-item">목동 캠퍼스 학생수 감소 원인 분석</div>
+    <div class="poly-history-item">오늘 재원생 수 현황</div>
+    <div class="poly-history-item">전년 대비 캠퍼스별 증감 비교</div>
+    <div class="poly-history-item">PI 사업부 3개월 학생 추이</div>
+    <div class="poly-history-item">ESC 캠퍼스 월별 등록 현황</div>
+  </div>
+  <div class="poly-sidebar-footer">
+    <div class="poly-user-avatar">이진</div>
+    <div>
+      <div class="poly-user-name">이진희</div>
+      <div class="poly-user-role">관리자</div>
+    </div>
+    <a href="login.html" class="icon-btn" style="margin-left:auto;text-decoration:none;" title="나가기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </a>
+  </div>
+</aside>
+
+<!-- 메인 -->
+<div class="poly-main">
+  <header class="poly-topbar">
+    <div class="poly-topbar-left">
+      <nav style="font-size:var(--text-sm);color:var(--color-text-tertiary);display:flex;align-items:center;gap:6px;">
+        <a href="home.html" style="color:var(--color-text-tertiary);text-decoration:none;">홈</a>
+        <span>›</span>
+        <span style="color:var(--color-text-primary);font-weight:var(--weight-medium);">채팅</span>
+      </nav>
+    </div>
+    <div class="poly-topbar-right">
+      <button class="btn btn-primary" style="font-size:var(--text-sm);" onclick="window.location.href='home.html'">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        새 채팅
+      </button>
+      <button id="theme-toggle-2" class="icon-btn" title="다크 모드">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="poly-page">
+
+    <!-- 헤더 -->
+    <div class="reports-header">
+      <div class="reports-header-left">
+        <h1>채팅</h1>
+        <p>AI와 나눈 경영 분석 채팅 기록을 확인하고 이어서 대화하세요.</p>
+      </div>
+    </div>
+
+    <!-- 검색 + 필터 -->
+    <div class="cl-search-bar">
+      <div style="display:flex;align-items:center;gap:8px;flex:1;">
+        <div class="cond-wrap">
+          <button class="cond-trigger" id="chatCondTrigger" onclick="toggleCondMenu('chat')">
+            <span id="chatCondLabel">전체</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="chatCondChevron"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="cond-menu" id="chatCondMenu">
+            <button class="cond-item active" onclick="selectCond('chat','전체',this)">전체</button>
+            <button class="cond-item" onclick="selectCond('chat','제목',this)">제목</button>
+            <button class="cond-item" onclick="selectCond('chat','내용',this)">내용</button>
+          </div>
+        </div>
+        <div class="date-box">
+          <input type="text" class="date-input" id="chatDateInput" placeholder="날짜 선택">
+          <button class="date-cal-btn" type="button" onclick="chatDateFp && chatDateFp.open()" aria-label="날짜 선택">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </button>
+        </div>
+        <div class="cl-search-box">
+          <input class="cl-search-input" id="searchInput" type="search" placeholder="채팅 내용 또는 제목으로 검색..." oninput="handleSearch(this.value)" aria-label="채팅 검색">
+          <button class="cl-search-clear" id="searchClear" onclick="clearSearch()" aria-label="검색 지우기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <button class="cl-search-submit" aria-label="검색">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 채팅 목록 -->
+    <div id="chatListContainer">
+
+      <!-- 오늘 -->
+      <div class="cl-group" id="group-today">
+        <div class="cl-group-label">오늘</div>
+        <div class="cl-list">
+          <a href="chat.html" class="cl-item" data-source="poly"
+             data-title="목동 캠퍼스 학생수 감소 원인 분석"
+             data-preview="목동 3개 캠퍼스 합산 -127명 감소 (전년 대비 -7.2%). 목동 본원이 가장 큰 폭으로 감소">
+            <div class="cl-item-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="cl-item-body">
+              <div class="cl-item-title">목동 캠퍼스 학생수 감소 원인 분석</div>
+              <div class="cl-item-preview">목동 3개 캠퍼스 합산 -127명 감소 (전년 대비 -7.2%). 목동 본원이 가장 큰 폭으로 감소</div>
+            </div>
+            <div class="cl-item-right">
+              <span class="cl-item-date">오후 3:31</span>
+              <div class="cl-item-badges"><span class="badge badge-poly">POLY</span></div>
+            </div>
+          </a>
+          <a href="chat.html" class="cl-item" data-source="poly"
+             data-title="오늘 재원생 수 현황"
+             data-preview="2026년 5월 27일 기준 POLY 전체 재원생 수는 12,847명. 전월 대비 -255명 감소">
+            <div class="cl-item-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="cl-item-body">
+              <div class="cl-item-title">오늘 재원생 수 현황</div>
+              <div class="cl-item-preview">2026년 5월 27일 기준 POLY 전체 재원생 수는 12,847명. 전월 대비 -255명 감소</div>
+            </div>
+            <div class="cl-item-right">
+              <span class="cl-item-date">오전 10:14</span>
+              <div class="cl-item-badges"><span class="badge badge-poly">POLY</span></div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- 어제 -->
+      <div class="cl-group" id="group-yesterday">
+        <div class="cl-group-label">어제</div>
+        <div class="cl-list">
+          <a href="chat.html" class="cl-item" data-source="poly"
+             data-title="전년 대비 캠퍼스별 증감 비교"
+             data-preview="서울권 직영 8개 캠퍼스 평균 감소율 -2.1%. 광명이 유일하게 +1.7%p 증가 중">
+            <div class="cl-item-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="cl-item-body">
+              <div class="cl-item-title">전년 대비 캠퍼스별 증감 비교</div>
+              <div class="cl-item-preview">서울권 직영 8개 캠퍼스 평균 감소율 -2.1%. 광명이 유일하게 +1.7%p 증가 중</div>
+            </div>
+            <div class="cl-item-right">
+              <span class="cl-item-date">오후 4:52</span>
+              <div class="cl-item-badges"><span class="badge badge-poly">POLY</span></div>
+            </div>
+          </a>
+          <a href="chat.html" class="cl-item" data-source="canb"
+             data-title="CANB 학급 편성 현황 확인"
+             data-preview="CANB 캠퍼스별 강의실 가동률 분석. 평균 가동률 74%로 전분기 대비 소폭 하락">
+            <div class="cl-item-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="cl-item-body">
+              <div class="cl-item-title">CANB 학급 편성 현황 확인</div>
+              <div class="cl-item-preview">CANB 캠퍼스별 강의실 가동률 분석. 평균 가동률 74%로 전분기 대비 소폭 하락</div>
+            </div>
+            <div class="cl-item-right">
+              <span class="cl-item-date">오후 2:08</span>
+              <div class="cl-item-badges"><span class="badge badge-canb">CANB</span></div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- 이번 주 -->
+      <div class="cl-group" id="group-week">
+        <div class="cl-group-label">이번 주</div>
+        <div class="cl-list">
+          <a href="chat.html" class="cl-item" data-source="poly"
+             data-title="PI 사업부 3개월 학생 추이"
+             data-preview="PI 사업부 3월~5월 학생 수 추이. 전반적 하락세이나 5월 낙폭 소폭 둔화">
+            <div class="cl-item-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="cl-item-body">
+              <div class="cl-item-title">PI 사업부 3개월 학생 추이</div>
+              <div class="cl-item-preview">PI 사업부 3월~5월 학생 수 추이. 전반적 하락세이나 5월 낙폭 소폭 둔화</div>
+            </div>
+            <div class="cl-item-right">
+              <span class="cl-item-date">5월 25일</span>
+              <div class="cl-item-badges"><span class="badge badge-poly">POLY</span></div>
+            </div>
+          </a>
+          <a href="chat.html" class="cl-item" data-source="poly"
+             data-title="ESC 캠퍼스 월별 등록 현황"
+             data-preview="ESC 사업부 5월 신규 등록 현황. 경인권 중심 소폭 회복 신호 포착">
+            <div class="cl-item-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="cl-item-body">
+              <div class="cl-item-title">ESC 캠퍼스 월별 등록 현황</div>
+              <div class="cl-item-preview">ESC 사업부 5월 신규 등록 현황. 경인권 중심 소폭 회복 신호 포착</div>
+            </div>
+            <div class="cl-item-right">
+              <span class="cl-item-date">5월 24일</span>
+              <div class="cl-item-badges"><span class="badge badge-poly">POLY</span></div>
+            </div>
+          </a>
+          <a href="chat.html" class="cl-item" data-source="canb"
+             data-title="CANB 전년 대비 매출 분석"
+             data-preview="CANB 2026년 5월 매출 전년 동기 대비 분석. 가맹 캠퍼스 수납 현황 포함">
+            <div class="cl-item-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="cl-item-body">
+              <div class="cl-item-title">CANB 전년 대비 매출 분석</div>
+              <div class="cl-item-preview">CANB 2026년 5월 매출 전년 동기 대비 분석. 가맹 캠퍼스 수납 현황 포함</div>
+            </div>
+            <div class="cl-item-right">
+              <span class="cl-item-date">5월 23일</span>
+              <div class="cl-item-badges"><span class="badge badge-canb">CANB</span></div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- 지난 달 -->
+      <div class="cl-group" id="group-month">
+        <div class="cl-group-label">지난 달</div>
+        <div class="cl-list">
+          <a href="chat.html" class="cl-item" data-source="poly"
+             data-title="4월 신규 등록 분석"
+             data-preview="4월 신규 등록 현황 및 전월 대비 증감. 강원권 중심 신규 등록 감소세">
+            <div class="cl-item-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="cl-item-body">
+              <div class="cl-item-title">4월 신규 등록 분석</div>
+              <div class="cl-item-preview">4월 신규 등록 현황 및 전월 대비 증감. 강원권 중심 신규 등록 감소세</div>
+            </div>
+            <div class="cl-item-right">
+              <span class="cl-item-date">4월 30일</span>
+              <div class="cl-item-badges"><span class="badge badge-poly">POLY</span></div>
+            </div>
+          </a>
+          <a href="chat.html" class="cl-item" data-source="poly"
+             data-title="1분기 재학생 추이 요약"
+             data-preview="2026년 1분기(1~3월) 전체 재학생 추이 요약. 전년 동기 대비 -6.3% 감소">
+            <div class="cl-item-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            </div>
+            <div class="cl-item-body">
+              <div class="cl-item-title">1분기 재학생 추이 요약</div>
+              <div class="cl-item-preview">2026년 1분기(1~3월) 전체 재학생 추이 요약. 전년 동기 대비 -6.3% 감소</div>
+            </div>
+            <div class="cl-item-right">
+              <span class="cl-item-date">4월 14일</span>
+              <div class="cl-item-badges"><span class="badge badge-neutral">전체</span></div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 빈 상태 (검색 결과 없음) -->
+    <div class="cl-empty" id="emptyState">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <p class="cl-empty-title">검색 결과가 없습니다</p>
+      <p class="cl-empty-sub" id="emptySubText">다른 키워드로 검색해보세요.</p>
+    </div>
+
+  </main>
+</div>
+
+
+<script>
+  (function () {
+    const t = localStorage.getItem('epTheme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  })();
+
+function _syncTheme() {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const sun = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+    const moon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+    const b = document.getElementById('theme-toggle-2');
+    if (b) { b.innerHTML = dark ? sun : moon; b.title = dark ? '라이트 모드' : '다크 모드'; }
+  }
+  function _toggleTheme() {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const next = dark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('epTheme', next);
+    _syncTheme();
+  }
+  document.getElementById('theme-toggle-2').addEventListener('click', _toggleTheme);
+  _syncTheme();
+
+  let _query  = '';
+
+  function applyFilter() {
+    const items = document.querySelectorAll('.cl-item');
+    const q = _query.toLowerCase();
+    let totalVisible = 0;
+
+    items.forEach(item => {
+      const title   = item.dataset.title   || '';
+      const preview = item.dataset.preview || '';
+
+      const show = !q || title.toLowerCase().includes(q) || preview.toLowerCase().includes(q);
+
+      item.classList.toggle('hidden', !show);
+
+      // 검색어 하이라이트
+      const titleEl   = item.querySelector('.cl-item-title');
+      const previewEl = item.querySelector('.cl-item-preview');
+      titleEl.innerHTML   = q ? highlight(title, q)   : escHtml(title);
+      previewEl.innerHTML = q ? highlight(preview, q) : escHtml(preview);
+
+      if (show) totalVisible++;
+    });
+
+    // 그룹별 빈 상태 처리
+    document.querySelectorAll('.cl-group').forEach(group => {
+      const anyVisible = [...group.querySelectorAll('.cl-item')].some(i => !i.classList.contains('hidden'));
+      group.style.display = anyVisible ? '' : 'none';
+    });
+
+    const empty = document.getElementById('emptyState');
+    empty.classList.toggle('show', totalVisible === 0);
+    if (totalVisible === 0) {
+      document.getElementById('emptySubText').textContent =
+        q ? `"${_query}"에 해당하는 채팅이 없습니다.` : '해당 데이터 소스의 채팅이 없습니다.';
+    }
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function highlight(text, q) {
+    const safe = escHtml(text);
+    const re = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+    return safe.replace(re, '<mark>$1</mark>');
+  }
+
+  function toggleCondMenu(id) {
+    const menu = document.getElementById(id + 'CondMenu');
+    const chevron = document.getElementById(id + 'CondChevron');
+    menu.classList.toggle('open');
+    chevron.style.transform = menu.classList.contains('open') ? 'rotate(180deg)' : '';
+  }
+  function selectCond(id, label, btn) {
+    document.getElementById(id + 'CondLabel').textContent = label;
+    document.querySelectorAll('#' + id + 'CondMenu .cond-item').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const menu = document.getElementById(id + 'CondMenu');
+    menu.classList.remove('open');
+    document.getElementById(id + 'CondChevron').style.transform = '';
+  }
+  document.addEventListener('click', function(e) {
+    document.querySelectorAll('.cond-wrap').forEach(wrap => {
+      if (!wrap.contains(e.target)) {
+        wrap.querySelector('.cond-menu').classList.remove('open');
+        const chev = wrap.querySelector('.cond-trigger svg');
+        if (chev) chev.style.transform = '';
+      }
+    });
+  });
+
+  function handleSearch(val) {
+    _query = val.trim();
+    document.getElementById('searchClear').style.display = _query ? 'flex' : 'none';
+    applyFilter();
+  }
+
+  function clearSearch() {
+    const input = document.getElementById('searchInput');
+    input.value = '';
+    document.getElementById('searchClear').style.display = 'none';
+    _query = '';
+    applyFilter();
+    input.focus();
+  }
+
+
+  /* LNB 브랜드 스위처 + 컬러 토큰 전환 */
+  const BRAND_TOKENS = {
+    poly: {
+      '--color-primary':        '#0066FF',
+      '--color-primary-light':  '#E8F0FF',
+      '--color-primary-dark':   '#0052CC',
+      '--color-primary-deeper': '#003D99',
+      '--color-success':        '#0066FF',
+      '--color-success-light':  '#E8F0FF',
+      '--color-sidebar-active': '#0066FF',
+      '--chart-1': 'rgba(0,102,255,0.85)',
+      '--chart-2': 'rgba(0,102,255,0.60)',
+      '--chart-3': 'rgba(0,102,255,0.38)',
+      '--chart-4': 'rgba(0,102,255,0.22)',
+      '--chart-5': 'rgba(0,102,255,0.13)',
+      '--chart-6': 'rgba(0,102,255,0.07)',
+      '--color-primary-a08': 'rgba(0,102,255,0.08)',
+      '--color-primary-a10': 'rgba(0,102,255,0.10)',
+      '--color-primary-a15': 'rgba(0,102,255,0.15)',
+      '--color-primary-a25': 'rgba(0,102,255,0.25)',
+      '--color-primary-a30': 'rgba(0,102,255,0.30)',
+      '--color-primary-a50': 'rgba(0,102,255,0.50)',
+    },
+    canb: {
+      '--color-primary':        '#BC216D',
+      '--color-primary-light':  '#FAEAF3',
+      '--color-primary-dark':   '#9A1D5E',
+      '--color-primary-deeper': '#6E1040',
+      '--color-success':        '#BC216D',
+      '--color-success-light':  '#FAEAF3',
+      '--color-sidebar-active': '#BC216D',
+      '--chart-1': 'rgba(212,46,120,0.85)',
+      '--chart-2': 'rgba(212,46,120,0.60)',
+      '--chart-3': 'rgba(212,46,120,0.38)',
+      '--chart-4': 'rgba(212,46,120,0.22)',
+      '--chart-5': 'rgba(212,46,120,0.13)',
+      '--chart-6': 'rgba(212,46,120,0.07)',
+      '--color-primary-a08': 'rgba(188,33,109,0.08)',
+      '--color-primary-a10': 'rgba(188,33,109,0.10)',
+      '--color-primary-a15': 'rgba(188,33,109,0.15)',
+      '--color-primary-a25': 'rgba(188,33,109,0.25)',
+      '--color-primary-a30': 'rgba(188,33,109,0.30)',
+      '--color-primary-a50': 'rgba(188,33,109,0.50)',
+    }
+  };
+  BRAND_TOKENS.all = BRAND_TOKENS.poly;
+
+  function toggleSubNav(btn) {
+    btn.closest('.poly-nav-group').classList.toggle('open');
+  }
+
+  function applyBrand(brand) {
+    const tokens = BRAND_TOKENS[brand] || BRAND_TOKENS.poly;
+    const root = document.documentElement;
+    Object.entries(tokens).forEach(([k, v]) => root.style.setProperty(k, v));
+    root.setAttribute('data-brand', brand);
+  }
+
+  (function() {
+    const saved = localStorage.getItem('polyBrand') || 'poly';
+    applyBrand(saved);
+    document.querySelectorAll('.lnb-brand-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.brand === saved);
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.lnb-brand-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const brand = this.dataset.brand;
+        localStorage.setItem('polyBrand', brand);
+        applyBrand(brand);
+      });
+    });
+  })();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+<script>
+  var chatDateFp = flatpickr('#chatDateInput', {
+    locale: 'ko',
+    dateFormat: 'Y.m.d',
+    allowInput: true,
+    disableMobile: true,
+  });
+</script>
+</body>
+</html>
