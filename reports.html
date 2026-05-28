@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="ko" data-theme="light">
+﻿<!DOCTYPE html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -337,11 +337,15 @@
     .rc-preview {
       flex: 1;
       background: var(--color-bg-subtle);
-      padding: var(--space-4);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-3);
       overflow: hidden;
+      display: flex;
+    }
+    .rc-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      display: block;
     }
     .rc-doc-header {
       display: flex; align-items: center; gap: var(--space-2);
@@ -530,33 +534,7 @@
         <div class="rc-inner">
           <div class="rc-front">
             <div class="rc-preview">
-              <div class="rc-doc-header">
-                <div class="rc-dot"></div>
-                <div class="rc-header-lines">
-                  <div class="rc-hl" style="width:68%"></div>
-                  <div class="rc-hl" style="width:48%"></div>
-                </div>
-              </div>
-              <div class="rc-kpis">
-                <div class="rc-kpi"></div>
-                <div class="rc-kpi"></div>
-                <div class="rc-kpi"></div>
-              </div>
-              <div class="rc-chart-area">
-                <div class="rc-bar" style="height:48%"></div>
-                <div class="rc-bar hi" style="height:70%"></div>
-                <div class="rc-bar" style="height:58%"></div>
-                <div class="rc-bar top" style="height:88%"></div>
-                <div class="rc-bar" style="height:52%"></div>
-                <div class="rc-bar hi" style="height:76%"></div>
-                <div class="rc-bar" style="height:44%"></div>
-                <div class="rc-bar hi" style="height:65%"></div>
-              </div>
-              <div class="rc-rows">
-                <div class="rc-row" style="width:100%"></div>
-                <div class="rc-row" style="width:88%"></div>
-                <div class="rc-row" style="width:72%"></div>
-              </div>
+              <img src="images/1.png" alt="PI 학생 분석 리포트">
             </div>
             <div class="rc-body">
               <div class="rc-badges">
@@ -580,45 +558,7 @@
         <div class="rc-inner">
           <div class="rc-front">
             <div class="rc-preview">
-              <div class="rc-doc-header">
-                <div class="rc-dot"></div>
-                <div class="rc-header-lines">
-                  <div class="rc-hl" style="width:75%"></div>
-                  <div class="rc-hl" style="width:55%"></div>
-                </div>
-              </div>
-              <div class="rc-kpis">
-                <div class="rc-kpi"></div>
-                <div class="rc-kpi"></div>
-                <div class="rc-kpi"></div>
-              </div>
-              <div class="rc-chart-area" style="gap:6px;">
-                <div style="flex:1;display:flex;align-items:flex-end;gap:2px;">
-                  <div class="rc-bar" style="flex:1;height:50%"></div>
-                  <div class="rc-bar hi" style="flex:1;height:62%"></div>
-                  <div class="rc-bar top" style="flex:1;height:74%"></div>
-                </div>
-                <div style="flex:1;display:flex;align-items:flex-end;gap:2px;">
-                  <div class="rc-bar" style="flex:1;height:38%"></div>
-                  <div class="rc-bar hi" style="flex:1;height:50%"></div>
-                  <div class="rc-bar top" style="flex:1;height:62%"></div>
-                </div>
-                <div style="flex:1;display:flex;align-items:flex-end;gap:2px;">
-                  <div class="rc-bar" style="flex:1;height:65%"></div>
-                  <div class="rc-bar hi" style="flex:1;height:78%"></div>
-                  <div class="rc-bar top" style="flex:1;height:90%"></div>
-                </div>
-                <div style="flex:1;display:flex;align-items:flex-end;gap:2px;">
-                  <div class="rc-bar" style="flex:1;height:42%"></div>
-                  <div class="rc-bar hi" style="flex:1;height:54%"></div>
-                  <div class="rc-bar top" style="flex:1;height:66%"></div>
-                </div>
-              </div>
-              <div class="rc-rows">
-                <div class="rc-row" style="width:100%"></div>
-                <div class="rc-row" style="width:85%"></div>
-                <div class="rc-row" style="width:68%"></div>
-              </div>
+              <img src="images/2.png" alt="교육과정별 3개년 학생 수 분석">
             </div>
             <div class="rc-body">
               <div class="rc-badges">
@@ -641,33 +581,7 @@
         <div class="rc-inner">
           <div class="rc-front">
             <div class="rc-preview">
-              <div class="rc-doc-header">
-                <div class="rc-dot"></div>
-                <div class="rc-header-lines">
-                  <div class="rc-hl" style="width:60%"></div>
-                  <div class="rc-hl" style="width:42%"></div>
-                </div>
-              </div>
-              <div class="rc-kpis">
-                <div class="rc-kpi"></div>
-                <div class="rc-kpi"></div>
-                <div class="rc-kpi"></div>
-              </div>
-              <div class="rc-chart-area">
-                <div class="rc-bar hi" style="height:80%"></div>
-                <div class="rc-bar top" style="height:95%"></div>
-                <div class="rc-bar hi" style="height:75%"></div>
-                <div class="rc-bar hi" style="height:85%"></div>
-                <div class="rc-bar" style="height:60%"></div>
-                <div class="rc-bar hi" style="height:78%"></div>
-                <div class="rc-bar top" style="height:92%"></div>
-              </div>
-              <div class="rc-rows">
-                <div class="rc-row" style="width:100%"></div>
-                <div class="rc-row" style="width:92%"></div>
-                <div class="rc-row" style="width:80%"></div>
-                <div class="rc-row" style="width:65%"></div>
-              </div>
+              <img src="images/3.png" alt="학급 편성 대시보드">
             </div>
             <div class="rc-body">
               <div class="rc-badges">
@@ -690,33 +604,7 @@
         <div class="rc-inner">
           <div class="rc-front">
             <div class="rc-preview">
-              <div class="rc-doc-header">
-                <div class="rc-dot"></div>
-                <div class="rc-header-lines">
-                  <div class="rc-hl" style="width:55%"></div>
-                  <div class="rc-hl" style="width:38%"></div>
-                </div>
-              </div>
-              <div class="rc-kpis">
-                <div class="rc-kpi"></div>
-                <div class="rc-kpi"></div>
-                <div class="rc-kpi"></div>
-              </div>
-              <div class="rc-chart-area">
-                <div class="rc-bar top" style="height:90%"></div>
-                <div class="rc-bar hi" style="height:72%"></div>
-                <div class="rc-bar" style="height:55%"></div>
-                <div class="rc-bar hi" style="height:68%"></div>
-                <div class="rc-bar top" style="height:82%"></div>
-                <div class="rc-bar" style="height:48%"></div>
-                <div class="rc-bar hi" style="height:76%"></div>
-                <div class="rc-bar" style="height:60%"></div>
-              </div>
-              <div class="rc-rows">
-                <div class="rc-row" style="width:100%"></div>
-                <div class="rc-row" style="width:82%"></div>
-                <div class="rc-row" style="width:64%"></div>
-              </div>
+              <img src="images/4.png" alt="ESC 학생 현황">
             </div>
             <div class="rc-body">
               <div class="rc-badges">
@@ -740,33 +628,7 @@
         <div class="rc-inner">
           <div class="rc-front">
             <div class="rc-preview">
-              <div class="rc-doc-header">
-                <div class="rc-dot"></div>
-                <div class="rc-header-lines">
-                  <div class="rc-hl" style="width:70%"></div>
-                  <div class="rc-hl" style="width:50%"></div>
-                </div>
-              </div>
-              <div class="rc-kpis">
-                <div class="rc-kpi"></div>
-                <div class="rc-kpi"></div>
-                <div class="rc-kpi"></div>
-              </div>
-              <div class="rc-chart-area">
-                <div class="rc-bar top" style="height:95%"></div>
-                <div class="rc-bar top" style="height:88%"></div>
-                <div class="rc-bar hi" style="height:80%"></div>
-                <div class="rc-bar hi" style="height:72%"></div>
-                <div class="rc-bar" style="height:62%"></div>
-                <div class="rc-bar" style="height:54%"></div>
-                <div class="rc-bar" style="height:46%"></div>
-                <div class="rc-bar" style="height:38%"></div>
-              </div>
-              <div class="rc-rows">
-                <div class="rc-row" style="width:100%"></div>
-                <div class="rc-row" style="width:90%"></div>
-                <div class="rc-row" style="width:74%"></div>
-              </div>
+              <img src="images/5.png" alt="재학생 추이 분석">
             </div>
             <div class="rc-body">
               <div class="rc-badges">
@@ -802,31 +664,7 @@
           <div class="rc-inner">
             <div class="rc-front">
               <div class="rc-preview">
-                <div class="rc-doc-header">
-                  <div class="rc-dot"></div>
-                  <div class="rc-header-lines">
-                    <div class="rc-hl" style="width:68%"></div>
-                    <div class="rc-hl" style="width:48%"></div>
-                  </div>
-                </div>
-                <div class="rc-kpis">
-                  <div class="rc-kpi"></div><div class="rc-kpi"></div><div class="rc-kpi"></div>
-                </div>
-                <div class="rc-chart-area">
-                  <div class="rc-bar" style="height:48%"></div>
-                  <div class="rc-bar hi" style="height:70%"></div>
-                  <div class="rc-bar" style="height:58%"></div>
-                  <div class="rc-bar top" style="height:88%"></div>
-                  <div class="rc-bar" style="height:52%"></div>
-                  <div class="rc-bar hi" style="height:76%"></div>
-                  <div class="rc-bar" style="height:44%"></div>
-                  <div class="rc-bar hi" style="height:65%"></div>
-                </div>
-                <div class="rc-rows">
-                  <div class="rc-row" style="width:100%"></div>
-                  <div class="rc-row" style="width:88%"></div>
-                  <div class="rc-row" style="width:72%"></div>
-                </div>
+                <img src="images/1.png" alt="PI 학생 분석 리포트">
               </div>
               <div class="rc-body">
                 <div class="rc-badges"><span class="badge badge-poly">POLY</span><span class="badge badge-neutral">PI</span></div>
@@ -846,31 +684,7 @@
           <div class="rc-inner">
             <div class="rc-front">
               <div class="rc-preview">
-                <div class="rc-doc-header">
-                  <div class="rc-dot"></div>
-                  <div class="rc-header-lines">
-                    <div class="rc-hl" style="width:70%"></div>
-                    <div class="rc-hl" style="width:50%"></div>
-                  </div>
-                </div>
-                <div class="rc-kpis">
-                  <div class="rc-kpi"></div><div class="rc-kpi"></div><div class="rc-kpi"></div>
-                </div>
-                <div class="rc-chart-area">
-                  <div class="rc-bar top" style="height:95%"></div>
-                  <div class="rc-bar top" style="height:88%"></div>
-                  <div class="rc-bar hi" style="height:80%"></div>
-                  <div class="rc-bar hi" style="height:72%"></div>
-                  <div class="rc-bar" style="height:62%"></div>
-                  <div class="rc-bar" style="height:54%"></div>
-                  <div class="rc-bar" style="height:46%"></div>
-                  <div class="rc-bar" style="height:38%"></div>
-                </div>
-                <div class="rc-rows">
-                  <div class="rc-row" style="width:100%"></div>
-                  <div class="rc-row" style="width:90%"></div>
-                  <div class="rc-row" style="width:74%"></div>
-                </div>
+                <img src="images/5.png" alt="재학생 추이 분석">
               </div>
               <div class="rc-body">
                 <div class="rc-badges"><span class="badge badge-neutral">전체</span></div>
@@ -890,43 +704,7 @@
           <div class="rc-inner">
             <div class="rc-front">
               <div class="rc-preview">
-                <div class="rc-doc-header">
-                  <div class="rc-dot"></div>
-                  <div class="rc-header-lines">
-                    <div class="rc-hl" style="width:75%"></div>
-                    <div class="rc-hl" style="width:55%"></div>
-                  </div>
-                </div>
-                <div class="rc-kpis">
-                  <div class="rc-kpi"></div><div class="rc-kpi"></div><div class="rc-kpi"></div>
-                </div>
-                <div class="rc-chart-area" style="gap:6px;">
-                  <div style="flex:1;display:flex;align-items:flex-end;gap:2px;">
-                    <div class="rc-bar" style="flex:1;height:50%"></div>
-                    <div class="rc-bar hi" style="flex:1;height:62%"></div>
-                    <div class="rc-bar top" style="flex:1;height:74%"></div>
-                  </div>
-                  <div style="flex:1;display:flex;align-items:flex-end;gap:2px;">
-                    <div class="rc-bar" style="flex:1;height:38%"></div>
-                    <div class="rc-bar hi" style="flex:1;height:50%"></div>
-                    <div class="rc-bar top" style="flex:1;height:62%"></div>
-                  </div>
-                  <div style="flex:1;display:flex;align-items:flex-end;gap:2px;">
-                    <div class="rc-bar" style="flex:1;height:65%"></div>
-                    <div class="rc-bar hi" style="flex:1;height:78%"></div>
-                    <div class="rc-bar top" style="flex:1;height:90%"></div>
-                  </div>
-                  <div style="flex:1;display:flex;align-items:flex-end;gap:2px;">
-                    <div class="rc-bar" style="flex:1;height:42%"></div>
-                    <div class="rc-bar hi" style="flex:1;height:54%"></div>
-                    <div class="rc-bar top" style="flex:1;height:66%"></div>
-                  </div>
-                </div>
-                <div class="rc-rows">
-                  <div class="rc-row" style="width:100%"></div>
-                  <div class="rc-row" style="width:85%"></div>
-                  <div class="rc-row" style="width:68%"></div>
-                </div>
+                <img src="images/2.png" alt="교육과정별 3개년 분석">
               </div>
               <div class="rc-body">
                 <div class="rc-badges"><span class="badge badge-poly">POLY</span></div>
@@ -969,6 +747,7 @@
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('epTheme', next);
     _syncThemeBtn();
+    applyBrand(localStorage.getItem('polyBrand') || 'poly');
   });
   _syncThemeBtn();
 
@@ -1076,10 +855,20 @@
     btn.closest('.poly-nav-group').classList.toggle('open');
   }
 
+  const BRAND_DARK_OVERRIDES = {
+    poly: { '--color-primary-light': 'rgba(0,102,255,0.18)', '--color-success-light': 'rgba(0,102,255,0.18)' },
+    canb: { '--color-primary-light': 'rgba(188,33,109,0.18)', '--color-success-light': 'rgba(188,33,109,0.18)' }
+  };
+
   function applyBrand(brand) {
     const tokens = BRAND_TOKENS[brand] || BRAND_TOKENS.poly;
     const root = document.documentElement;
     Object.entries(tokens).forEach(([k, v]) => root.style.setProperty(k, v));
+    const dark = root.getAttribute('data-theme') === 'dark';
+    const darkKey = brand === 'all' ? 'poly' : brand;
+    if (dark && BRAND_DARK_OVERRIDES[darkKey]) {
+      Object.entries(BRAND_DARK_OVERRIDES[darkKey]).forEach(([k, v]) => root.style.setProperty(k, v));
+    }
     root.setAttribute('data-brand', brand);
   }
 

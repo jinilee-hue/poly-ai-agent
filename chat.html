@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="ko" data-theme="light">
+﻿<!DOCTYPE html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -576,6 +576,7 @@
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('epTheme', next);
     _syncTheme();
+    applyBrand(localStorage.getItem('polyBrand') || 'poly');
   }
   document.getElementById('theme-toggle-2').addEventListener('click', _toggleTheme);
   _syncTheme();
@@ -808,10 +809,20 @@
     btn.closest('.poly-nav-group').classList.toggle('open');
   }
 
+  const BRAND_DARK_OVERRIDES = {
+    poly: { '--color-primary-light': 'rgba(0,102,255,0.18)', '--color-success-light': 'rgba(0,102,255,0.18)' },
+    canb: { '--color-primary-light': 'rgba(188,33,109,0.18)', '--color-success-light': 'rgba(188,33,109,0.18)' }
+  };
+
   function applyBrand(brand) {
     const tokens = BRAND_TOKENS[brand] || BRAND_TOKENS.poly;
     const root = document.documentElement;
     Object.entries(tokens).forEach(([k, v]) => root.style.setProperty(k, v));
+    const dark = root.getAttribute('data-theme') === 'dark';
+    const darkKey = brand === 'all' ? 'poly' : brand;
+    if (dark && BRAND_DARK_OVERRIDES[darkKey]) {
+      Object.entries(BRAND_DARK_OVERRIDES[darkKey]).forEach(([k, v]) => root.style.setProperty(k, v));
+    }
     root.setAttribute('data-brand', brand);
   }
 

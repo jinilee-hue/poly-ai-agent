@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="ko" data-theme="light">
+﻿<!DOCTYPE html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -470,6 +470,14 @@
     .ds-picker-apply:hover { background: var(--color-primary); color: #fff; }
     .ds-picker-apply svg { width: 14px; height: 14px; }
 
+    /* ── 테마 토글 버튼 ─────────────────── */
+    .home-theme-btn {
+      position: fixed;
+      top: 12px;
+      right: var(--space-8);
+      z-index: 150;
+    }
+
     /* ── 전송 버튼 비활성화 ──────────────── */
     .poly-send-btn:disabled {
       background: var(--color-bg-muted);
@@ -558,6 +566,9 @@
     </a>
   </div>
 </aside>
+
+<!-- ── 테마 토글 ────────────────────────────── -->
+<button id="theme-toggle" class="icon-btn home-theme-btn" title="다크 모드"></button>
 
 <!-- ── 메인 컨텐츠 ──────────────────────────── -->
 <div class="poly-main">
@@ -710,6 +721,7 @@
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('epTheme', next);
     _syncThemeBtn();
+    applyBrand(localStorage.getItem('polyBrand') || 'poly');
   });
   _syncThemeBtn();
 
@@ -764,10 +776,20 @@
     btn.closest('.poly-nav-group').classList.toggle('open');
   }
 
+  const BRAND_DARK_OVERRIDES = {
+    poly: { '--color-primary-light': 'rgba(0,102,255,0.18)', '--color-success-light': 'rgba(0,102,255,0.18)' },
+    canb: { '--color-primary-light': 'rgba(188,33,109,0.18)', '--color-success-light': 'rgba(188,33,109,0.18)' }
+  };
+
   function applyBrand(brand) {
     const tokens = BRAND_TOKENS[brand] || BRAND_TOKENS.poly;
     const root = document.documentElement;
     Object.entries(tokens).forEach(([k, v]) => root.style.setProperty(k, v));
+    const dark = root.getAttribute('data-theme') === 'dark';
+    const darkKey = brand === 'all' ? 'poly' : brand;
+    if (dark && BRAND_DARK_OVERRIDES[darkKey]) {
+      Object.entries(BRAND_DARK_OVERRIDES[darkKey]).forEach(([k, v]) => root.style.setProperty(k, v));
+    }
     root.setAttribute('data-brand', brand);
   }
 

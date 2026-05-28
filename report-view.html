@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="ko" data-theme="light">
+﻿<!DOCTYPE html>
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -500,17 +500,71 @@
     }
     .chat-empty-chip:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
 
+    /* ── 인쇄 전용 타이틀 ─────────────────── */
+    .print-title-block { display: none; }
+
     /* ── 인쇄 스타일 ──────────────────────── */
     @media print {
+      @page { margin: 1.5cm 1.2cm; size: A4 portrait; }
+
       .poly-sidebar, .view-topbar, .chat-panel, .view-selector-inner,
       .data-panel-header { display: none !important; }
-      body, .view-shell, .view-panels { display: block !important; }
-      .data-panel { width: 100% !important; overflow: visible !important; }
-      .data-scroll { overflow: visible !important; padding: 0 !important; }
+      body, html { background: #fff !important; }
+      .view-shell, .view-panels { display: block !important; margin-left: 0 !important; }
+      .data-panel {
+        width: 100% !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .data-scroll {
+        overflow: visible !important;
+        padding: 0 !important;
+        zoom: 0.72;
+        margin-left: auto !important;
+        margin-right: auto !important;
+        display: block !important;
+      }
       .data-table-card { border: none !important; box-shadow: none !important; }
       .data-table { font-size: 11px !important; }
       .data-table th, .data-table td { padding: 4px 6px !important; }
-      @page { margin: 1.5cm; size: A4 landscape; }
+
+      /* ── 인쇄 타이틀 ── */
+      .print-title-block {
+        display: block !important;
+        text-align: center;
+        padding-bottom: 18pt;
+        margin-bottom: 24pt;
+        border-bottom: 2.5pt solid #0066FF;
+      }
+      .print-title-label {
+        display: inline-block;
+        font-size: 8pt;
+        font-weight: 600;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: #0066FF;
+        margin-bottom: 8pt;
+      }
+      .print-title-main {
+        font-size: 30pt;
+        font-weight: 800;
+        color: #111;
+        line-height: 1.15;
+        margin-bottom: 10pt;
+        letter-spacing: -0.5pt;
+      }
+      .print-title-sub {
+        font-size: 14pt;
+        color: #444;
+        margin-bottom: 8pt;
+        font-weight: 400;
+      }
+      .print-title-meta {
+        font-size: 9pt;
+        color: #999;
+        letter-spacing: 0.3pt;
+      }
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
@@ -641,6 +695,13 @@
     <div class="data-panel" id="dataPanel">
 
       <div class="data-scroll">
+
+        <!-- 인쇄 전용 타이틀 -->
+        <div class="print-title-block">
+          <div class="print-title-main">PI 학생 분석 리포트</div>
+          <div class="print-title-sub" id="printSubTitle">전년 대비 증감 추이 분석 (캠퍼스별)</div>
+          <div class="print-title-meta" id="printMeta">기준일 2026-05-15 · 77개 캠퍼스</div>
+        </div>
 
         <!-- 뷰 선택 박스 -->
         <div class="view-selector-inner">
@@ -1252,6 +1313,8 @@
     document.documentElement.setAttribute('data-theme', next);
     localStorage.setItem('epTheme', next);
     _syncThemeBtns();
+    applyBrand(localStorage.getItem('polyBrand') || 'poly');
+    window.dispatchEvent(new CustomEvent('themechange'));
   }
   document.getElementById('theme-toggle-2').addEventListener('click', _toggleTheme);
   _syncThemeBtns();
@@ -1381,6 +1444,9 @@
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
     const tickColor = isDark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)';
+    const style = getComputedStyle(document.documentElement);
+    const c1 = style.getPropertyValue('--chart-1').trim() || 'rgba(0,102,255,0.85)';
+    const c3 = style.getPropertyValue('--chart-3').trim() || 'rgba(0,102,255,0.38)';
     _compareChart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -1389,7 +1455,7 @@
           {
             label: '전년 당월',
             data: _prevYear,
-            backgroundColor: 'rgba(0,102,255,0.30)',
+            backgroundColor: c3,
             borderRadius: 3,
             barPercentage: 0.75,
             categoryPercentage: 0.7,
@@ -1397,7 +1463,7 @@
           {
             label: '금년 당월',
             data: _thisYear,
-            backgroundColor: 'rgba(0,102,255,0.82)',
+            backgroundColor: c1,
             borderRadius: 3,
             barPercentage: 0.75,
             categoryPercentage: 0.7,
@@ -1469,6 +1535,7 @@
     document.querySelectorAll('.view-dropdown-item').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById('viewSelectorLabel').textContent = label;
+    document.getElementById('printSubTitle').textContent = label;
     const menu = document.getElementById('viewDropdownMenu');
     menu.classList.remove('open');
     document.getElementById('viewDropdownChevron').style.transform = '';
@@ -1487,10 +1554,20 @@
     btn.closest('.poly-nav-group').classList.toggle('open');
   }
 
+  const BRAND_DARK_OVERRIDES = {
+    poly: { '--color-primary-light': 'rgba(0,102,255,0.18)', '--color-success-light': 'rgba(0,102,255,0.18)' },
+    canb: { '--color-primary-light': 'rgba(188,33,109,0.18)', '--color-success-light': 'rgba(188,33,109,0.18)' }
+  };
+
   function applyBrand(brand) {
     const tokens = BRAND_TOKENS[brand] || BRAND_TOKENS.poly;
     const root = document.documentElement;
     Object.entries(tokens).forEach(([k, v]) => root.style.setProperty(k, v));
+    const dark = root.getAttribute('data-theme') === 'dark';
+    const darkKey = brand === 'all' ? 'poly' : brand;
+    if (dark && BRAND_DARK_OVERRIDES[darkKey]) {
+      Object.entries(BRAND_DARK_OVERRIDES[darkKey]).forEach(([k, v]) => root.style.setProperty(k, v));
+    }
     root.setAttribute('data-brand', brand);
   }
 
@@ -1501,6 +1578,7 @@
 
     const saved = localStorage.getItem('polyBrand') || 'poly';
     applyBrand(saved);
+    buildCompareChart();
     document.querySelectorAll('.lnb-brand-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.brand === saved);
       btn.addEventListener('click', function() {
@@ -1509,6 +1587,7 @@
         const brand = this.dataset.brand;
         localStorage.setItem('polyBrand', brand);
         applyBrand(brand);
+        buildCompareChart();
       });
     });
   })();
