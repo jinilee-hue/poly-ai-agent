@@ -161,10 +161,10 @@
             <span class="chart-card-title">전년 vs 금년 당월 학생 수 비교 (캠퍼스별)</span>
             <div class="chart-legend">
               <div class="chart-legend-item">
-                <div class="chart-legend-dot" style="background:var(--color-primary-a30)"></div>전년 당월
+                <div class="chart-legend-dot" style="background:var(--chart-3)"></div>전년 당월
               </div>
               <div class="chart-legend-item">
-                <div class="chart-legend-dot" style="background:var(--color-primary)"></div>금년 당월
+                <div class="chart-legend-dot" style="background:var(--chart-1)"></div>금년 당월
               </div>
             </div>
           </div>
@@ -815,11 +815,11 @@
       '--color-success':        '#0066FF',
       '--color-success-light':  '#E8F0FF',
       '--color-sidebar-active': '#0066FF',
-      '--chart-1': 'rgba(0,102,255,0.35)',
-      '--chart-2': 'rgba(0,102,255,0.25)',
+      '--chart-1': 'rgba(0,102,255,0.30)',
+      '--chart-2': 'rgba(0,102,255,0.22)',
       '--chart-3': 'rgba(0,102,255,0.15)',
-      '--chart-4': 'rgba(0,102,255,0.22)',
-      '--chart-5': 'rgba(0,102,255,0.13)',
+      '--chart-4': 'rgba(0,102,255,0.18)',
+      '--chart-5': 'rgba(0,102,255,0.11)',
       '--chart-6': 'rgba(0,102,255,0.07)',
       '--color-primary-a08': 'rgba(0,102,255,0.08)',
       '--color-primary-a10': 'rgba(0,102,255,0.10)',
@@ -836,11 +836,11 @@
       '--color-success':        '#BC216D',
       '--color-success-light':  '#FAEAF3',
       '--color-sidebar-active': '#BC216D',
-      '--chart-1': 'rgba(212,46,120,0.85)',
-      '--chart-2': 'rgba(212,46,120,0.60)',
-      '--chart-3': 'rgba(212,46,120,0.38)',
-      '--chart-4': 'rgba(212,46,120,0.22)',
-      '--chart-5': 'rgba(212,46,120,0.13)',
+      '--chart-1': 'rgba(212,46,120,0.30)',
+      '--chart-2': 'rgba(212,46,120,0.22)',
+      '--chart-3': 'rgba(212,46,120,0.15)',
+      '--chart-4': 'rgba(212,46,120,0.18)',
+      '--chart-5': 'rgba(212,46,120,0.11)',
       '--chart-6': 'rgba(212,46,120,0.07)',
       '--color-primary-a08': 'rgba(188,33,109,0.08)',
       '--color-primary-a10': 'rgba(188,33,109,0.10)',
@@ -976,8 +976,26 @@
   }
 
   const BRAND_DARK_OVERRIDES = {
-    poly: { '--color-primary-light': 'rgba(0,102,255,0.18)', '--color-success-light': 'rgba(0,102,255,0.18)' },
-    canb: { '--color-primary-light': 'rgba(188,33,109,0.18)', '--color-success-light': 'rgba(188,33,109,0.18)' }
+    poly: {
+      '--color-primary-light': 'rgba(0,102,255,0.18)',
+      '--color-success-light': 'rgba(0,102,255,0.18)',
+      '--chart-1': 'rgba(0,102,255,0.65)',
+      '--chart-2': 'rgba(0,102,255,0.50)',
+      '--chart-3': 'rgba(0,102,255,0.35)',
+      '--chart-4': 'rgba(0,102,255,0.42)',
+      '--chart-5': 'rgba(0,102,255,0.28)',
+      '--chart-6': 'rgba(0,102,255,0.18)',
+    },
+    canb: {
+      '--color-primary-light': 'rgba(188,33,109,0.18)',
+      '--color-success-light': 'rgba(188,33,109,0.18)',
+      '--chart-1': 'rgba(212,46,120,0.65)',
+      '--chart-2': 'rgba(212,46,120,0.50)',
+      '--chart-3': 'rgba(212,46,120,0.35)',
+      '--chart-4': 'rgba(212,46,120,0.42)',
+      '--chart-5': 'rgba(212,46,120,0.28)',
+      '--chart-6': 'rgba(212,46,120,0.18)',
+    }
   };
 
   function applyBrand(brand) {
@@ -1012,6 +1030,71 @@
       });
     });
   })();
+</script>
+<script>
+(function() {
+  const panel = document.getElementById('chatPanel');
+  if (!panel) return;
+
+  // 툴팁 생성
+  const tip = document.createElement('div');
+  tip.className = 'resize-tooltip';
+  tip.textContent = '← 드래그하여 크기 조절';
+  document.body.appendChild(tip);
+
+  const EDGE = 14; // 경계에서 감지할 픽셀 범위
+  let dragging = false;
+  let startX, startW;
+
+  panel.addEventListener('mousemove', function(e) {
+    if (dragging) return;
+    const fromLeft = e.clientX - panel.getBoundingClientRect().left;
+    if (fromLeft <= EDGE) {
+      panel.style.cursor = 'col-resize';
+      tip.style.left = (e.clientX + 12) + 'px';
+      tip.style.top  = e.clientY + 'px';
+      tip.classList.add('visible');
+    } else {
+      panel.style.cursor = '';
+      tip.classList.remove('visible');
+    }
+  });
+
+  panel.addEventListener('mouseleave', function() {
+    if (!dragging) {
+      panel.style.cursor = '';
+      tip.classList.remove('visible');
+    }
+  });
+
+  panel.addEventListener('mousedown', function(e) {
+    const fromLeft = e.clientX - panel.getBoundingClientRect().left;
+    if (fromLeft > EDGE) return;
+    dragging = true;
+    startX = e.clientX;
+    startW = panel.offsetWidth;
+    tip.classList.remove('visible');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+
+    function onMove(e) {
+      const newW = Math.min(720, Math.max(260, startW + (startX - e.clientX)));
+      panel.style.width = newW + 'px';
+      panel.style.transition = 'none';
+    }
+    function onUp() {
+      dragging = false;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      panel.style.transition = '';
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    }
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    e.preventDefault();
+  });
+})();
 </script>
 <script src="js/utils.js"></script>
 <script src="js/layout.js"></script>
