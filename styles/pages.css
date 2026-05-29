@@ -1,6 +1,6 @@
 ﻿/* ── home.css ─────────────────────────────────── */
     /* ── 전체 레이아웃 ──────────────────────── */
-    body { display: flex; min-height: 100vh; background: var(--color-bg-subtle); }
+    body.page-home { display: flex; min-height: 100vh; background: var(--color-bg-subtle); }
 
     /* ── 커스텀 사이드바 ────────────────────── */
     .poly-sidebar {
@@ -480,7 +480,7 @@
 
 
 /* ── chat-list.css ─────────────────────────────────── */
-    body { display: flex; min-height: 100vh; background: var(--color-bg-subtle); }
+    body.page-chat-list { display: flex; min-height: 100vh; background: var(--color-bg-subtle); }
 
     /* ── 사이드바 ───────────────────────────── */
     .poly-sidebar {
@@ -761,7 +761,7 @@
 
 
 /* ── chat.css ─────────────────────────────────── */
-    body { display: flex; min-height: 100vh; background: var(--color-bg); overflow: hidden; }
+    body.page-chat { display: flex; min-height: 100vh; background: var(--color-bg); overflow: hidden; }
 
     /* ── 사이드바 ───────────────────────────── */
     .poly-sidebar {
@@ -1079,7 +1079,7 @@
 
 
 /* ── reports.css ─────────────────────────────────── */
-    body { display: flex; min-height: 100vh; background: var(--color-bg-subtle); }
+    body.page-reports { display: flex; min-height: 100vh; background: var(--color-bg-subtle); }
 
     /* ── 사이드바 (home.html과 동일) ──────── */
     .poly-sidebar {
@@ -1461,7 +1461,7 @@
 
 
 /* ── projects.css ─────────────────────────────────── */
-    body { display: flex; min-height: 100vh; background: var(--color-bg-subtle); }
+    body.page-projects { display: flex; min-height: 100vh; background: var(--color-bg-subtle); }
 
     /* ── 사이드바 ───────────────────────────── */
     .poly-sidebar {
@@ -1728,7 +1728,7 @@
 
 
 /* ── project-detail.css ─────────────────────────────────── */
-    body { display: flex; min-height: 100vh; background: var(--color-bg-subtle); }
+    body.page-project-detail { display: flex; min-height: 100vh; background: var(--color-bg-subtle); }
 
     /* ── 사이드바 ───────────────────────────── */
     .poly-sidebar {
@@ -1965,7 +1965,7 @@
 
 
 /* ── report-view.css ─────────────────────────────────── */
-    body {
+    body.page-report-view {
       display: flex;
       min-height: 100vh;
       background: var(--color-bg-subtle);
