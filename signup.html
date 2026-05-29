@@ -80,9 +80,12 @@
     /* ── 왼쪽 패널 ── */
     .auth-left {
       width: 380px; flex-shrink: 0;
-      background: linear-gradient(145deg, #0044cc 0%, #0055ee 55%, #0066FF 100%);
+      overflow: visible;
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(145deg, rgba(0,80,220,0.75) 0%, rgba(0,102,255,0.62) 55%, rgba(70,140,255,0.55) 100%);
+      backdrop-filter: blur(4px);
       padding: 44px 40px; display: flex; flex-direction: column;
-      position: relative; overflow: hidden;
     }
     .auth-left::before { content:''; position:absolute; width:260px; height:260px; border-radius:50%; background:rgba(255,255,255,0.08); top:-80px; right:-80px; }
     .auth-left::after  { content:''; position:absolute; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,0.06); bottom:-60px; left:-40px; }
@@ -90,23 +93,15 @@
     .left-logo { display:flex; align-items:center; gap:10px; margin-bottom:auto; }
     .left-logo img { height:26px; filter:brightness(0) invert(1); }
 
-    .glass-graphic { position:relative; height:200px; margin:24px 0 28px; flex-shrink:0; }
-    .glass-card { position:absolute; background:rgba(255,255,255,0.15); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.3); border-radius:16px; }
-    .gc-1 { width:120px; height:120px; top:20px; left:20px; border-radius:20px; transform:rotate(-8deg); animation:gFloat1 6s ease-in-out infinite; }
-    .gc-2 { width:90px; height:90px; top:0; left:100px; border-radius:50%; animation:gFloat2 7s ease-in-out infinite; }
-    .gc-3 { width:100px; height:100px; top:70px; left:160px; border-radius:18px; transform:rotate(12deg); animation:gFloat3 5.5s ease-in-out infinite; }
-    .gc-4 { width:60px; height:60px; top:120px; left:50px; border-radius:12px; transform:rotate(-15deg); animation:gFloat1 8s ease-in-out infinite reverse; }
-    .gc-inner { width:100%; height:100%; border-radius:inherit; background:linear-gradient(135deg,rgba(255,255,255,0.25) 0%,rgba(255,255,255,0.05) 100%); display:flex; align-items:center; justify-content:center; }
-    .gc-inner svg { opacity:0.7; }
-    @keyframes gFloat1 { 0%,100%{transform:rotate(-8deg) translateY(0)} 50%{transform:rotate(-8deg) translateY(-10px)} }
-    @keyframes gFloat2 { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-14px) scale(1.05)} }
-    @keyframes gFloat3 { 0%,100%{transform:rotate(12deg) translateY(0)} 50%{transform:rotate(12deg) translateY(-8px)} }
+    /* 로그인 그래픽 이미지 */
+    .login-graphic { flex-shrink: 0; margin: 24px -110px 20px -20px; }
+    .login-graphic img { width: calc(100% + 80px); height: 240px; object-fit: cover; object-position: center; border-radius: 20px; box-shadow: 0 16px 48px rgba(0,0,0,0.22); }
 
     .left-title { font-size:22px; font-weight:700; color:#fff; line-height:1.35; margin-bottom:10px; letter-spacing:-0.3px; }
     .left-sub { font-size:13.5px; color:rgba(255,255,255,0.72); line-height:1.6; }
 
     /* ── 오른쪽 패널 ── */
-    .auth-right { flex:1; padding:44px 44px 36px; display:flex; flex-direction:column; justify-content:center; overflow-y:auto; }
+    .auth-right { flex:1; padding:44px 44px 36px; display:flex; flex-direction:column; justify-content:center; overflow-y:auto; position:relative; z-index:1; }
 
     .form-title { font-size:24px; font-weight:700; color:#111827; letter-spacing:-0.4px; margin-bottom:24px; }
 

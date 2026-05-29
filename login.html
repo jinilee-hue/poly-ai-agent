@@ -53,12 +53,14 @@
     .auth-left {
       width: 380px;
       flex-shrink: 0;
-      background: linear-gradient(145deg, #0044cc 0%, #0055ee 55%, #0066FF 100%);
+      overflow: visible;
+      position: relative;
+      z-index: 2;
+      background: linear-gradient(145deg, rgba(0,80,220,0.75) 0%, rgba(0,102,255,0.62) 55%, rgba(70,140,255,0.55) 100%);
+      backdrop-filter: blur(4px);
       padding: 44px 40px;
       display: flex;
       flex-direction: column;
-      position: relative;
-      overflow: hidden;
     }
 
     /* 왼쪽 패널 배경 오브 */
@@ -93,17 +95,15 @@
         /* 로그인 그래픽 이미지 */
     .login-graphic {
       flex-shrink: 0;
-      margin: 24px 0 28px;
-      border-radius: 16px;
-      overflow: hidden;
+      margin: 24px -110px 20px -20px;
     }
     .login-graphic img {
-      width: 100%;
-      height: 200px;
+      width: calc(100% + 80px);
+      height: 260px;
       object-fit: cover;
       object-position: center;
-      border-radius: 16px;
-      opacity: 0.92;
+      border-radius: 20px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.22);
     } 50%{transform:rotate(12deg) translateY(-8px)} }
 
     .left-title {
@@ -126,6 +126,8 @@
       padding: 52px 48px 44px;
       display: flex;
       flex-direction: column;
+      position: relative;
+      z-index: 1;
       justify-content: center;
     }
 
