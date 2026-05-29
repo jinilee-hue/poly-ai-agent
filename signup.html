@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입 | Poly AI Agent</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', 'Pretendard', -apple-system, sans-serif;
+      background: linear-gradient(-45deg, #dbeafe, #c7d7ff, #ddd6fe, #bfdbfe, #ede9fe, #e0e7ff);
+      background-size: 400% 400%;
+      animation: gradientFlow 12s ease infinite;
+      position: relative;
+      overflow: hidden;
+    }
+    @keyframes gradientFlow {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      pointer-events: none;
+      will-change: transform;
+    }
+    .orb-1 {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, rgba(99,102,241,0.4), transparent);
+      top: -160px; left: -100px;
+      animation: float1 18s ease-in-out infinite;
+    }
+    .orb-2 {
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(59,130,246,0.35), transparent);
+      bottom: -120px; right: -80px;
+      animation: float2 14s ease-in-out infinite;
+    }
+    .orb-3 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(167,139,250,0.3), transparent);
+      top: 50%; left: 60%;
+      transform: translate(-50%, -50%);
+      animation: float3 20s ease-in-out infinite;
+    }
+    @keyframes float1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33%       { transform: translate(40px, 30px) scale(1.08); }
+      66%       { transform: translate(-20px, 50px) scale(0.95); }
+    }
+    @keyframes float2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      40%       { transform: translate(-50px, -30px) scale(1.1); }
+      70%       { transform: translate(20px, -50px) scale(0.92); }
+    }
+    @keyframes float3 {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      30%       { transform: translate(-40%, -60%) scale(1.15); }
+      60%       { transform: translate(-60%, -40%) scale(0.9); }
+    }
+
+    /* ── 카드 ── */
+    .auth-card {
+      position: relative; z-index: 1;
+      display: flex; width: 860px; max-width: 100%; min-height: 580px;
+      background: #fff; border-radius: 24px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.13), 0 4px 16px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+
+    /* ── 왼쪽 패널 ── */
+    .auth-left {
+      width: 380px; flex-shrink: 0;
+      background: linear-gradient(145deg, #0044cc 0%, #0055ee 55%, #0066FF 100%);
+      padding: 44px 40px; display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
+    }
+    .auth-left::before { content:''; position:absolute; width:260px; height:260px; border-radius:50%; background:rgba(255,255,255,0.08); top:-80px; right:-80px; }
+    .auth-left::after  { content:''; position:absolute; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,0.06); bottom:-60px; left:-40px; }
+
+    .left-logo { display:flex; align-items:center; gap:10px; margin-bottom:auto; }
+    .left-logo img { height:26px; filter:brightness(0) invert(1); }
+
+    .glass-graphic { position:relative; height:200px; margin:24px 0 28px; flex-shrink:0; }
+    .glass-card { position:absolute; background:rgba(255,255,255,0.15); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,0.3); border-radius:16px; }
+    .gc-1 { width:120px; height:120px; top:20px; left:20px; border-radius:20px; transform:rotate(-8deg); animation:gFloat1 6s ease-in-out infinite; }
+    .gc-2 { width:90px; height:90px; top:0; left:100px; border-radius:50%; animation:gFloat2 7s ease-in-out infinite; }
+    .gc-3 { width:100px; height:100px; top:70px; left:160px; border-radius:18px; transform:rotate(12deg); animation:gFloat3 5.5s ease-in-out infinite; }
+    .gc-4 { width:60px; height:60px; top:120px; left:50px; border-radius:12px; transform:rotate(-15deg); animation:gFloat1 8s ease-in-out infinite reverse; }
+    .gc-inner { width:100%; height:100%; border-radius:inherit; background:linear-gradient(135deg,rgba(255,255,255,0.25) 0%,rgba(255,255,255,0.05) 100%); display:flex; align-items:center; justify-content:center; }
+    .gc-inner svg { opacity:0.7; }
+    @keyframes gFloat1 { 0%,100%{transform:rotate(-8deg) translateY(0)} 50%{transform:rotate(-8deg) translateY(-10px)} }
+    @keyframes gFloat2 { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-14px) scale(1.05)} }
+    @keyframes gFloat3 { 0%,100%{transform:rotate(12deg) translateY(0)} 50%{transform:rotate(12deg) translateY(-8px)} }
+
+    .left-title { font-size:22px; font-weight:700; color:#fff; line-height:1.35; margin-bottom:10px; letter-spacing:-0.3px; }
+    .left-sub { font-size:13.5px; color:rgba(255,255,255,0.72); line-height:1.6; }
+
+    /* ── 오른쪽 패널 ── */
+    .auth-right { flex:1; padding:44px 44px 36px; display:flex; flex-direction:column; justify-content:center; overflow-y:auto; }
+
+    .form-title { font-size:24px; font-weight:700; color:#111827; letter-spacing:-0.4px; margin-bottom:24px; }
+
+    .social-row { display:flex; gap:10px; margin-bottom:16px; }
+    .btn-social { flex:1; height:42px; border:1.5px solid #e5e7eb; border-radius:10px; background:#fff; font-size:13px; font-weight:500; color:#374151; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; transition:background 0.15s,border-color 0.15s; }
+    .btn-social:hover { background:#f9fafb; border-color:#d1d5db; }
+    .btn-social svg { width:17px; height:17px; flex-shrink:0; }
+
+    .divider { display:flex; align-items:center; gap:12px; margin-bottom:16px; font-size:12px; color:#9ca3af; }
+    .divider::before,.divider::after { content:''; flex:1; height:1px; background:#e5e7eb; }
+
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .form-group { margin-bottom:12px; }
+    .form-label { display:block; font-size:13px; font-weight:500; color:#374151; margin-bottom:5px; }
+    .input-wrap { position:relative; }
+    .form-input { width:100%; height:44px; border:1.5px solid #e5e7eb; border-radius:10px; padding:0 14px; font-size:14px; color:#111827; background:#f9fafb; outline:none; transition:border-color 0.15s,box-shadow 0.15s,background 0.15s; }
+    .form-input::placeholder { color:#9ca3af; }
+    .form-input:focus { border-color:#0066FF; background:#fff; box-shadow:0 0 0 3px rgba(0,102,255,0.1); }
+    .pw-toggle { position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; padding:4px; color:#9ca3af; display:flex; align-items:center; }
+    .pw-toggle:hover { color:#6b7280; }
+    .pw-toggle svg { width:17px; height:17px; }
+    .form-error { font-size:12px; color:#ef4444; margin-top:4px; display:none; }
+
+    .pw-strength { display:flex; gap:4px; margin-top:6px; }
+    .pw-strength-bar { flex:1; height:3px; border-radius:2px; background:#e5e7eb; transition:background 0.2s; }
+    .pw-strength-label { font-size:11px; color:#9ca3af; margin-top:3px; }
+
+    .terms-label { display:flex; align-items:flex-start; gap:8px; font-size:13px; color:#6b7280; cursor:pointer; line-height:1.5; margin-bottom:16px; margin-top:4px; }
+    .terms-label input { width:15px; height:15px; margin-top:2px; flex-shrink:0; accent-color:#0066FF; cursor:pointer; }
+    .terms-label a { color:#0066FF; text-decoration:none; font-weight:500; }
+    .terms-label a:hover { text-decoration:underline; }
+
+    .btn-primary { width:100%; height:46px; background:linear-gradient(135deg,#3b5bdb,#0066FF); color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; transition:opacity 0.15s,box-shadow 0.15s; margin-bottom:14px; letter-spacing:-0.1px; }
+    .btn-primary:hover { opacity:0.92; box-shadow:0 4px 16px rgba(0,102,255,0.35); }
+
+    .auth-footer { text-align:center; font-size:13px; color:#9ca3af; }
+    .auth-footer a { color:#0066FF; font-weight:500; text-decoration:none; }
+    .auth-footer a:hover { text-decoration:underline; }
+
+    /* 성공 화면 */
+    .success-screen { display:none; text-align:center; padding:16px 0; }
+    .success-icon { width:60px; height:60px; background:#f0edff; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px; }
+    .success-icon svg { width:28px; height:28px; color:#0066FF; }
+    .success-title { font-size:20px; font-weight:700; color:#111827; margin-bottom:8px; }
+    .success-desc { font-size:14px; color:#6b7280; line-height:1.6; margin-bottom:28px; }
+    .btn-go-login { display:inline-block; padding:12px 32px; background:linear-gradient(135deg,#3b5bdb,#0066FF); color:#fff; border-radius:10px; font-size:14px; font-weight:600; text-decoration:none; transition:opacity 0.15s; }
+    .btn-go-login:hover { opacity:0.9; }
+  </style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<div class="auth-card">
+
+  <!-- 왼쪽 -->
+  <div class="auth-left">
+    <div class="left-logo">
+      <img src="https://www.polyinspiration.com/img/main/logo.png" alt="POLY">
+    </div>
+    <div class="login-graphic">
+      <img src="images/login-graphic.png" alt="">
+    </div>
+    <div class="left-title">데이터로 만드는<br>경영 인사이트</div>
+    <div class="left-sub">Poly AI Agent와 함께<br>스마트한 경영 분석을 시작하세요.</div>
+  </div>
+
+  <!-- 오른쪽 -->
+  <div class="auth-right">
+
+    <!-- 회원가입 폼 -->
+    <div id="signupForm">
+      <div class="form-title">Sign up</div>
+
+      <div class="social-row">
+        <button class="btn-social" onclick="window.location.href='home.html'">
+          <svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          구글로 가입
+        </button>
+      </div>
+
+      <div class="divider">OR</div>
+
+      <form onsubmit="handleSignup(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">이름</label>
+            <input class="form-input" type="text" id="name" placeholder="홍길동">
+            <div class="form-error" id="nameError">이름을 입력해주세요.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">소속</label>
+            <input class="form-input" type="text" id="dept" placeholder="본사 경영팀">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">아이디</label>
+          <input class="form-input" type="text" id="username" placeholder="사용할 아이디 입력">
+          <div class="form-error" id="userError">아이디를 입력해주세요.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">이메일</label>
+          <input class="form-input" type="email" id="email" placeholder="name@edu-poly.com">
+          <div class="form-error" id="emailError">올바른 이메일을 입력해주세요.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">비밀번호</label>
+          <div class="input-wrap">
+            <input class="form-input" type="password" id="password" placeholder="8자 이상" style="padding-right:40px" oninput="checkStrength(this.value)">
+            <button type="button" class="pw-toggle" onclick="togglePw('password','eye1')">
+              <svg id="eye1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <div class="pw-strength"><div class="pw-strength-bar" id="bar1"></div><div class="pw-strength-bar" id="bar2"></div><div class="pw-strength-bar" id="bar3"></div><div class="pw-strength-bar" id="bar4"></div></div>
+          <div class="pw-strength-label" id="strengthLabel"></div>
+          <div class="form-error" id="pwError">비밀번호는 8자 이상이어야 합니다.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">비밀번호 확인</label>
+          <div class="input-wrap">
+            <input class="form-input" type="password" id="password2" placeholder="비밀번호 재입력" style="padding-right:40px">
+            <button type="button" class="pw-toggle" onclick="togglePw('password2','eye2')">
+              <svg id="eye2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <div class="form-error" id="pw2Error">비밀번호가 일치하지 않습니다.</div>
+        </div>
+        <label class="terms-label">
+          <input type="checkbox" id="terms">
+          <span><a href="#">이용약관</a> 및 <a href="#">개인정보 처리방침</a>에 동의합니다.</span>
+        </label>
+        <div class="form-error" id="termsError" style="margin-top:-10px;margin-bottom:12px;">약관에 동의해주세요.</div>
+        <button type="submit" class="btn-primary">가입하기</button>
+      </form>
+
+      <div class="auth-footer">
+        이미 계정이 있으신가요? <a href="login.html">로그인</a>
+      </div>
+    </div>
+
+    <!-- 가입 완료 화면 -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="success-title">가입이 완료됐어요!</div>
+      <div class="success-desc">관리자 승인 후 로그인하실 수 있습니다.<br>승인 완료 시 이메일로 안내드립니다.</div>
+      <a href="login.html" class="btn-go-login">로그인 페이지로 이동</a>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function togglePw(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon  = document.getElementById(iconId);
+    const isHidden = input.type === 'password';
+    input.type = isHidden ? 'text' : 'password';
+    icon.innerHTML = isHidden
+      ? '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>'
+      : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
+
+  function checkStrength(val) {
+    const bars   = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3'), document.getElementById('bar4')];
+    const label  = document.getElementById('strengthLabel');
+    const colors = ['#ef4444','#f97316','#eab308','#22c55e'];
+    const labels = ['매우 약함','보통','강함','매우 강함'];
+    let score = 0;
+    if (val.length >= 8)               score++;
+    if (/[A-Z]/.test(val))             score++;
+    if (/[0-9]/.test(val))             score++;
+    if (/[^A-Za-z0-9]/.test(val))      score++;
+    bars.forEach((b, i) => {
+      b.style.background = i < score ? colors[score - 1] : '#e5e7eb';
+    });
+    label.textContent = val.length ? labels[score - 1] || '' : '';
+    label.style.color = score ? colors[score - 1] : '#9ca3af';
+  }
+
+  function handleSignup(e) {
+    e.preventDefault();
+    let valid = true;
+    const hide = id => document.getElementById(id).style.display = 'none';
+    const show = id => document.getElementById(id).style.display = 'block';
+    ['nameError','emailError','pwError','pw2Error','termsError'].forEach(hide);
+
+    if (!document.getElementById('name').value.trim())               { show('nameError');  valid = false; }
+    const email = document.getElementById('email').value.trim();
+    if (!email || !/\S+@\S+\.\S+/.test(email))                       { show('emailError'); valid = false; }
+    const pw  = document.getElementById('password').value;
+    if (pw.length < 8)                                                { show('pwError');    valid = false; }
+    if (pw !== document.getElementById('password2').value)           { show('pw2Error');   valid = false; }
+    if (!document.getElementById('terms').checked)                   { show('termsError'); valid = false; }
+
+    if (valid) {
+      document.getElementById('signupForm').style.display   = 'none';
+      document.getElementById('successScreen').style.display = 'block';
+    }
+  }
+</script>
+</body>
+</html>
