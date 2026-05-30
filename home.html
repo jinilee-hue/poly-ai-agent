@@ -399,5 +399,31 @@
     }
   });
 </script>
+<script>
+  /* LNB 최근 채팅 — hover 시 x 삭제 버튼 주입 */
+  (function () {
+    document.querySelectorAll('.poly-history-item').forEach(function (item) {
+      if (item.dataset.delReady) return;
+      item.dataset.delReady = '1';
+      var txt = document.createElement('span');
+      txt.className = 'poly-history-text';
+      txt.innerHTML = item.innerHTML;
+      item.innerHTML = '';
+      item.appendChild(txt);
+      var del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'poly-history-del';
+      del.title = '삭제';
+      del.setAttribute('aria-label', '채팅 삭제');
+      del.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      del.addEventListener('click', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        item.remove();
+      });
+      item.appendChild(del);
+    });
+  })();
+</script>
 </body>
 </html>

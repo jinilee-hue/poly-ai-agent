@@ -645,6 +645,13 @@
     }
     .date-cal-btn:hover { color: var(--color-primary); background: var(--color-primary-light); }
     .date-cal-btn svg { width: 15px; height: 15px; }
+    /* 시작일 ~ 종료일 구분자 */
+    .date-range-sep {
+      flex-shrink: 0;
+      color: var(--color-text-tertiary);
+      font-size: var(--text-sm);
+      padding: 0 2px;
+    }
     .cl-search-clear {
       display: none;
       background: none; border: none; cursor: pointer;
@@ -743,6 +750,21 @@
       white-space: nowrap;
     }
     .cl-item-badges { display: flex; gap: var(--space-1); }
+
+    /* 날짜 + 열기/삭제 액션 (항상 고정 노출) */
+    .cl-item-daterow { display: flex; align-items: center; gap: var(--space-2); }
+    .cl-item-actions { display: flex; align-items: center; gap: var(--space-1); }
+    .cl-item-action {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 36px; height: 36px; padding: 0;
+      border: var(--border-default); border-radius: var(--radius-md);
+      background: var(--color-bg); cursor: pointer;
+      color: var(--color-text-secondary);
+      transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .cl-item-action svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .cl-item-action-open:hover { border-color: var(--color-primary); color: var(--color-primary); background: var(--color-primary-light); }
+    .cl-item-action-del:hover  { border-color: var(--color-border-strong); color: var(--color-text-primary); background: var(--color-bg-muted); }
 
     /* ── 빈 상태 ────────────────────────────── */
     .cl-empty {
@@ -1352,7 +1374,7 @@
     /* ── 리포트 카드 그리드 ─────────────────── */
     .reports-grid {
       display: grid;
-      grid-template-columns: repeat(8, 1fr);
+      grid-template-columns: repeat(6, 1fr);
       gap: var(--space-5);
     }
     .report-card {
@@ -1406,6 +1428,8 @@
       transition: opacity 0.15s;
     }
     .rc-back-btn:hover { opacity: 0.88; }
+    /* 파란 카드 뒷면의 열기 버튼은 원형 */
+    .rc-back .cl-item-action { border-radius: var(--radius-full); }
 
     /* 문서 프리뷰 */
     .rc-preview {
@@ -2231,7 +2255,11 @@
       transition: width 0.2s ease;
       overflow: hidden;
     }
-    .chat-panel.collapsed { width: 0; }
+    .chat-panel.collapsed {
+      width: 0 !important;
+      min-width: 0;
+      border: none;
+    }
 
     .chat-header {
       padding: var(--space-4) var(--space-5);
@@ -2572,5 +2600,23 @@
     .chart-legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
     .chart-wrap { position: relative; height: 320px; }
     .test-class { box-shadow: 0 4px 16px rgba(0,102,255,0.35); }
+
+    /* ── LNB 최근 채팅 항목 — hover 시 x 삭제 버튼 ───────── */
+    .poly-history-item { display: flex; align-items: center; gap: var(--space-2); }
+    .poly-history-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .poly-history-del {
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; padding: 0;
+      border: none; background: transparent; cursor: pointer;
+      border-radius: var(--radius-sm);
+      color: var(--color-text-tertiary);
+      opacity: 0;
+      transition: opacity 0.12s, background 0.12s, color 0.12s;
+    }
+    .poly-history-del svg { width: 13px; height: 13px; }
+    .poly-history-item:hover .poly-history-del,
+    .poly-history-item:focus-within .poly-history-del { opacity: 1; }
+    .poly-history-del:hover { background: var(--color-bg-muted); color: var(--color-text-primary); }
 
 
