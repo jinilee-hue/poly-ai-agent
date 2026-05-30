@@ -115,6 +115,43 @@
       </div>
     </div>
 
+    <!-- 검색 + 필터 -->
+    <div class="cl-search-bar">
+      <div style="display:flex;align-items:center;gap:8px;flex:1;">
+        <div class="cond-wrap">
+          <button class="cond-trigger" id="projCondTrigger" onclick="toggleProjCond()">
+            <span id="projCondLabel">전체</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="projCondChevron"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="cond-menu" id="projCondMenu">
+            <button class="cond-item active" onclick="selectProjCond('전체',this)">전체</button>
+            <button class="cond-item" onclick="selectProjCond('제목',this)">제목</button>
+            <button class="cond-item" onclick="selectProjCond('내용',this)">내용</button>
+          </div>
+        </div>
+        <div class="cond-wrap">
+          <button class="cond-trigger" id="projStatusTrigger" onclick="toggleProjStatus()">
+            <span id="projStatusLabel">전체 상태</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="projStatusChevron"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="cond-menu" id="projStatusMenu">
+            <button class="cond-item active" onclick="selectProjStatus('all',this)">전체 상태</button>
+            <button class="cond-item" onclick="selectProjStatus('active',this)">진행 중</button>
+            <button class="cond-item" onclick="selectProjStatus('done',this)">완료</button>
+          </div>
+        </div>
+        <div class="cl-search-box">
+          <input class="cl-search-input" id="projSearchInput" type="search" placeholder="프로젝트 이름 또는 설명으로 검색..." oninput="handleProjSearch(this.value)" aria-label="프로젝트 검색">
+          <button class="cl-search-clear" id="projSearchClear" onclick="clearProjSearch()" aria-label="검색 지우기">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <button class="cl-search-submit" aria-label="검색">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
+    </div>
+
     <!-- 프로젝트 카드 -->
     <div class="proj-section-header">
       <div class="proj-section-title">내 프로젝트</div>
@@ -124,6 +161,7 @@
         <button class="period-tab">완료</button>
       </div>
     </div>
+
     <!-- 새 프로젝트 (전폭 버튼) -->
     <a href="#" class="proj-card-new" onclick="document.getElementById('newProjModal').style.display='flex';return false;">
       <div class="proj-card-new-icon">
@@ -431,11 +469,12 @@
     if (e.target === this) closeDeleteModal();
   });
 
-  /* period-tabs 동작 */
+  /* period-tabs → 상태 필터 (상태 셀렉트와 동기화) */
   document.querySelectorAll('.period-tab').forEach(btn => {
     btn.addEventListener('click', function () {
-      this.closest('.period-tabs').querySelectorAll('.period-tab').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
+      var map = { '전체': 'all', '진행 중': 'active', '완료': 'done' };
+      syncProjStatusUI(map[this.textContent.trim()] || 'all');
+      applyProjFilter();
     });
   });
 
@@ -529,6 +568,99 @@
 </script>
 <script src="js/utils.js"></script>
 <script src="js/layout.js"></script>
+<script>
+  /* 프로젝트 검색/필터 */
+  var _projQuery = '';
+  var _projCond = '전체';
+  var _projStatus = 'all';   // all | active(진행 중) | done(완료)
+
+  function applyProjFilter() {
+    var q = _projQuery.toLowerCase();
+    document.querySelectorAll('.proj-card').forEach(function (card) {
+      var nameEl = card.querySelector('.proj-card-name');
+      var descEl = card.querySelector('.proj-card-desc');
+      var badgeEl = card.querySelector('.proj-card-badges');
+      var name = nameEl ? nameEl.textContent : '';
+      var desc = descEl ? descEl.textContent : '';
+      var badges = badgeEl ? badgeEl.textContent : '';
+      // 배지 텍스트로 진행 상태 판별
+      var status = badges.indexOf('진행') !== -1 ? 'active' : (badges.indexOf('완료') !== -1 ? 'done' : 'other');
+
+      var hay = _projCond === '제목' ? name : (_projCond === '내용' ? desc : (name + ' ' + desc));
+      var textOk = !q || hay.toLowerCase().indexOf(q) !== -1;
+      var statusOk = _projStatus === 'all' || status === _projStatus;
+      card.style.display = (textOk && statusOk) ? '' : 'none';
+    });
+  }
+
+  /* 상태 셀렉트 ↔ 기간 탭 동기화 */
+  function _projStatusLabel(v) { return v === 'active' ? '진행 중' : v === 'done' ? '완료' : '전체 상태'; }
+  function syncProjStatusUI(value) {
+    _projStatus = value;
+    var dropLabel = _projStatusLabel(value);
+    document.getElementById('projStatusLabel').textContent = dropLabel;
+    document.querySelectorAll('#projStatusMenu .cond-item').forEach(function (b) {
+      b.classList.toggle('active', b.textContent.trim() === dropLabel);
+    });
+    var tabLabel = value === 'active' ? '진행 중' : value === 'done' ? '완료' : '전체';
+    document.querySelectorAll('.period-tab').forEach(function (b) {
+      b.classList.toggle('active', b.textContent.trim() === tabLabel);
+    });
+  }
+  function toggleProjStatus() {
+    var menu = document.getElementById('projStatusMenu');
+    var chevron = document.getElementById('projStatusChevron');
+    menu.classList.toggle('open');
+    chevron.style.transform = menu.classList.contains('open') ? 'rotate(180deg)' : '';
+  }
+  function selectProjStatus(value, btn) {
+    document.getElementById('projStatusMenu').classList.remove('open');
+    document.getElementById('projStatusChevron').style.transform = '';
+    syncProjStatusUI(value);
+    applyProjFilter();
+  }
+
+  function handleProjSearch(val) {
+    _projQuery = val.trim();
+    document.getElementById('projSearchClear').style.display = _projQuery ? 'flex' : 'none';
+    applyProjFilter();
+  }
+  function clearProjSearch() {
+    var input = document.getElementById('projSearchInput');
+    input.value = '';
+    document.getElementById('projSearchClear').style.display = 'none';
+    _projQuery = '';
+    applyProjFilter();
+    input.focus();
+  }
+
+  function toggleProjCond() {
+    var menu = document.getElementById('projCondMenu');
+    var chevron = document.getElementById('projCondChevron');
+    menu.classList.toggle('open');
+    chevron.style.transform = menu.classList.contains('open') ? 'rotate(180deg)' : '';
+  }
+  function selectProjCond(label, btn) {
+    document.getElementById('projCondLabel').textContent = label;
+    document.querySelectorAll('#projCondMenu .cond-item').forEach(function (b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('projCondMenu').classList.remove('open');
+    document.getElementById('projCondChevron').style.transform = '';
+    _projCond = label;
+    applyProjFilter();
+  }
+  /* 조건 메뉴 바깥 클릭 시 닫기 */
+  document.addEventListener('click', function (e) {
+    document.querySelectorAll('.cond-wrap').forEach(function (wrap) {
+      if (!wrap.contains(e.target)) {
+        wrap.querySelector('.cond-menu').classList.remove('open');
+        var chev = wrap.querySelector('.cond-trigger svg');
+        if (chev) chev.style.transform = '';
+      }
+    });
+  });
+
+</script>
 <script>
   /* LNB 최근 채팅 — hover 시 x 삭제 버튼 주입 */
   (function () {
