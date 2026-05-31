@@ -2552,7 +2552,7 @@
         text-align: center;
         padding-bottom: 18pt;
         margin-bottom: 24pt;
-        border-bottom: 2.5pt solid #0066FF;
+        border-bottom: 2.5pt solid var(--color-primary);
       }
       .print-title-label {
         display: inline-block;
@@ -2560,7 +2560,7 @@
         font-weight: 600;
         letter-spacing: 2px;
         text-transform: uppercase;
-        color: #0066FF;
+        color: var(--color-primary);
         margin-bottom: 8pt;
       }
       .print-title-main {
@@ -2599,7 +2599,6 @@
     .chart-legend-item { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-xs); color: var(--color-text-secondary); }
     .chart-legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
     .chart-wrap { position: relative; height: 320px; }
-    .test-class { box-shadow: 0 4px 16px rgba(0,102,255,0.35); }
 
     /* ── LNB 최근 채팅 항목 — hover 시 x 삭제 버튼 ───────── */
     .poly-history-item { display: flex; align-items: center; gap: var(--space-2); }
