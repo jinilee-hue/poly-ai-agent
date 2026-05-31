@@ -1,0 +1,56 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell",
+            "args": [
+              "-NoProfile",
+              "-NonInteractive",
+              "-ExecutionPolicy", "Bypass",
+              "-File",
+              "${CLAUDE_PROJECT_DIR}/.claude/hooks/poly-validate.ps1"
+            ],
+            "timeout": 15,
+            "statusMessage": "POLY 규칙 검증 중..."
+          },
+          {
+            "type": "command",
+            "command": "powershell",
+            "args": [
+              "-NoProfile",
+              "-NonInteractive",
+              "-ExecutionPolicy", "Bypass",
+              "-File",
+              "${CLAUDE_PROJECT_DIR}/.claude/hooks/open-browser.ps1"
+            ],
+            "timeout": 10,
+            "async": true,
+            "statusMessage": "브라우저 자동 오픈..."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell",
+            "args": [
+              "-NoProfile",
+              "-NonInteractive",
+              "-ExecutionPolicy", "Bypass",
+              "-File",
+              "${CLAUDE_PROJECT_DIR}/.claude/hooks/poly-reminder.ps1"
+            ],
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
