@@ -115,14 +115,14 @@
     <!-- 좌측: 데이터 패널 -->
     <div class="data-panel" id="dataPanel">
 
-      <div class="data-scroll">
+      <!-- 인쇄 전용 타이틀 — zoom 적용된 .data-scroll 밖에 두어 페이지 폭 기준 중앙 정렬 유지 -->
+      <div class="print-title-block">
+        <div class="print-title-main">PI 학생 분석 리포트</div>
+        <div class="print-title-sub" id="printSubTitle">전년 대비 증감 추이 분석 (캠퍼스별)</div>
+        <div class="print-title-meta" id="printMeta">기준일 2026-05-15 · 77개 캠퍼스</div>
+      </div>
 
-        <!-- 인쇄 전용 타이틀 -->
-        <div class="print-title-block">
-          <div class="print-title-main">PI 학생 분석 리포트</div>
-          <div class="print-title-sub" id="printSubTitle">전년 대비 증감 추이 분석 (캠퍼스별)</div>
-          <div class="print-title-meta" id="printMeta">기준일 2026-05-15 · 77개 캠퍼스</div>
-        </div>
+      <div class="data-scroll">
 
         <!-- 뷰 선택 박스 -->
         <div class="view-selector-inner">
@@ -924,6 +924,30 @@
 
   buildCompareChart();
   window.addEventListener('themechange', buildCompareChart);
+
+  /* 데이터 테이블 — 가용 폭에 맞춰 자동 축소 (17개 컬럼 전체를 잘림 없이 표시) */
+  function fitDataTable() {
+    const wrap = document.querySelector('.data-table-wrap');
+    const table = wrap ? wrap.querySelector('.data-table') : null;
+    if (!wrap || !table) return;
+    table.style.zoom = '';                       // 자연 폭 측정을 위해 초기화
+    const natural = table.scrollWidth;           // zoom 1 기준 실제 폭
+    const avail = wrap.clientWidth;              // 패널 가용 폭
+    if (!natural || !avail) return;
+    table.style.zoom = Math.min(1, avail / natural);  // 넘칠 때만 축소(확대는 안 함)
+  }
+  fitDataTable();
+  window.addEventListener('load', fitDataTable);   // 웹폰트 로드 후 재보정
+  let _fitRaf;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(_fitRaf);
+    _fitRaf = requestAnimationFrame(fitDataTable);
+  });
+  // 채팅 패널 열림/닫힘 애니메이션(width 0.2s) 종료 후 재보정
+  const _chatPanelEl = document.getElementById('chatPanel');
+  if (_chatPanelEl) _chatPanelEl.addEventListener('transitionend', e => {
+    if (e.propertyName === 'width') fitDataTable();
+  });
 
   /* Excel 다운로드 */
   function downloadExcel() {

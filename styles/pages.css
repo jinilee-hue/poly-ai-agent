@@ -2537,48 +2537,71 @@
       .data-scroll {
         overflow: visible !important;
         padding: 0 !important;
-        zoom: 0.72;
-        margin-left: auto !important;
-        margin-right: auto !important;
+        margin: 0 !important;
         display: block !important;
       }
+      /* 차트: 화면에서 넓게 렌더된 canvas가 인쇄 페이지 폭을 넘치지 않도록 100%로 맞춤 */
+      .chart-wrap { width: 100% !important; height: auto !important; }
+      .chart-wrap canvas { width: 100% !important; height: auto !important; max-width: 100% !important; }
       .data-table-card { border: none !important; box-shadow: none !important; }
-      .data-table { font-size: 11px !important; }
-      .data-table th, .data-table td { padding: 4px 6px !important; }
+      /* 테이블: 17개 컬럼이 페이지 폭에 모두 들어가도록 폰트를 줄여 맞춤.
+         자동 레이아웃 + nowrap으로 각 컬럼이 내용 폭에 맞게 잡혀 숫자/이름이 겹치지 않음.
+         화면용 fitDataTable()이 남긴 인라인 zoom은 zoom:1 !important로 무력화하고,
+         고정 컬럼(col-fixed)의 sticky도 인쇄에선 정적으로 되돌림. */
+      .data-table {
+        zoom: 1 !important;
+        table-layout: auto !important;
+        width: 100% !important;
+        white-space: nowrap !important;
+        font-size: 5.5px !important;
+      }
+      /* 셀에 직접 폰트 지정: 숫자/고정컬럼 셀은 자체 규칙·인라인 스타일이 있어
+         테이블 font-size 상속이 무시되므로 th/td에 !important로 강제.
+         인라인 min-width(60/52/90px)도 인쇄에선 해제해 컬럼이 내용 폭에 맞게 최소화됨. */
+      .data-table th, .data-table td {
+        font-size: 5.5px !important;
+        padding: 1px 2px !important;
+        min-width: 0 !important;
+      }
+      .data-table thead small { font-size: 4.5px !important; }
+      .data-table .col-fixed, .data-table th.col-fixed { position: static !important; }
 
-      /* ── 인쇄 타이틀 ── */
+      /* ── 인쇄 타이틀 ──
+         .data-scroll(zoom:0.72) 밖, .data-panel(페이지 폭) 직속에 위치시켜
+         와이드 테이블이 콘텐츠 폭을 넓혀도 타이틀이 페이지 기준 중앙 정렬되도록 함.
+         zoom이 걸리지 않으므로 폰트·여백은 기존 zoom 환산값(×0.72)으로 보정. */
       .print-title-block {
         display: block !important;
         text-align: center;
-        padding-bottom: 18pt;
-        margin-bottom: 24pt;
+        padding-bottom: 13pt;
+        margin-bottom: 17pt;
         border-bottom: 2.5pt solid var(--color-primary);
       }
       .print-title-label {
         display: inline-block;
-        font-size: 8pt;
+        font-size: 6pt;
         font-weight: 600;
         letter-spacing: 2px;
         text-transform: uppercase;
         color: var(--color-primary);
-        margin-bottom: 8pt;
+        margin-bottom: 6pt;
       }
       .print-title-main {
-        font-size: 30pt;
+        font-size: 22pt;
         font-weight: 800;
         color: #111;
         line-height: 1.15;
-        margin-bottom: 10pt;
+        margin-bottom: 7pt;
         letter-spacing: -0.5pt;
       }
       .print-title-sub {
-        font-size: 14pt;
+        font-size: 10pt;
         color: #444;
-        margin-bottom: 8pt;
+        margin-bottom: 6pt;
         font-weight: 400;
       }
       .print-title-meta {
-        font-size: 9pt;
+        font-size: 6.5pt;
         color: #999;
         letter-spacing: 0.3pt;
       }
