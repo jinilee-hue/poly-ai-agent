@@ -190,6 +190,7 @@
               <button class="cond-trigger" id="itemCondTrigger" onclick="toggleCondMenu('item')"><span id="itemCondLabel">항목 전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="itemCondChevron"><polyline points="6 9 12 15 18 9"/></svg></button>
               <div class="cond-menu cond-menu-multi" id="itemCondMenu">
                 <button class="cond-mitem active" data-v="all" onclick="toggleMulti('item','all',this)"><span class="cond-box"></span>전체</button>
+                <button class="cond-mitem active" data-v="재학생·재등록" onclick="toggleMulti('item','재학생·재등록',this)"><span class="cond-box"></span>재학생·재등록</button>
                 <button class="cond-mitem active" data-v="신규입학" onclick="toggleMulti('item','신규입학',this)"><span class="cond-box"></span>신규입학</button>
                 <button class="cond-mitem active" data-v="신규 외부·내부" onclick="toggleMulti('item','신규 외부·내부',this)"><span class="cond-box"></span>신규 외부·내부</button>
                 <button class="cond-mitem active" data-v="탈퇴" onclick="toggleMulti('item','탈퇴',this)"><span class="cond-box"></span>탈퇴</button>
@@ -540,6 +541,7 @@
 
   /* 다중 선택 필터 상태 (연도·월·항목) */
   const ITEM_ROWS = {
+    '재학생·재등록': [0, 1, 2, 3],
     '신규입학': [4, 5, 6],
     '신규 외부·내부': [7, 8],
     '탈퇴': [9, 10, 11],
