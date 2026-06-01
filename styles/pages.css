@@ -3026,7 +3026,8 @@
     /* 연도별 상세 표 (밀도 높은 다열 표) */
     .cur-year-block { margin-top: var(--space-6); margin-bottom: var(--space-6); }
     .cur-table { font-size: var(--text-xs); }
-    .cur-table thead th { white-space: nowrap; }
+    .cur-table thead th { white-space: nowrap; background: var(--color-primary-deeper); color: #fff; border-bottom-color: var(--color-primary-deeper); }
+    .cur-table thead th.col-fixed { background: var(--color-primary-deeper); }
     .cur-table td { padding: 7px 10px; }
     .cur-table .cur-gubun { min-width: 120px; font-weight: var(--weight-medium); color: var(--color-text-primary); }
     .cur-table .cur-item { min-width: 72px; color: var(--color-text-secondary); }
@@ -3040,6 +3041,15 @@
     [data-theme="dark"] .cur-table td.cur-gubun.g-new2,   [data-theme="dark"] .cur-table tbody tr:hover td.cur-gubun.g-new2   { background: rgba(46,164,98,0.26); }
     [data-theme="dark"] .cur-table td.cur-gubun.g-leave,  [data-theme="dark"] .cur-table tbody tr:hover td.cur-gubun.g-leave  { background: rgba(214,69,69,0.16); }
     [data-theme="dark"] .cur-table td.cur-gubun.g-leave2, [data-theme="dark"] .cur-table tbody tr:hover td.cur-gubun.g-leave2 { background: rgba(214,69,69,0.26); }
+    /* 항목 열 — 동일 그룹 옅은 틴트 */
+    .cur-table td.cur-item.g-new,    .cur-table tbody tr:hover td.cur-item.g-new    { background: #F4FBF7; }
+    .cur-table td.cur-item.g-new2,   .cur-table tbody tr:hover td.cur-item.g-new2   { background: #EDF9F2; }
+    .cur-table td.cur-item.g-leave,  .cur-table tbody tr:hover td.cur-item.g-leave  { background: #FEF6F5; }
+    .cur-table td.cur-item.g-leave2, .cur-table tbody tr:hover td.cur-item.g-leave2 { background: #FDEFEE; }
+    [data-theme="dark"] .cur-table td.cur-item.g-new,    [data-theme="dark"] .cur-table tbody tr:hover td.cur-item.g-new    { background: rgba(46,164,98,0.08); }
+    [data-theme="dark"] .cur-table td.cur-item.g-new2,   [data-theme="dark"] .cur-table tbody tr:hover td.cur-item.g-new2   { background: rgba(46,164,98,0.12); }
+    [data-theme="dark"] .cur-table td.cur-item.g-leave,  [data-theme="dark"] .cur-table tbody tr:hover td.cur-item.g-leave  { background: rgba(214,69,69,0.08); }
+    [data-theme="dark"] .cur-table td.cur-item.g-leave2, [data-theme="dark"] .cur-table tbody tr:hover td.cur-item.g-leave2 { background: rgba(214,69,69,0.12); }
 
     @media print {
       .cur-chipbar, .cur-tabwrap, .cc-toolbar, #view-other { display: none !important; }
