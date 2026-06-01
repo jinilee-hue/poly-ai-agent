@@ -161,41 +161,42 @@
             </div></div>
             <div class="cc-filter"><div class="cond-wrap">
               <button class="cond-trigger" id="yearCondTrigger" onclick="toggleCondMenu('year')"><span id="yearCondLabel">연도 전체(3개년)</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="yearCondChevron"><polyline points="6 9 12 15 18 9"/></svg></button>
-              <div class="cond-menu" id="yearCondMenu">
-                <button class="cond-item active" onclick="selectYear('all','연도 전체(3개년)',this)">전체(3개년)</button>
-                <button class="cond-item" onclick="selectYear('2024','2024년',this)">2024년</button>
-                <button class="cond-item" onclick="selectYear('2025','2025년',this)">2025년</button>
-                <button class="cond-item" onclick="selectYear('2026','2026년',this)">2026년</button>
+              <div class="cond-menu cond-menu-multi" id="yearCondMenu">
+                <button class="cond-mitem active" data-v="all" onclick="toggleMulti('year','all',this)"><span class="cond-box"></span>전체(3개년)</button>
+                <button class="cond-mitem active" data-v="2024" onclick="toggleMulti('year','2024',this)"><span class="cond-box"></span>2024년</button>
+                <button class="cond-mitem active" data-v="2025" onclick="toggleMulti('year','2025',this)"><span class="cond-box"></span>2025년</button>
+                <button class="cond-mitem active" data-v="2026" onclick="toggleMulti('year','2026',this)"><span class="cond-box"></span>2026년</button>
               </div>
             </div></div>
             <div class="cc-filter"><div class="cond-wrap">
               <button class="cond-trigger" id="monthCondTrigger" onclick="toggleCondMenu('month')"><span id="monthCondLabel">월 전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="monthCondChevron"><polyline points="6 9 12 15 18 9"/></svg></button>
-              <div class="cond-menu" id="monthCondMenu">
-                <button class="cond-item active" onclick="selectCond('month','월 전체',this)">전체</button>
-                <button class="cond-item" onclick="selectCond('month','3월',this)">3월</button>
-                <button class="cond-item" onclick="selectCond('month','4월',this)">4월</button>
-                <button class="cond-item" onclick="selectCond('month','5월',this)">5월</button>
-                <button class="cond-item" onclick="selectCond('month','6월',this)">6월</button>
-                <button class="cond-item" onclick="selectCond('month','7월',this)">7월</button>
-                <button class="cond-item" onclick="selectCond('month','8월',this)">8월</button>
-                <button class="cond-item" onclick="selectCond('month','9월',this)">9월</button>
-                <button class="cond-item" onclick="selectCond('month','10월',this)">10월</button>
-                <button class="cond-item" onclick="selectCond('month','11월',this)">11월</button>
-                <button class="cond-item" onclick="selectCond('month','12월',this)">12월</button>
-                <button class="cond-item" onclick="selectCond('month','1월',this)">1월</button>
-                <button class="cond-item" onclick="selectCond('month','2월',this)">2월</button>
+              <div class="cond-menu cond-menu-multi" id="monthCondMenu">
+                <button class="cond-mitem active" data-v="all" onclick="toggleMulti('month','all',this)"><span class="cond-box"></span>전체</button>
+                <button class="cond-mitem active" data-v="0" onclick="toggleMulti('month','0',this)"><span class="cond-box"></span>3월</button>
+                <button class="cond-mitem active" data-v="1" onclick="toggleMulti('month','1',this)"><span class="cond-box"></span>4월</button>
+                <button class="cond-mitem active" data-v="2" onclick="toggleMulti('month','2',this)"><span class="cond-box"></span>5월</button>
+                <button class="cond-mitem active" data-v="3" onclick="toggleMulti('month','3',this)"><span class="cond-box"></span>6월</button>
+                <button class="cond-mitem active" data-v="4" onclick="toggleMulti('month','4',this)"><span class="cond-box"></span>7월</button>
+                <button class="cond-mitem active" data-v="5" onclick="toggleMulti('month','5',this)"><span class="cond-box"></span>8월</button>
+                <button class="cond-mitem active" data-v="6" onclick="toggleMulti('month','6',this)"><span class="cond-box"></span>9월</button>
+                <button class="cond-mitem active" data-v="7" onclick="toggleMulti('month','7',this)"><span class="cond-box"></span>10월</button>
+                <button class="cond-mitem active" data-v="8" onclick="toggleMulti('month','8',this)"><span class="cond-box"></span>11월</button>
+                <button class="cond-mitem active" data-v="9" onclick="toggleMulti('month','9',this)"><span class="cond-box"></span>12월</button>
+                <button class="cond-mitem active" data-v="10" onclick="toggleMulti('month','10',this)"><span class="cond-box"></span>1월</button>
+                <button class="cond-mitem active" data-v="11" onclick="toggleMulti('month','11',this)"><span class="cond-box"></span>2월</button>
               </div>
             </div></div>
             <div class="cc-filter"><div class="cond-wrap">
-              <button class="cond-trigger" id="itemCondTrigger" onclick="toggleCondMenu('item')"><span id="itemCondLabel">항목 재학생·재등록</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="itemCondChevron"><polyline points="6 9 12 15 18 9"/></svg></button>
-              <div class="cond-menu" id="itemCondMenu">
-                <button class="cond-item active" onclick="selectCond('item','항목 재학생·재등록',this)">재학생·재등록</button>
-                <button class="cond-item" onclick="selectCond('item','신규입학',this)">신규입학</button>
-                <button class="cond-item" onclick="selectCond('item','신규 외부·내부',this)">신규 외부·내부</button>
-                <button class="cond-item" onclick="selectCond('item','탈퇴',this)">탈퇴</button>
-                <button class="cond-item" onclick="selectCond('item','탈퇴 외부·내부',this)">탈퇴 외부·내부</button>
-                <button class="cond-item" onclick="selectCond('item','증감분석',this)">증감분석</button>
-                <button class="cond-item" onclick="selectCond('item','가동현황',this)">가동현황</button>
+              <button class="cond-trigger" id="itemCondTrigger" onclick="toggleCondMenu('item')"><span id="itemCondLabel">항목 전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="itemCondChevron"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="cond-menu cond-menu-multi" id="itemCondMenu">
+                <button class="cond-mitem active" data-v="all" onclick="toggleMulti('item','all',this)"><span class="cond-box"></span>전체</button>
+                <button class="cond-mitem active" data-v="재학생·재등록" onclick="toggleMulti('item','재학생·재등록',this)"><span class="cond-box"></span>재학생·재등록</button>
+                <button class="cond-mitem active" data-v="신규입학" onclick="toggleMulti('item','신규입학',this)"><span class="cond-box"></span>신규입학</button>
+                <button class="cond-mitem active" data-v="신규 외부·내부" onclick="toggleMulti('item','신규 외부·내부',this)"><span class="cond-box"></span>신규 외부·내부</button>
+                <button class="cond-mitem active" data-v="탈퇴" onclick="toggleMulti('item','탈퇴',this)"><span class="cond-box"></span>탈퇴</button>
+                <button class="cond-mitem active" data-v="탈퇴 외부·내부" onclick="toggleMulti('item','탈퇴 외부·내부',this)"><span class="cond-box"></span>탈퇴 외부·내부</button>
+                <button class="cond-mitem active" data-v="증감분석" onclick="toggleMulti('item','증감분석',this)"><span class="cond-box"></span>증감분석</button>
+                <button class="cond-mitem active" data-v="가동현황" onclick="toggleMulti('item','가동현황',this)"><span class="cond-box"></span>가동현황</button>
               </div>
             </div></div>
             <button class="btn btn-secondary" style="width:44px;height:44px;padding:0;justify-content:center;box-sizing:border-box;border-radius:var(--radius-lg);" onclick="refreshReport()" title="새로고침" aria-label="새로고침">
@@ -538,6 +539,28 @@
   };
   const TREND = { 2024: DATA[2024].rows[0], 2025: DATA[2025].rows[0], 2026: DATA[2026].rows[0] };
 
+  /* 다중 선택 필터 상태 (연도·월·항목) */
+  const ITEM_ROWS = {
+    '재학생·재등록': [0, 1, 2, 3],
+    '신규입학': [4, 5, 6],
+    '신규 외부·내부': [7, 8],
+    '탈퇴': [9, 10, 11],
+    '탈퇴 외부·내부': [12, 13],
+    '증감분석': [14, 15, 16],
+    '가동현황': [17, 18, 19],
+  };
+  const ALLVALS = {
+    year: ['2024', '2025', '2026'],
+    month: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    item: Object.keys(ITEM_ROWS),
+  };
+  const SEL = {
+    year: new Set(ALLVALS.year),
+    month: new Set(ALLVALS.month),
+    item: new Set(ALLVALS.item),
+  };
+  function selRowIndices() { const s = new Set(); SEL.item.forEach(function (k) { (ITEM_ROWS[k] || []).forEach(function (i) { s.add(i); }); }); return s; }
+
   function fmtCell(v, fmt) {
     if (v === null || v === undefined) return { t: '—', c: 'num-neutral' };
     if (fmt === 'int') return { t: v.toLocaleString(), c: 'num-neutral' };
@@ -554,18 +577,21 @@
     const table = document.getElementById('curTable' + year);
     if (!table) return;
     const yd = DATA[year];
+    const monthIdx = ALLVALS.month.filter(function (i) { return SEL.month.has(i); });
+    const rowSet = selRowIndices();
     let thead = '<thead><tr><th class="text-left col-fixed" style="min-width:120px;">구분</th><th class="text-left" style="min-width:72px;">항목</th>';
-    MONTHS.forEach(m => thead += '<th style="text-align:right;">' + m + '</th>');
+    monthIdx.forEach(function (i) { thead += '<th style="text-align:right;">' + MONTHS[i] + '</th>'; });
     thead += '<th style="text-align:right;border-left:1px solid var(--color-border-strong);">비고</th></tr></thead>';
     let tbody = '<tbody>';
     let prevG = null;
     ROWDEFS.forEach(function (rd, i) {
-      const grpStart = rd.g !== prevG; prevG = rd.g;
+      if (!rowSet.has(i)) return;
+      const grpStart = prevG !== null && rd.g !== prevG; prevG = rd.g;
       tbody += '<tr class="' + (grpStart ? 'cur-grp-start' : '') + '">';
       tbody += '<td class="text-left col-fixed cur-gubun">' + (rd.d || '') + '</td>';
       tbody += '<td class="text-left cur-item">' + rd.item + '</td>';
-      yd.rows[i].forEach(function (v) {
-        const c = fmtCell(v, rd.fmt);
+      monthIdx.forEach(function (mi) {
+        const c = fmtCell(yd.rows[i][mi], rd.fmt);
         tbody += '<td class="' + c.c + '" style="text-align:right;">' + c.t + '</td>';
       });
       const note = yd.notes[i];
@@ -583,7 +609,6 @@
 
   /* 라인 차트 */
   let _trendChart = null;
-  let activeYears = new Set(['2024', '2025', '2026']);
   function buildChart() {
     const ctx = document.getElementById('trendChart');
     if (!ctx) return;
@@ -593,7 +618,7 @@
     const tick = dark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)';
     const colorMap = { '2024': _cvar('--chart-3', 'rgba(0,102,255,0.24)'), '2025': _cvar('--chart-2', 'rgba(0,102,255,0.50)'), '2026': _cvar('--chart-1', 'rgba(0,102,255,0.85)') };
     const labelMap = { '2024': '2024년 추이', '2025': '2025년 추이', '2026': '2026년 진행중' };
-    const datasets = ['2024', '2025', '2026'].filter(y => activeYears.has(y)).map(function (y) {
+    const datasets = ['2024', '2025', '2026'].filter(y => SEL.year.has(y)).map(function (y) {
       const col = colorMap[y];
       return { label: labelMap[y], data: TREND[y], borderColor: col, backgroundColor: 'transparent', borderWidth: 2.5, tension: 0.35, spanGaps: false, pointRadius: 4, pointHoverRadius: 6, pointBackgroundColor: col, pointBorderColor: 'transparent', pointBorderWidth: 0 };
     });
@@ -742,15 +767,44 @@
   window.addEventListener('resize', function () { cancelAnimationFrame(_fitRaf); _fitRaf = requestAnimationFrame(fitTables); });
   (function () { const p = document.getElementById('chatPanel'); if (p) p.addEventListener('transitionend', function (e) { if (e.propertyName === 'width') fitTables(); }); })();
 
-  /* 연도 선택 (셀렉트) — 전체(3개년) 또는 단일 연도 */
-  function selectYear(val, label, btn) {
-    selectCond('year', label, btn);
-    activeYears = (val === 'all') ? new Set(['2024', '2025', '2026']) : new Set([val]);
-    document.querySelectorAll('.cur-year-block').forEach(function (b) { b.style.display = activeYears.has(b.dataset.year) ? '' : 'none'; });
-    document.querySelectorAll('#curLegend .chart-legend-item').forEach(function (it, idx) {
-      const yr = ['2024', '2025', '2026'][idx];
-      it.style.opacity = activeYears.has(yr) ? '1' : '0.35';
+  /* 다중 선택 (연도·월·항목) 체크박스 */
+  function toggleMulti(group, value, btn) {
+    const set = SEL[group], all = ALLVALS[group];
+    if (value === 'all') {
+      if (set.size === all.length) set.clear();
+      else { set.clear(); all.forEach(function (v) { set.add(v); }); }
+    } else {
+      const v = (group === 'month') ? parseInt(value, 10) : value;
+      if (set.has(v)) set.delete(v); else set.add(v);
+    }
+    syncMultiUI(group);
+    applyFilters();
+  }
+  function labelFor(group) {
+    const set = SEL[group], all = ALLVALS[group];
+    const pfx = { year: '연도', month: '월', item: '항목' }[group];
+    if (set.size === all.length) return pfx + ' 전체' + (group === 'year' ? '(3개년)' : '');
+    if (set.size === 0) return pfx + ' 선택 안함';
+    return pfx + ' ' + set.size + '개 선택';
+  }
+  function syncMultiUI(group) {
+    const menu = document.getElementById(group + 'CondMenu');
+    if (!menu) return;
+    const set = SEL[group], all = ALLVALS[group];
+    menu.querySelectorAll('.cond-mitem').forEach(function (b) {
+      const v = b.dataset.v;
+      if (v === 'all') b.classList.toggle('active', set.size === all.length);
+      else { const val = (group === 'month') ? parseInt(v, 10) : v; b.classList.toggle('active', set.has(val)); }
     });
+    const lbl = document.getElementById(group + 'CondLabel');
+    if (lbl) lbl.textContent = labelFor(group);
+  }
+  function applyFilters() {
+    document.querySelectorAll('.cur-year-block').forEach(function (b) { b.style.display = SEL.year.has(b.dataset.year) ? '' : 'none'; });
+    document.querySelectorAll('#curLegend .chart-legend-item').forEach(function (it, idx) {
+      it.style.opacity = SEL.year.has(['2024', '2025', '2026'][idx]) ? '1' : '0.35';
+    });
+    buildYearTable(2024); buildYearTable(2025); buildYearTable(2026);
     buildChart(); fitTables();
   }
 
@@ -822,6 +876,7 @@
     if (intro && msgs && msgs.querySelector('.msg')) intro.style.display = 'none';
     const saved = localStorage.getItem('polyBrand') || 'poly';
     applyBrand(saved);
+    syncMultiUI('year'); syncMultiUI('month'); syncMultiUI('item');
     buildYearTable(2024); buildYearTable(2025); buildYearTable(2026);
     buildChart(); fitTables();
     window.addEventListener('themechange', rebuildAllCharts);
