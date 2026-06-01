@@ -2898,7 +2898,7 @@
     .cc-lbl-pct { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-primary); margin-top: 1px; }
 
     /* 학급 카드 */
-    .cc-cell { min-width: 168px; width: 168px; }
+    .cc-cell { min-width: 168px; width: 168px; height: 100%; }
     .cc-card {
       display: flex; flex-direction: column; gap: 7px; height: 100%;
       padding: 10px 12px; background: var(--color-bg);
