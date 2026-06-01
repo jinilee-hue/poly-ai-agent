@@ -178,53 +178,43 @@
           </div>
         </div>
 
-        <!-- 요약 KPI -->
-        <div class="esc-kpi-grid">
-          <div class="esc-kpi-card cc-gauge-card">
-            <div class="cc-gauge" id="ccGauge" style="--val:0;"><span id="ccGaugeVal">0%</span></div>
-            <div>
-              <div class="esc-kpi-title">평균 가동률</div>
-              <div class="esc-kpi-delta">전체 정원 대비 충원율</div>
+        <!-- 요약 KPI (컴팩트) -->
+        <div class="cc-kpi-grid">
+          <div class="cc-kpi-card">
+            <div class="cc-gauge cc-gauge-sm" id="ccGauge" style="--val:0;"><span id="ccGaugeVal">0%</span></div>
+            <div class="cc-kpi-body">
+              <div class="cc-kpi-label">평균 가동률</div>
+              <div class="cc-kpi-sub">전체 정원 대비 충원율</div>
             </div>
           </div>
 
-          <div class="esc-kpi-card">
-            <div class="esc-kpi-head">
-              <div class="esc-kpi-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-              </div>
-              <div class="esc-kpi-title">전체 충원</div>
+          <div class="cc-kpi-card">
+            <div class="cc-kpi-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             </div>
-            <div class="esc-kpi-body">
-              <div class="esc-kpi-value"><span id="kpiFillVal">0</span><span class="unit" id="kpiFillCap">/0명</span></div>
+            <div class="cc-kpi-body">
+              <div class="cc-kpi-label">전체 충원</div>
+              <div class="cc-kpi-value"><span id="kpiFillVal">0</span><span class="cc-kpi-unit" id="kpiFillCap">/0명</span></div>
             </div>
           </div>
 
-          <div class="esc-kpi-card">
-            <div class="esc-kpi-head">
-              <div class="esc-kpi-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M14 12h.01"/></svg>
-              </div>
-              <div class="esc-kpi-title">가용 강의실</div>
+          <div class="cc-kpi-card">
+            <div class="cc-kpi-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M14 12h.01"/></svg>
             </div>
-            <div class="esc-kpi-body">
-              <div class="esc-kpi-value"><span id="kpiRooms">0</span><span class="unit">개</span></div>
+            <div class="cc-kpi-body">
+              <div class="cc-kpi-label">가용 강의실</div>
+              <div class="cc-kpi-value"><span id="kpiRooms">0</span><span class="cc-kpi-unit">개</span></div>
             </div>
           </div>
 
-          <div class="esc-kpi-card">
-            <div class="esc-kpi-head">
-              <div class="esc-kpi-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-              </div>
-              <div class="esc-kpi-title">학급 현황</div>
+          <div class="cc-kpi-card">
+            <div class="cc-kpi-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
             </div>
-            <div class="esc-kpi-body" style="margin-bottom:var(--space-4);">
-              <div class="esc-kpi-value"><span id="kpiFull">0</span><span class="unit">개 마감</span></div>
-            </div>
-            <div class="esc-kpi-breakdown">
-              <div class="esc-bd-item"><span class="esc-bd-label">여석 있는 반</span><span class="esc-bd-value"><span id="kpiOpen">0</span>개</span></div>
-              <div class="esc-bd-item"><span class="esc-bd-label">전체 정규반</span><span class="esc-bd-value"><span id="kpiTotal">0</span>개</span></div>
+            <div class="cc-kpi-body">
+              <div class="cc-kpi-label">학급 현황</div>
+              <div class="cc-kpi-value" style="font-size:var(--text-base);"><span id="kpiFull">0</span><span class="cc-kpi-unit">개 마감</span> · <span id="kpiOpen">0</span><span class="cc-kpi-unit">개 여석</span></div>
             </div>
           </div>
         </div>
