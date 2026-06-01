@@ -2995,7 +2995,7 @@
     .cur-tabwrap .cc-tab.active::before { background: var(--color-primary-light); box-shadow: none; }
 
     /* 연도별 상세 표 (밀도 높은 다열 표) */
-    .cur-year-block { margin-bottom: var(--space-6); }
+    .cur-year-block { margin-top: var(--space-6); margin-bottom: var(--space-6); }
     .cur-table { font-size: var(--text-xs); }
     .cur-table thead th { white-space: nowrap; }
     .cur-table td { padding: 7px 10px; }
