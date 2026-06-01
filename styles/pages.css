@@ -2672,22 +2672,7 @@
       color: var(--color-text-secondary);
     }
     .esc-toolbar-label svg { width: 14px; height: 14px; color: var(--color-text-tertiary); }
-    .esc-date-field {
-      display: inline-flex; align-items: center; gap: var(--space-2);
-      height: 36px; padding: 0 var(--space-3);
-      background: var(--color-bg); border: var(--border-default);
-      border-radius: var(--radius-md);
-      font-size: var(--text-sm); font-weight: var(--weight-medium);
-      color: var(--color-text-primary); cursor: pointer;
-      transition: border-color 0.15s;
-    }
-    .esc-date-field:hover { border-color: var(--color-primary-a50); }
-    .esc-date-field svg { width: 14px; height: 14px; color: var(--color-text-tertiary); }
-    .esc-date-field input {
-      border: none; outline: none; background: transparent; width: 84px;
-      font-size: var(--text-sm); font-weight: var(--weight-medium);
-      color: var(--color-text-primary); font-family: var(--font-sans); cursor: pointer;
-    }
+    /* 기준일 날짜 선택은 리포트 목록과 동일한 .date-box 컴포넌트 사용 (common/pages 전역 정의) */
 
     /* 주요 지표 KPI 카드 */
     .esc-kpi-grid {

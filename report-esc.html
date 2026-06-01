@@ -130,10 +130,12 @@
           <div class="esc-toolbar-label">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
             조회 조건
-            <label class="esc-date-field" for="escDate">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-              <input type="text" id="escDate" value="2026.05.31" readonly>
-            </label>
+            <div class="date-box">
+              <input type="text" class="date-input" id="escDate" placeholder="날짜 선택">
+              <button class="date-cal-btn" type="button" onclick="escDateFp && escDateFp.open()" aria-label="날짜 선택">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </button>
+            </div>
           </div>
           <div class="view-selector-right">
             <button class="btn btn-secondary" style="height:44px;border-radius:var(--radius-lg);" onclick="printReport()">
@@ -1110,15 +1112,15 @@
 <script src="js/utils.js"></script>
 <script src="js/layout.js"></script>
 <script>
-  /* 기준일 Flatpickr */
+  /* 기준일 Flatpickr — 리포트 목록(reports.html)과 동일 설정 */
+  var escDateFp;
   if (typeof flatpickr !== 'undefined') {
-    flatpickr('#escDate', {
-      locale: (typeof fpLocale !== 'undefined') ? fpLocale : 'ko',
+    escDateFp = flatpickr('#escDate', {
+      locale: 'ko',
       dateFormat: 'Y.m.d',
       defaultDate: '2026.05.31',
+      allowInput: true,
       disableMobile: true,
-      onReady:       function(_, __, fp) { if (typeof initFlatpickrSelects === 'function') initFlatpickrSelects(fp); },
-      onMonthChange: function(_, __, fp) { if (typeof syncFlatpickrMonthLabel === 'function') syncFlatpickrMonthLabel(fp); },
     });
   }
 
