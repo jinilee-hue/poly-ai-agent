@@ -2989,6 +2989,10 @@
     .cur-chip-hint svg { width: 13px; height: 13px; }
 
     .cur-tabwrap { margin-bottom: var(--space-4); }
+    /* 탭 감싸는 회색 컨테이너 제거 — 개별 탭만 노출 */
+    .cur-tabwrap .cc-tabs { background: transparent; padding: 0; height: auto; gap: var(--space-2); }
+    .cur-tabwrap .cc-tab::before { background: transparent; }
+    .cur-tabwrap .cc-tab.active::before { background: var(--color-primary-light); box-shadow: none; }
 
     /* 연도별 상세 표 (밀도 높은 다열 표) */
     .cur-year-block { margin-bottom: var(--space-6); }
