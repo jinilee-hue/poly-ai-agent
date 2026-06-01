@@ -587,8 +587,9 @@
     ROWDEFS.forEach(function (rd, i) {
       if (!rowSet.has(i)) return;
       const grpStart = prevG !== null && rd.g !== prevG; prevG = rd.g;
+      const gc = rd.g === '신규' ? (i >= 7 ? ' g-new2' : ' g-new') : (rd.g === '이탈' ? (i >= 12 ? ' g-leave2' : ' g-leave') : '');
       tbody += '<tr class="' + (grpStart ? 'cur-grp-start' : '') + '">';
-      tbody += '<td class="text-left col-fixed cur-gubun">' + (rd.d || '') + '</td>';
+      tbody += '<td class="text-left col-fixed cur-gubun' + gc + '">' + (rd.d || '') + '</td>';
       tbody += '<td class="text-left cur-item">' + rd.item + '</td>';
       monthIdx.forEach(function (mi) {
         const c = fmtCell(yd.rows[i][mi], rd.fmt);

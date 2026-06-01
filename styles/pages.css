@@ -3031,6 +3031,15 @@
     .cur-table .cur-gubun { min-width: 120px; font-weight: var(--weight-medium); color: var(--color-text-primary); }
     .cur-table .cur-item { min-width: 72px; color: var(--color-text-secondary); }
     .cur-table tbody tr.cur-grp-start td { border-top: 1px solid var(--color-border-strong); }
+    /* 구분 열 그룹 색상 (원본 리포트 기준: 신규=녹색 / 이탈=적색 계열) */
+    .cur-table td.cur-gubun.g-new,    .cur-table tbody tr:hover td.cur-gubun.g-new    { background: #EAF7EF; }
+    .cur-table td.cur-gubun.g-new2,   .cur-table tbody tr:hover td.cur-gubun.g-new2   { background: #D5EFDF; }
+    .cur-table td.cur-gubun.g-leave,  .cur-table tbody tr:hover td.cur-gubun.g-leave  { background: #FDEEEC; }
+    .cur-table td.cur-gubun.g-leave2, .cur-table tbody tr:hover td.cur-gubun.g-leave2 { background: #FADBD8; }
+    [data-theme="dark"] .cur-table td.cur-gubun.g-new,    [data-theme="dark"] .cur-table tbody tr:hover td.cur-gubun.g-new    { background: rgba(46,164,98,0.16); }
+    [data-theme="dark"] .cur-table td.cur-gubun.g-new2,   [data-theme="dark"] .cur-table tbody tr:hover td.cur-gubun.g-new2   { background: rgba(46,164,98,0.26); }
+    [data-theme="dark"] .cur-table td.cur-gubun.g-leave,  [data-theme="dark"] .cur-table tbody tr:hover td.cur-gubun.g-leave  { background: rgba(214,69,69,0.16); }
+    [data-theme="dark"] .cur-table td.cur-gubun.g-leave2, [data-theme="dark"] .cur-table tbody tr:hover td.cur-gubun.g-leave2 { background: rgba(214,69,69,0.26); }
 
     @media print {
       .cur-chipbar, .cur-tabwrap, .cc-toolbar, #view-other { display: none !important; }
