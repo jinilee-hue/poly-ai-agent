@@ -129,26 +129,38 @@
         <!-- 툴바 -->
         <div class="cc-toolbar view-selector-inner">
           <div class="cc-toolbar-filters">
-            <label class="cc-filter">
+            <div class="cc-filter">
               <span class="cc-filter-label">캠퍼스</span>
-              <select class="filter-select" id="campusSelect">
-                <option>목동매그넷</option>
-                <option>목동</option>
-                <option>대치폴리마그넷</option>
-                <option>분당</option>
-                <option>일산</option>
-              </select>
-            </label>
-            <label class="cc-filter">
+              <div class="cond-wrap">
+                <button class="cond-trigger" id="campusCondTrigger" onclick="toggleCondMenu('campus')">
+                  <span id="campusCondLabel">목동매그넷</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="campusCondChevron"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="cond-menu" id="campusCondMenu">
+                  <button class="cond-item active" onclick="selectCond('campus','목동매그넷',this)">목동매그넷</button>
+                  <button class="cond-item" onclick="selectCond('campus','목동',this)">목동</button>
+                  <button class="cond-item" onclick="selectCond('campus','대치폴리마그넷',this)">대치폴리마그넷</button>
+                  <button class="cond-item" onclick="selectCond('campus','분당',this)">분당</button>
+                  <button class="cond-item" onclick="selectCond('campus','일산',this)">일산</button>
+                </div>
+              </div>
+            </div>
+            <div class="cc-filter">
               <span class="cc-filter-label">요일</span>
-              <select class="filter-select" id="daySelect">
-                <option value="all">전체</option>
-                <option value="매일">매일</option>
-                <option value="월수금">월수금</option>
-                <option value="화목">화목</option>
-                <option value="월수">월수</option>
-              </select>
-            </label>
+              <div class="cond-wrap">
+                <button class="cond-trigger" id="dayCondTrigger" onclick="toggleCondMenu('day')">
+                  <span id="dayCondLabel">전체</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="dayCondChevron"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="cond-menu" id="dayCondMenu">
+                  <button class="cond-item active" onclick="selectDay('all','전체',this)">전체</button>
+                  <button class="cond-item" onclick="selectDay('매일','매일',this)">매일</button>
+                  <button class="cond-item" onclick="selectDay('월수금','월수금',this)">월수금</button>
+                  <button class="cond-item" onclick="selectDay('화목','화목',this)">화목</button>
+                  <button class="cond-item" onclick="selectDay('월수','월수',this)">월수</button>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="cc-toolbar-actions">
             <div class="cc-tabs">
@@ -602,7 +614,39 @@
     setText('ccGaugeVal', pct + '%');
   }
 
-  function filterDay(v) { buildMatrix(v); }
+  /* 요일 필터 (커스텀 cond 드롭다운 — 리포트 목록과 동일 스타일) */
+  let _curDay = 'all';
+  function filterDay(v) { _curDay = v; buildMatrix(v); }
+
+  function toggleCondMenu(id) {
+    const menu = document.getElementById(id + 'CondMenu');
+    const chev = document.getElementById(id + 'CondChevron');
+    if (!menu) return;
+    menu.classList.toggle('open');
+    if (chev) chev.style.transform = menu.classList.contains('open') ? 'rotate(180deg)' : '';
+  }
+  function selectCond(id, label, btn) {
+    document.getElementById(id + 'CondLabel').textContent = label;
+    document.querySelectorAll('#' + id + 'CondMenu .cond-item').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(id + 'CondMenu').classList.remove('open');
+    const chev = document.getElementById(id + 'CondChevron');
+    if (chev) chev.style.transform = '';
+  }
+  function selectDay(val, label, btn) {
+    selectCond('day', label, btn);
+    filterDay(val);
+  }
+  document.addEventListener('click', function (e) {
+    document.querySelectorAll('.cond-wrap').forEach(function (wrap) {
+      if (!wrap.contains(e.target)) {
+        const m = wrap.querySelector('.cond-menu');
+        if (m) m.classList.remove('open');
+        const chev = wrap.querySelector('.cond-trigger svg');
+        if (chev) chev.style.transform = '';
+      }
+    });
+  });
 
   function switchView(view, btn) {
     document.querySelectorAll('.cc-tab').forEach(t => t.classList.remove('active'));
@@ -639,8 +683,7 @@
       btn.style.transform = 'rotate(360deg)';
       setTimeout(() => { btn.style.transition = 'none'; btn.style.transform = ''; }, 650);
     }
-    const dv = document.getElementById('daySelect');
-    buildMatrix(dv ? dv.value : 'all');
+    buildMatrix(_curDay);
     updateSummary();
   }
 
@@ -728,12 +771,6 @@
 <script src="js/utils.js"></script>
 <script src="js/layout.js"></script>
 <script>
-  /* 요일 필터 (커스텀 셀렉트 change 대응) */
-  (function () {
-    const sel = document.getElementById('daySelect');
-    if (sel) sel.addEventListener('change', function () { filterDay(this.value); });
-  })();
-
   /* LNB 최근 채팅 — hover 시 x 삭제 버튼 주입 */
   (function () {
     document.querySelectorAll('.poly-history-item').forEach(function (item) {
