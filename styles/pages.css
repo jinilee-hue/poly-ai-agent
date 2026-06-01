@@ -2965,4 +2965,45 @@
       .cc-kpi-grid { display: none !important; }
     }
 
+    /* ══════════════════════════════════════════════════
+       교육과정별 3개년 학생 수 분석 (report-curriculum.html)
+       ══════════════════════════════════════════════════ */
+
+    /* 연도/월/항목 칩 바 */
+    .cur-chipbar {
+      display: flex; flex-direction: column; gap: var(--space-2);
+      padding: var(--space-3) var(--space-4); margin-bottom: var(--space-4);
+      background: var(--color-bg-subtle); border: var(--border-default); border-radius: var(--radius-lg);
+    }
+    .cur-chip-row { display: flex; align-items: center; flex-wrap: wrap; gap: var(--space-2); }
+    .cur-chip-label { width: 40px; flex-shrink: 0; font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-text-tertiary); }
+    .cur-chip {
+      padding: 5px 12px; border: var(--border-default); background: var(--color-bg);
+      border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: var(--weight-medium);
+      color: var(--color-text-secondary); cursor: pointer; font-family: var(--font-sans);
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+    }
+    .cur-chip:hover { border-color: var(--color-primary-a50); color: var(--color-primary); }
+    .cur-chip.active { background: var(--color-primary); border-color: var(--color-primary); color: #fff; }
+    .cur-chip-hint { display: inline-flex; align-items: center; gap: 4px; margin-left: var(--space-2); font-size: var(--text-xs); color: var(--color-warning); }
+    .cur-chip-hint svg { width: 13px; height: 13px; }
+
+    .cur-tabwrap { margin-bottom: var(--space-4); }
+
+    /* 연도별 상세 표 (밀도 높은 다열 표) */
+    .cur-year-block { margin-bottom: var(--space-6); }
+    .cur-table { font-size: var(--text-xs); }
+    .cur-table thead th { white-space: nowrap; }
+    .cur-table td { padding: 7px 10px; }
+    .cur-table .cur-gubun { min-width: 120px; font-weight: var(--weight-medium); color: var(--color-text-primary); }
+    .cur-table .cur-item { min-width: 72px; color: var(--color-text-secondary); }
+    .cur-table tbody tr.cur-grp-start td { border-top: 1px solid var(--color-border-strong); }
+
+    @media print {
+      .cur-chipbar, .cur-tabwrap, .cc-toolbar, #view-other { display: none !important; }
+      .cur-table { font-size: 5.5px !important; zoom: 1 !important; }
+      .cur-table th, .cur-table td { font-size: 5.5px !important; padding: 1px 2px !important; min-width: 0 !important; }
+      .cur-table .col-fixed { position: static !important; }
+    }
+
 

@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>교육과정별 3개년 학생 수 분석 | Poly AI Agent</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/common.css">
+  <link rel="stylesheet" href="styles/pages.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body class="page-report-view">
+
+<!-- 사이드바 -->
+<aside class="poly-sidebar">
+  <div class="poly-sidebar-logo">
+    <a href="home.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+      <img src="https://www.polyinspiration.com/img/main/logo.png" alt="POLY" class="poly-sidebar-brand">
+      <span class="poly-sidebar-tagline">AI 경영 분석 플랫폼</span>
+    </a>
+  </div>
+  <div class="lnb-brand-switch">
+    <button class="lnb-brand-btn" data-brand="poly">POLY</button>
+    <button class="lnb-brand-btn" data-brand="canb">CANB</button>
+    <button class="lnb-brand-btn" data-brand="all">전체</button>
+  </div>
+
+  <a href="home.html" class="poly-new-chat">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    새 채팅
+  </a>
+  <div class="poly-nav-section">
+    <a href="chat-list.html" class="poly-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      채팅
+    </a>
+    <div class="poly-nav-group">
+      <div class="poly-nav-item-row">
+        <a href="projects.html" class="poly-nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          프로젝트
+        </a>
+        <button class="poly-nav-chevron" onclick="toggleSubNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+      <div class="poly-nav-sub">
+        <a href="project-detail.html" class="poly-nav-sub-item">목동 학생 감소 원인 분석</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">2026 상반기 재학생 추이 보고서</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">TEST</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">CANB 캠퍼스 학급 편성 최적화</a>
+      </div>
+    </div>
+    <div class="poly-nav-group open">
+      <div class="poly-nav-item-row">
+        <a href="reports.html" class="poly-nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          리포트
+        </a>
+        <button class="poly-nav-chevron" onclick="toggleSubNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+      <div class="poly-nav-sub">
+        <a href="report-view.html" class="poly-nav-sub-item">PI 학생 분석 리포트</a>
+        <a href="report-curriculum.html" class="poly-nav-sub-item active">교육과정별 3개년 학생 수 분석</a>
+        <a href="report-class.html" class="poly-nav-sub-item">학급 편성 대시보드</a>
+        <a href="report-esc.html" class="poly-nav-sub-item">ESC 학생 현황</a>
+        <a href="report-view.html" class="poly-nav-sub-item">재학생 추이 분석</a>
+      </div>
+    </div>
+  </div>
+  <div class="poly-history-section">
+    <div class="poly-nav-label">최근 채팅</div>
+    <div class="poly-history-item" style="color:var(--color-primary);font-weight:var(--weight-medium);">3개년 학생 수 추이 분석</div>
+    <div class="poly-history-item">9월 대비 증감 패턴</div>
+    <div class="poly-history-item">1월 대규모 이탈 원인</div>
+    <div class="poly-history-item">재등록률 연도 비교</div>
+  </div>
+  <div class="poly-sidebar-footer">
+    <div class="poly-user-avatar">이진</div>
+    <div>
+      <div class="poly-user-name">이진희</div>
+      <div class="poly-user-role">관리자</div>
+    </div>
+    <a href="login.html" class="icon-btn" style="margin-left:auto;text-decoration:none;" title="나가기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </a>
+  </div>
+</aside>
+
+<!-- 뷰 셸 -->
+<div class="view-shell" id="viewShell">
+
+  <header class="view-topbar">
+    <div class="view-topbar-left">
+      <a href="reports.html" class="icon-btn" style="text-decoration:none;flex-shrink:0;" title="리포트 목록">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </a>
+      <span class="view-topbar-title">교육과정별 3개년 학생 수 분석</span>
+    </div>
+    <div class="view-topbar-right">
+      <button id="theme-toggle-2" class="icon-btn" title="다크 모드">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="view-panels" style="position:relative;">
+
+    <button class="chat-fab" id="chatFab" onclick="toggleChat()" title="AI 채팅 열기" aria-label="AI 채팅 패널 열기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </button>
+
+    <div class="data-panel" id="dataPanel">
+
+      <img class="print-watermark" src="https://www.polyinspiration.com/img/main/logo.png" alt="" aria-hidden="true">
+
+      <div class="print-title-block">
+        <div class="print-title-main">교육과정별 3개년 학생 수 분석</div>
+        <div class="print-title-sub">Poly 교육과정별 3개년(2024·2025·2026) 학생 수 추이</div>
+        <div class="print-title-meta">매월 15일 기준 · 학사연도 기준(3월~2월)</div>
+      </div>
+
+      <div class="data-scroll">
+
+        <!-- 툴바 -->
+        <div class="cc-toolbar view-selector-inner">
+          <div class="cc-toolbar-filters">
+            <div class="cc-filter"><div class="cond-wrap">
+              <button class="cond-trigger" id="courseCondTrigger" onclick="toggleCondMenu('course')"><span id="courseCondLabel">교육과정 전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="courseCondChevron"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="cond-menu" id="courseCondMenu">
+                <button class="cond-item active" onclick="selectCond('course','교육과정 전체',this)">교육과정 전체</button>
+                <button class="cond-item" onclick="selectCond('course','ECP',this)">ECP</button>
+                <button class="cond-item" onclick="selectCond('course','ELE',this)">ELE</button>
+                <button class="cond-item" onclick="selectCond('course','GRAD',this)">GRAD</button>
+              </div>
+            </div></div>
+            <div class="cc-filter"><div class="cond-wrap">
+              <button class="cond-trigger" id="opCondTrigger" onclick="toggleCondMenu('op')"><span id="opCondLabel">운영 구분 전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="opCondChevron"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="cond-menu" id="opCondMenu">
+                <button class="cond-item active" onclick="selectCond('op','운영 구분 전체',this)">운영 구분 전체</button>
+                <button class="cond-item" onclick="selectCond('op','직영',this)">직영</button>
+                <button class="cond-item" onclick="selectCond('op','가맹',this)">가맹</button>
+              </div>
+            </div></div>
+            <div class="cc-filter"><div class="cond-wrap">
+              <button class="cond-trigger" id="regionCondTrigger" onclick="toggleCondMenu('region')"><span id="regionCondLabel">권역 전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="regionCondChevron"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="cond-menu" id="regionCondMenu">
+                <button class="cond-item active" onclick="selectCond('region','권역 전체',this)">권역 전체</button>
+                <button class="cond-item" onclick="selectCond('region','서울권',this)">서울권</button>
+                <button class="cond-item" onclick="selectCond('region','경인권',this)">경인권</button>
+                <button class="cond-item" onclick="selectCond('region','대전권',this)">대전권</button>
+              </div>
+            </div></div>
+            <div class="cc-filter"><div class="cond-wrap">
+              <button class="cond-trigger" id="campusCondTrigger" onclick="toggleCondMenu('campus')"><span id="campusCondLabel">캠퍼스 전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="campusCondChevron"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="cond-menu" id="campusCondMenu">
+                <button class="cond-item active" onclick="selectCond('campus','캠퍼스 전체',this)">캠퍼스 전체</button>
+                <button class="cond-item" onclick="selectCond('campus','목동',this)">목동</button>
+                <button class="cond-item" onclick="selectCond('campus','분당',this)">분당</button>
+                <button class="cond-item" onclick="selectCond('campus','대전',this)">대전</button>
+              </div>
+            </div></div>
+            <button class="btn btn-secondary" style="width:44px;height:44px;padding:0;justify-content:center;box-sizing:border-box;border-radius:var(--radius-lg);" onclick="refreshReport()" title="새로고침" aria-label="새로고침">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            </button>
+          </div>
+          <div class="cc-toolbar-actions">
+            <button class="btn btn-secondary cc-action-btn" onclick="printReport()" title="인쇄">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              인쇄
+            </button>
+            <button class="btn btn-secondary cc-action-btn" onclick="downloadExcel()" title="Excel 다운로드">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Excel
+            </button>
+          </div>
+        </div>
+
+        <!-- 연도 / 월 / 항목 칩 -->
+        <div class="cur-chipbar">
+          <div class="cur-chip-row">
+            <span class="cur-chip-label">연도</span>
+            <button class="cur-chip active" data-year="2024" onclick="toggleYear(this)">2024년</button>
+            <button class="cur-chip active" data-year="2025" onclick="toggleYear(this)">2025년</button>
+            <button class="cur-chip active" data-year="2026" onclick="toggleYear(this)">2026년</button>
+          </div>
+          <div class="cur-chip-row">
+            <span class="cur-chip-label">월</span>
+            <button class="cur-chip active">3월</button><button class="cur-chip active">4월</button><button class="cur-chip active">5월</button><button class="cur-chip active">6월</button><button class="cur-chip active">7월</button><button class="cur-chip active">8월</button><button class="cur-chip active">9월</button><button class="cur-chip active">10월</button><button class="cur-chip active">11월</button><button class="cur-chip active">12월</button><button class="cur-chip active">1월</button><button class="cur-chip active">2월</button>
+            <span class="cur-chip-hint">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              대규모 이탈 시기(1월)
+            </span>
+          </div>
+          <div class="cur-chip-row">
+            <span class="cur-chip-label">항목</span>
+            <button class="cur-chip active">재학생·재등록</button><button class="cur-chip">신규입학</button><button class="cur-chip">신규 외부·내부</button><button class="cur-chip">탈퇴</button><button class="cur-chip">탈퇴 외부·내부</button><button class="cur-chip">증감분석</button><button class="cur-chip">가동현황</button>
+          </div>
+        </div>
+
+        <!-- 탭 -->
+        <div class="cur-tabwrap">
+          <div class="cc-tabs">
+            <button class="cc-tab active" onclick="switchView('compare',this)">학생수 변동 비교</button>
+            <button class="cc-tab" onclick="switchView('flow',this)">신규생 및 탈퇴생 추이</button>
+            <button class="cc-tab" onclick="switchView('pattern',this)">탈퇴생 발생 패턴</button>
+          </div>
+        </div>
+
+        <div id="view-compare">
+          <!-- 3개년 라인 차트 -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <span class="chart-card-title">3개년도 학생 수 변동 비교 분석</span>
+                <div style="font-size:var(--text-xs);color:var(--color-text-tertiary);margin-top:2px;">매월 15일 기준 총 재학생 수 · 학사연도 기준(3월~2월)</div>
+              </div>
+              <div class="chart-legend" id="curLegend">
+                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--chart-3)"></div>2024년 추이</div>
+                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--chart-2)"></div>2025년 추이</div>
+                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--chart-1)"></div>2026년 진행중</div>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:360px;"><canvas id="trendChart" role="img" aria-label="2024·2025년은 3월 약 22,600명에서 2월 약 18,400명으로 연중 감소, 2026년은 3~5월 21,500명대 진행중"></canvas></div>
+          </div>
+
+          <!-- 연도별 상세 표 -->
+          <div class="cur-year-block" data-year="2024">
+            <div class="esc-section-title">2024년 · 교육과정별 월별 재학생 수 <span style="font-weight:var(--weight-regular);color:var(--color-text-tertiary);font-size:var(--text-xs);">(매월 15일 기준)</span></div>
+            <div class="data-table-card"><div class="data-table-wrap"><table class="data-table cur-table" id="curTable2024"></table></div></div>
+          </div>
+          <div class="cur-year-block" data-year="2025">
+            <div class="esc-section-title">2025년 · 교육과정별 월별 재학생 수 <span style="font-weight:var(--weight-regular);color:var(--color-text-tertiary);font-size:var(--text-xs);">(매월 15일 기준)</span></div>
+            <div class="data-table-card"><div class="data-table-wrap"><table class="data-table cur-table" id="curTable2025"></table></div></div>
+          </div>
+          <div class="cur-year-block" data-year="2026">
+            <div class="esc-section-title">2026년 · 교육과정별 월별 재학생 수 <span style="font-weight:var(--weight-regular);color:var(--color-text-tertiary);font-size:var(--text-xs);">(매월 15일 기준 · 진행중)</span></div>
+            <div class="data-table-card"><div class="data-table-wrap"><table class="data-table cur-table" id="curTable2026"></table></div></div>
+          </div>
+        </div>
+
+        <div id="view-other" style="display:none;">
+          <div class="cc-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
+            <p><strong id="otherViewLabel">신규생 및 탈퇴생 추이</strong> 화면은 준비 중입니다.</p>
+            <p class="cc-placeholder-sub">학생수 변동 비교 탭에서 3개년 추이와 상세 표를 확인하세요.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 우측: AI 채팅 패널 -->
+    <div class="chat-panel" id="chatPanel">
+      <div class="chat-header">
+        <div class="chat-header-left">
+          <div class="chat-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div class="chat-header-title">대화</div>
+        </div>
+        <button class="chat-close-btn" onclick="toggleChat()" title="닫기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="chat-intro" id="chatIntro">
+        <div class="chat-intro-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+        <div>
+          <div class="chat-intro-title">Poly AI</div>
+          <div class="chat-intro-desc">3개년 학생 수 추이 데이터를<br>기반으로 인사이트를 제공합니다</div>
+        </div>
+        <button class="chat-insight-btn" onclick="sendMsg('현재 데이터를 분석하여 인사이트를 제공해줘')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          분석하여 인사이트 얻기
+        </button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg ai">
+          <div class="msg-bubble">
+            안녕하세요! 교육과정별 3개년 학생 수 분석을 보고 계시네요.<br>
+            2024·2025·2026 학사연도 추이를 기반으로 답변 드립니다.
+          </div>
+          <span class="msg-time">15:29</span>
+          <div class="msg-followups">
+            <button class="followup-chip" onclick="sendMsg('1월에 학생 수가 크게 줄어드는 이유는?')">1월 대규모 이탈</button>
+            <button class="followup-chip" onclick="sendMsg('3개년 추이를 비교해줘')">3개년 비교</button>
+            <button class="followup-chip" onclick="sendMsg('2026년은 전년 대비 어떤가요?')">2026 전년 대비</button>
+          </div>
+        </div>
+      </div>
+      <div class="chat-empty" id="chatEmpty" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <p>데이터에 대해 궁금한 점을 질문해보세요</p>
+        <div class="chat-empty-suggestions">
+          <button class="chat-empty-chip" onclick="sendMsg('9월 신규 유입이 많은 이유는?')">9월 신규 유입이 많은 이유는?</button>
+          <button class="chat-empty-chip" onclick="sendMsg('가동률 추이를 알려줘')">가동률 추이를 알려줘</button>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <div class="chat-input-wrap">
+          <textarea class="chat-textarea" id="chatInput" placeholder="대화 내에서 질문해보세요..." rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}"></textarea>
+          <button class="chat-send-btn" onclick="sendMsg()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* 테마 */
+  (function () { const t = localStorage.getItem('epTheme'); if (t) document.documentElement.setAttribute('data-theme', t); })();
+  function _syncThemeBtns() {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const sunSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+    const moonSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+    const btn = document.getElementById('theme-toggle-2');
+    if (btn) { btn.innerHTML = dark ? sunSvg : moonSvg; btn.title = dark ? '라이트 모드' : '다크 모드'; }
+  }
+  function _toggleTheme() {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const next = dark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('epTheme', next);
+    _syncThemeBtns();
+    applyBrand(localStorage.getItem('polyBrand') || 'poly');
+    window.dispatchEvent(new CustomEvent('themechange'));
+  }
+  document.getElementById('theme-toggle-2').addEventListener('click', _toggleTheme);
+  _syncThemeBtns();
+
+  /* 패널 토글 */
+  let chatOpen = true;
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    const panel = document.getElementById('chatPanel'), fab = document.getElementById('chatFab');
+    if (chatOpen) { panel.classList.remove('collapsed'); fab.classList.remove('visible'); }
+    else { panel.classList.add('collapsed'); fab.classList.add('visible'); }
+  }
+
+  /* 채팅 */
+  const AI_RESPONSES = {
+    '1월에 학생 수가 크게 줄어드는 이유는?': '1월은 학년말 졸업·상급 학교 진학 및 연말 재등록 미정 학생 이탈이 겹치는 대규모 이탈 시기입니다. 2024년 1월 -987명, 2025년 1월 -958명으로 연중 전월 대비 감소폭이 가장 컸습니다.',
+    '3개년 추이를 비교해줘': '2024·2025년은 3월 약 22,600명에서 2월 약 18,400명으로 거의 동일한 감소 곡선을 그립니다. 2026년은 3월 21,872명으로 시작해 전년 동기 대비 약 700~800명 낮은 수준에서 진행 중입니다.',
+    '2026년은 전년 대비 어떤가요?': '2026년 5월 기준 21,525명으로 2025년 5월(22,216명) 대비 -691명입니다. 신규 유입률(2.2%→1.5%)과 가동률(75.2%→74.0%) 모두 소폭 낮아 추세 관리가 필요합니다.',
+    '9월 신규 유입이 많은 이유는?': '9월은 2학기 시작 시점으로 신규 입학이 집중됩니다. 2024년 9월 1,278명, 2025년 9월 1,326명으로 연중 신규 인원이 가장 많았습니다.',
+    '가동률 추이를 알려줘': '당월 평균 가동률은 3월(77%대)에서 1~2월(65~69%)로 하락하는 계절성을 보입니다. 연 평균은 2024년 73.1%, 2025년 72.1%, 2026년(진행) 74.6%입니다.',
+    '현재 데이터를 분석하여 인사이트를 제공해줘': '① 2024·2025년 추이가 거의 일치해 학사연도 계절성이 뚜렷합니다(3월 고점 → 1~2월 저점). ② 1월이 최대 이탈 시기(전월 대비 -950~990명)입니다. ③ 9월은 최대 신규 유입 시기입니다. ④ 2026년은 전년 동기 대비 약 700명 낮게 출발해 초기 충원·가동률 관리가 중요합니다.',
+  };
+  function sendMsg(text) {
+    const input = document.getElementById('chatInput');
+    const msg = text || input.value.trim();
+    if (!msg) return;
+    input.value = '';
+    const intro = document.getElementById('chatIntro'); if (intro) intro.style.display = 'none';
+    const container = document.getElementById('chatMessages');
+    const userDiv = document.createElement('div'); userDiv.className = 'msg user';
+    const now = new Date(); const timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+    userDiv.innerHTML = `<div class="msg-bubble">${msg}</div><span class="msg-time">${timeStr}</span>`;
+    container.appendChild(userDiv);
+    const loadDiv = document.createElement('div'); loadDiv.className = 'msg ai';
+    loadDiv.innerHTML = `<div class="msg-bubble" style="padding:var(--space-3) var(--space-4);"><div class="msg-loading"><span></span><span></span><span></span></div></div>`;
+    container.appendChild(loadDiv); container.scrollTop = container.scrollHeight;
+    setTimeout(() => {
+      container.removeChild(loadDiv);
+      const aiDiv = document.createElement('div'); aiDiv.className = 'msg ai';
+      const response = AI_RESPONSES[msg] || `"${msg}"에 대한 분석 결과입니다. 현재 교육과정별 3개년 학생 수 데이터를 기반으로 답변 드리겠습니다.`;
+      aiDiv.innerHTML = `<div class="msg-bubble">${response}</div><span class="msg-time">${timeStr}</span>`;
+      container.appendChild(aiDiv); container.scrollTop = container.scrollHeight;
+    }, 1000);
+  }
+
+  /* 브랜드 토큰 */
+  const BRAND_TOKENS = {
+    poly: { '--color-primary':'#0066FF','--color-primary-light':'#E8F0FF','--color-primary-dark':'#0052CC','--color-primary-deeper':'#003D99','--color-success':'#0066FF','--color-success-light':'#E8F0FF','--color-sidebar-active':'#0066FF','--chart-1':'rgba(0,102,255,0.85)','--chart-2':'rgba(0,102,255,0.50)','--chart-3':'rgba(0,102,255,0.24)','--chart-4':'rgba(0,102,255,0.30)','--chart-5':'rgba(0,102,255,0.12)','--chart-6':'rgba(0,102,255,0.07)','--color-primary-a08':'rgba(0,102,255,0.08)','--color-primary-a10':'rgba(0,102,255,0.10)','--color-primary-a15':'rgba(0,102,255,0.15)','--color-primary-a25':'rgba(0,102,255,0.25)','--color-primary-a30':'rgba(0,102,255,0.30)','--color-primary-a50':'rgba(0,102,255,0.50)' },
+    canb: { '--color-primary':'#BC216D','--color-primary-light':'#FAEAF3','--color-primary-dark':'#9A1D5E','--color-primary-deeper':'#6E1040','--color-success':'#BC216D','--color-success-light':'#FAEAF3','--color-sidebar-active':'#BC216D','--chart-1':'rgba(188,33,109,0.85)','--chart-2':'rgba(188,33,109,0.50)','--chart-3':'rgba(188,33,109,0.24)','--chart-4':'rgba(188,33,109,0.30)','--chart-5':'rgba(188,33,109,0.12)','--chart-6':'rgba(188,33,109,0.07)','--color-primary-a08':'rgba(188,33,109,0.08)','--color-primary-a10':'rgba(188,33,109,0.10)','--color-primary-a15':'rgba(188,33,109,0.15)','--color-primary-a25':'rgba(188,33,109,0.25)','--color-primary-a30':'rgba(188,33,109,0.30)','--color-primary-a50':'rgba(188,33,109,0.50)' }
+  };
+  BRAND_TOKENS.all = BRAND_TOKENS.poly;
+  const BRAND_DARK_OVERRIDES = {
+    poly: { '--color-primary-light':'rgba(0,102,255,0.18)','--color-success-light':'rgba(0,102,255,0.18)','--chart-1':'rgba(0,102,255,0.92)','--chart-2':'rgba(0,102,255,0.60)','--chart-3':'rgba(0,102,255,0.34)','--chart-4':'rgba(0,102,255,0.45)','--chart-5':'rgba(0,102,255,0.22)','--chart-6':'rgba(0,102,255,0.13)' },
+    canb: { '--color-primary-light':'rgba(188,33,109,0.18)','--color-success-light':'rgba(188,33,109,0.18)','--chart-1':'rgba(188,33,109,0.92)','--chart-2':'rgba(188,33,109,0.60)','--chart-3':'rgba(188,33,109,0.34)','--chart-4':'rgba(188,33,109,0.45)','--chart-5':'rgba(188,33,109,0.22)','--chart-6':'rgba(188,33,109,0.13)' }
+  };
+  function applyBrand(brand) {
+    const tokens = BRAND_TOKENS[brand] || BRAND_TOKENS.poly;
+    const root = document.documentElement;
+    Object.entries(tokens).forEach(([k, v]) => root.style.setProperty(k, v));
+    const dark = root.getAttribute('data-theme') === 'dark';
+    const darkKey = brand === 'all' ? 'poly' : brand;
+    if (dark && BRAND_DARK_OVERRIDES[darkKey]) Object.entries(BRAND_DARK_OVERRIDES[darkKey]).forEach(([k, v]) => root.style.setProperty(k, v));
+    root.setAttribute('data-brand', brand);
+  }
+  function _cvar(name, fb) { const v = getComputedStyle(document.documentElement).getPropertyValue(name).trim(); return v || fb; }
+
+  /* ── 데이터 ───────────────────────────── */
+  const MONTHS = ['3월','4월','5월','6월','7월','8월','9월','10월','11월','12월','1월','2월'];
+  const ROWDEFS = [
+    {g:'재학생', d:'당월 재학생 수', item:'총 학생수', fmt:'int'},
+    {g:'재학생', d:'당월 재등록 수', item:'총 학생수', fmt:'int'},
+    {g:'재학생', d:'', item:'구성비', fmt:'pct'},
+    {g:'재학생', d:'전월 학생 재등록률', item:'재등록률', fmt:'pct'},
+    {g:'신규', d:'신규인원 수', item:'총 학생수', fmt:'int'},
+    {g:'신규', d:'신규유입률', item:'유입률', fmt:'pct'},
+    {g:'신규', d:'누적 신규 입학생', item:'총 학생수', fmt:'int'},
+    {g:'신규', d:'순수 신규생 수', item:'외부 신규', fmt:'int'},
+    {g:'신규', d:'레벨 변동 유입 수', item:'내부 유입', fmt:'int'},
+    {g:'이탈', d:'이탈인원 수', item:'총 학생수', fmt:'int'},
+    {g:'이탈', d:'탈퇴률', item:'탈퇴률', fmt:'pct'},
+    {g:'이탈', d:'누적 탈퇴생', item:'총 학생수', fmt:'int'},
+    {g:'이탈', d:'순수 탈퇴생 수', item:'외부 탈퇴', fmt:'int'},
+    {g:'이탈', d:'레벨 변동 이탈 수', item:'내부 이탈', fmt:'int'},
+    {g:'증감', d:'전월 대비 당월', item:'증감', fmt:'delta'},
+    {g:'증감', d:'3월 대비 당월', item:'증감', fmt:'delta'},
+    {g:'증감', d:'9월 대비 당월', item:'증감', fmt:'delta'},
+    {g:'가동', d:'당월 가동 학급수', item:'학급 수', fmt:'int'},
+    {g:'가동', d:'학급당 평균', item:'학생수', fmt:'dec'},
+    {g:'가동', d:'당월 평균 가동률', item:'가동률', fmt:'pct'},
+  ];
+  const N = null;
+  const DATA = {
+    2024: { notes: {0:'-4,085',4:'6,261',9:'10,346',18:'8.8',19:'73.1%'}, rows: [
+      [22674,22461,22119,21791,21176,20501,20568,20566,20442,19961,18974,18589],
+      [0,21999,21746,21158,20763,19970,19290,20129,19985,19399,18468,17980],
+      [0.0,97.9,98.3,97.1,98.0,97.4,93.8,97.9,97.8,97.2,97.3,96.7],
+      [0.0,97.0,96.8,95.7,95.3,94.3,94.1,97.9,97.2,94.9,92.5,94.8],
+      [0,462,373,633,413,531,1278,437,457,562,506,609],
+      [0.0,2.1,1.7,2.9,2.0,2.6,6.2,2.1,2.2,2.8,2.7,3.3],
+      [0,462,835,1468,1881,2412,3690,4127,4584,5146,5652,6261],
+      [0,462,373,633,413,531,1278,437,457,562,506,609],
+      [0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,675,715,961,1028,1206,1211,439,581,1043,1493,994],
+      [0.0,3.0,3.2,4.3,4.7,5.7,5.9,2.1,2.8,5.1,7.5,5.2],
+      [0,675,1390,2351,3379,4585,5796,6235,6816,7859,9352,10346],
+      [0,675,715,961,1028,1206,1211,439,581,1043,1493,994],
+      [0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,-213,-342,-328,-615,-675,67,-2,-124,-481,-987,-385],
+      [0,-213,-555,-883,-1498,-2173,-2106,-2108,-2232,-2713,-3700,-4085],
+      [2106,1893,1551,1223,608,-67,0,-2,-126,-607,-1594,-1979],
+      [2448,2451,2451,2421,2411,2411,2327,2331,2338,2298,2286,2294],
+      [9.3,9.2,9.0,9.0,8.8,8.5,8.8,8.8,8.7,8.7,8.3,8.1],
+      [77.2,76.4,75.2,75.0,73.2,70.9,73.7,73.5,72.9,72.4,69.2,67.5],
+    ]},
+    2025: { notes: {0:'-4,323',4:'5,848',9:'10,171',18:'8.7',19:'72.1%'}, rows: [
+      [22633,22529,22216,21900,21395,20613,20655,20498,20432,19967,19009,18310],
+      [0,22080,21898,21416,20934,20200,19329,20210,19999,19421,18422,17767],
+      [0.0,98.0,98.6,97.8,97.8,98.0,93.6,98.6,97.9,97.3,96.9,97.0],
+      [0.0,97.6,97.2,96.4,95.6,94.4,93.8,97.8,97.6,95.1,92.3,93.5],
+      [0,449,318,484,461,413,1326,288,433,546,587,543],
+      [0.0,2.0,1.4,2.2,2.2,2.0,6.4,1.4,2.1,2.7,3.1,3.0],
+      [0,449,767,1251,1712,2125,3451,3739,4172,4718,5305,5848],
+      [0,449,318,484,461,413,1326,288,433,546,587,543],
+      [0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,553,631,800,966,1195,1284,445,499,1011,1545,1242],
+      [0.0,2.4,2.8,3.6,4.4,5.6,6.2,2.2,2.4,4.9,7.7,6.5],
+      [0,553,1184,1984,2950,4145,5429,5874,6373,7384,8929,10171],
+      [0,553,631,800,966,1195,1284,445,499,1011,1545,1242],
+      [0,0,0,0,0,0,0,0,0,0,0,0],
+      [0,-104,-313,-316,-505,-782,42,-157,-66,-465,-958,-699],
+      [0,-104,-417,-733,-1238,-2020,-1978,-2135,-2201,-2666,-3624,-4323],
+      [1978,1874,1561,1245,740,-42,0,-157,-223,-688,-1646,-2345],
+      [2462,2461,2462,2432,2432,2431,2391,2396,2392,2353,2352,2341],
+      [9.2,9.2,9.0,9.0,8.8,8.5,8.6,8.6,8.5,8.5,8.1,7.8],
+      [76.6,76.3,75.2,75.0,73.3,70.7,72.0,71.3,71.2,70.7,67.4,65.2],
+    ]},
+    2026: { notes: {0:'-347',4:'803',9:'1,150',18:'9.0',19:'74.6%'}, rows: [
+      [21872,21782,21525,N,N,N,N,N,N,N,N,N],
+      [0,21308,21196,N,N,N,N,N,N,N,N,N],
+      [0.0,97.8,98.5,N,N,N,N,N,N,N,N,N],
+      [0.0,97.4,97.3,N,N,N,N,N,N,N,N,N],
+      [0,474,329,N,N,N,N,N,N,N,N,N],
+      [0.0,2.2,1.5,N,N,N,N,N,N,N,N,N],
+      [0,474,803,N,N,N,N,N,N,N,N,N],
+      [0,474,329,N,N,N,N,N,N,N,N,N],
+      [0,0,0,N,N,N,N,N,N,N,N,N],
+      [0,564,586,N,N,N,N,N,N,N,N,N],
+      [0.0,2.6,2.7,N,N,N,N,N,N,N,N,N],
+      [0,564,1150,N,N,N,N,N,N,N,N,N],
+      [0,564,586,N,N,N,N,N,N,N,N,N],
+      [0,0,0,N,N,N,N,N,N,N,N,N],
+      [0,-90,-257,N,N,N,N,N,N,N,N,N],
+      [0,-90,-347,N,N,N,N,N,N,N,N,N],
+      [N,N,N,N,N,N,N,N,N,N,N,N],
+      [2432,2426,2425,N,N,N,N,N,N,N,N,N],
+      [9.0,9.0,8.9,N,N,N,N,N,N,N,N,N],
+      [74.9,74.8,74.0,N,N,N,N,N,N,N,N,N],
+    ]},
+  };
+  const TREND = { 2024: DATA[2024].rows[0], 2025: DATA[2025].rows[0], 2026: DATA[2026].rows[0] };
+
+  function fmtCell(v, fmt) {
+    if (v === null || v === undefined) return { t: '—', c: 'num-neutral' };
+    if (fmt === 'int') return { t: v.toLocaleString(), c: 'num-neutral' };
+    if (fmt === 'pct') return { t: v.toFixed(1) + '%', c: 'num-neutral' };
+    if (fmt === 'dec') return { t: v.toFixed(1), c: 'num-neutral' };
+    if (fmt === 'delta') {
+      if (v === 0) return { t: '0', c: 'num-neutral' };
+      return { t: (v > 0 ? '+' : '') + v.toLocaleString(), c: v > 0 ? 'num-pos' : 'num-neg' };
+    }
+    return { t: String(v), c: 'num-neutral' };
+  }
+
+  function buildYearTable(year) {
+    const table = document.getElementById('curTable' + year);
+    if (!table) return;
+    const yd = DATA[year];
+    let thead = '<thead><tr><th class="text-left col-fixed" style="min-width:120px;">구분</th><th class="text-left" style="min-width:72px;">항목</th>';
+    MONTHS.forEach(m => thead += '<th style="text-align:right;">' + m + '</th>');
+    thead += '<th style="text-align:right;border-left:1px solid var(--color-border-strong);">비고</th></tr></thead>';
+    let tbody = '<tbody>';
+    let prevG = null;
+    ROWDEFS.forEach(function (rd, i) {
+      const grpStart = rd.g !== prevG; prevG = rd.g;
+      tbody += '<tr class="' + (grpStart ? 'cur-grp-start' : '') + '">';
+      tbody += '<td class="text-left col-fixed cur-gubun">' + (rd.d || '') + '</td>';
+      tbody += '<td class="text-left cur-item">' + rd.item + '</td>';
+      yd.rows[i].forEach(function (v) {
+        const c = fmtCell(v, rd.fmt);
+        tbody += '<td class="' + c.c + '" style="text-align:right;">' + c.t + '</td>';
+      });
+      const note = yd.notes[i];
+      if (note) {
+        const nc = note.indexOf('-') === 0 ? 'num-neg' : (note.indexOf('+') === 0 ? 'num-pos' : 'num-neutral');
+        tbody += '<td class="' + nc + '" style="text-align:right;font-weight:var(--weight-semibold);border-left:1px solid var(--color-border-strong);">' + note + '</td>';
+      } else {
+        tbody += '<td style="border-left:1px solid var(--color-border-strong);"></td>';
+      }
+      tbody += '</tr>';
+    });
+    tbody += '</tbody>';
+    table.innerHTML = thead + tbody;
+  }
+
+  /* 라인 차트 */
+  let _trendChart = null;
+  let activeYears = new Set(['2024', '2025', '2026']);
+  function buildChart() {
+    const ctx = document.getElementById('trendChart');
+    if (!ctx) return;
+    if (_trendChart) _trendChart.destroy();
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const grid = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+    const tick = dark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)';
+    const colorMap = { '2024': _cvar('--chart-3', 'rgba(0,102,255,0.24)'), '2025': _cvar('--chart-2', 'rgba(0,102,255,0.50)'), '2026': _cvar('--chart-1', 'rgba(0,102,255,0.85)') };
+    const labelMap = { '2024': '2024년 추이', '2025': '2025년 추이', '2026': '2026년 진행중' };
+    const datasets = ['2024', '2025', '2026'].filter(y => activeYears.has(y)).map(function (y) {
+      const col = colorMap[y];
+      return { label: labelMap[y], data: TREND[y], borderColor: col, backgroundColor: 'transparent', borderWidth: 2.5, tension: 0.35, spanGaps: false, pointRadius: 4, pointHoverRadius: 6, pointBackgroundColor: col, pointBorderColor: 'transparent', pointBorderWidth: 0 };
+    });
+    _trendChart = new Chart(ctx, {
+      type: 'line',
+      data: { labels: MONTHS, datasets: datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: function (c) { return c.dataset.label + ': ' + (c.parsed.y != null ? c.parsed.y.toLocaleString() + '명' : '—'); } } } },
+        scales: {
+          x: { grid: { display: false }, ticks: { color: tick, font: { size: 11 } } },
+          y: { grid: { color: grid }, ticks: { color: tick, font: { size: 11 }, callback: function (v) { return v.toLocaleString(); } }, border: { display: false } }
+        }
+      }
+    });
+  }
+
+  /* 표 폭 맞춤 */
+  function fitTables() {
+    document.querySelectorAll('.cur-table').forEach(function (table) {
+      const wrap = table.closest('.data-table-wrap');
+      if (!wrap) return;
+      table.style.zoom = '';
+      const natural = table.scrollWidth, avail = wrap.clientWidth;
+      if (natural && avail) table.style.zoom = Math.min(1, avail / natural);
+    });
+  }
+  let _fitRaf;
+  window.addEventListener('load', fitTables);
+  window.addEventListener('resize', function () { cancelAnimationFrame(_fitRaf); _fitRaf = requestAnimationFrame(fitTables); });
+  (function () { const p = document.getElementById('chatPanel'); if (p) p.addEventListener('transitionend', function (e) { if (e.propertyName === 'width') fitTables(); }); })();
+
+  /* 연도 토글 */
+  function toggleYear(btn) {
+    const y = btn.dataset.year;
+    if (activeYears.has(y)) {
+      if (activeYears.size === 1) return; // 최소 1개 유지
+      activeYears.delete(y); btn.classList.remove('active');
+    } else { activeYears.add(y); btn.classList.add('active'); }
+    document.querySelectorAll('.cur-year-block').forEach(function (b) { b.style.display = activeYears.has(b.dataset.year) ? '' : 'none'; });
+    document.querySelectorAll('#curLegend .chart-legend-item').forEach(function (it, idx) {
+      const yr = ['2024', '2025', '2026'][idx];
+      it.style.opacity = activeYears.has(yr) ? '1' : '0.35';
+    });
+    buildChart(); fitTables();
+  }
+
+  /* cond 드롭다운 */
+  function toggleCondMenu(id) {
+    const menu = document.getElementById(id + 'CondMenu'), chev = document.getElementById(id + 'CondChevron');
+    if (!menu) return;
+    menu.classList.toggle('open');
+    if (chev) chev.style.transform = menu.classList.contains('open') ? 'rotate(180deg)' : '';
+  }
+  function selectCond(id, label, btn) {
+    document.getElementById(id + 'CondLabel').textContent = label;
+    document.querySelectorAll('#' + id + 'CondMenu .cond-item').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(id + 'CondMenu').classList.remove('open');
+    const chev = document.getElementById(id + 'CondChevron'); if (chev) chev.style.transform = '';
+  }
+  document.addEventListener('click', function (e) {
+    document.querySelectorAll('.cond-wrap').forEach(function (wrap) {
+      if (!wrap.contains(e.target)) {
+        const m = wrap.querySelector('.cond-menu'); if (m) m.classList.remove('open');
+        const chev = wrap.querySelector('.cond-trigger svg'); if (chev) chev.style.transform = '';
+      }
+    });
+  });
+
+  /* 탭 */
+  function switchView(view, btn) {
+    document.querySelectorAll('.cc-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    const isCompare = view === 'compare';
+    document.getElementById('view-compare').style.display = isCompare ? '' : 'none';
+    document.getElementById('view-other').style.display = isCompare ? 'none' : '';
+    if (isCompare) { buildChart(); fitTables(); }
+    else { const lbl = document.getElementById('otherViewLabel'); if (lbl) lbl.textContent = view === 'flow' ? '신규생 및 탈퇴생 추이' : '탈퇴생 발생 패턴'; }
+  }
+
+  /* Excel */
+  function downloadExcel() {
+    if (typeof XLSX === 'undefined') return;
+    const wb = XLSX.utils.book_new();
+    ['2024', '2025', '2026'].forEach(function (year) {
+      if (!activeYears.has(year)) return;
+      const yd = DATA[year];
+      const aoa = [['구분', '항목'].concat(MONTHS).concat(['비고'])];
+      ROWDEFS.forEach(function (rd, i) {
+        const row = [rd.d || '', rd.item];
+        yd.rows[i].forEach(function (v) { row.push(v === null ? '' : (rd.fmt === 'pct' ? v + '%' : v)); });
+        row.push(yd.notes[i] || '');
+        aoa.push(row);
+      });
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(aoa), year + '년');
+    });
+    XLSX.writeFile(wb, '교육과정별_3개년_학생수_2026.xlsx');
+  }
+
+  function printReport() { window.print(); }
+  function refreshReport() {
+    const btn = document.querySelector('[onclick="refreshReport()"] svg');
+    if (btn) { btn.style.transition = 'transform 0.6s ease'; btn.style.transform = 'rotate(360deg)'; setTimeout(() => { btn.style.transition = 'none'; btn.style.transform = ''; }, 650); }
+    buildYearTable(2024); buildYearTable(2025); buildYearTable(2026); buildChart(); fitTables();
+  }
+  function toggleSubNav(btn) { btn.closest('.poly-nav-group').classList.toggle('open'); }
+
+  /* 초기화 */
+  (function () {
+    const intro = document.getElementById('chatIntro'), msgs = document.getElementById('chatMessages');
+    if (intro && msgs && msgs.querySelector('.msg')) intro.style.display = 'none';
+    const saved = localStorage.getItem('polyBrand') || 'poly';
+    applyBrand(saved);
+    buildYearTable(2024); buildYearTable(2025); buildYearTable(2026);
+    buildChart(); fitTables();
+    window.addEventListener('themechange', buildChart);
+    document.querySelectorAll('.lnb-brand-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.brand === saved);
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.lnb-brand-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const brand = this.dataset.brand;
+        localStorage.setItem('polyBrand', brand);
+        applyBrand(brand); buildChart();
+      });
+    });
+  })();
+</script>
+
+<!-- 채팅 패널 리사이즈 -->
+<script>
+(function() {
+  const panel = document.getElementById('chatPanel');
+  if (!panel) return;
+  const tip = document.createElement('div');
+  tip.className = 'resize-tooltip';
+  tip.textContent = '← 드래그하여 크기 조절';
+  document.body.appendChild(tip);
+  const EDGE = 14;
+  let dragging = false, startX, startW;
+  panel.addEventListener('mousemove', function(e) {
+    if (dragging) return;
+    const fromLeft = e.clientX - panel.getBoundingClientRect().left;
+    if (fromLeft <= EDGE) { panel.style.cursor = 'col-resize'; tip.style.left = (e.clientX + 12) + 'px'; tip.style.top = e.clientY + 'px'; tip.classList.add('visible'); }
+    else { panel.style.cursor = ''; tip.classList.remove('visible'); }
+  });
+  panel.addEventListener('mouseleave', function() { if (!dragging) { panel.style.cursor = ''; tip.classList.remove('visible'); } });
+  panel.addEventListener('mousedown', function(e) {
+    const fromLeft = e.clientX - panel.getBoundingClientRect().left;
+    if (fromLeft > EDGE) return;
+    dragging = true; startX = e.clientX; startW = panel.offsetWidth;
+    tip.classList.remove('visible'); document.body.style.cursor = 'col-resize'; document.body.style.userSelect = 'none';
+    function onMove(e) { const newW = Math.min(720, Math.max(260, startW + (startX - e.clientX))); panel.style.width = newW + 'px'; panel.style.transition = 'none'; }
+    function onUp() { dragging = false; document.body.style.cursor = ''; document.body.style.userSelect = ''; panel.style.transition = ''; document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); }
+    document.addEventListener('mousemove', onMove); document.addEventListener('mouseup', onUp); e.preventDefault();
+  });
+})();
+</script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script>
+  (function () {
+    document.querySelectorAll('.poly-history-item').forEach(function (item) {
+      if (item.dataset.delReady) return;
+      item.dataset.delReady = '1';
+      var txt = document.createElement('span'); txt.className = 'poly-history-text'; txt.innerHTML = item.innerHTML;
+      item.innerHTML = ''; item.appendChild(txt);
+      var del = document.createElement('button'); del.type = 'button'; del.className = 'poly-history-del'; del.title = '삭제'; del.setAttribute('aria-label', '채팅 삭제');
+      del.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      del.addEventListener('click', function (e) { e.stopPropagation(); e.preventDefault(); item.remove(); });
+      item.appendChild(del);
+    });
+  })();
+</script>
+</body>
+</html>
