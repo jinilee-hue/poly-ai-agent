@@ -2886,6 +2886,7 @@
       border-bottom: var(--border-default); border-right: var(--border-default);
     }
     .cc-matrix td:last-child { border-right: none; }
+    .cc-matrix tbody tr:last-child td { border-bottom: none; }
     /* 고정 라벨 열 */
     .cc-matrix td.cc-lbl {
       position: sticky; z-index: 2; text-align: center; vertical-align: middle;
