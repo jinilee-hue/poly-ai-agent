@@ -2139,6 +2139,7 @@
     .data-table-card {
       background: var(--color-bg);
       border: var(--border-default);
+      border-bottom: none;          /* 하단은 표 마지막 행 테두리로 단일 1px 처리(이중선 방지) */
       border-radius: var(--radius-lg);
       overflow: hidden;
     }
@@ -2191,7 +2192,7 @@
       color: var(--color-text-primary);
       vertical-align: middle;
     }
-    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table tbody tr:last-child td { border-bottom: var(--border-default); }
     .data-table tbody tr:hover td { background: var(--color-bg-subtle); }
     /* 소계 행 */
     .data-table tbody tr.subtotal td {
@@ -2667,7 +2668,7 @@
       font-weight: var(--weight-semibold);
       color: var(--color-text-primary);
       border-top: 1px solid var(--color-primary-a30);
-      border-bottom: none;
+      border-bottom: var(--border-default);
     }
     .data-table tbody tr.grand-total:hover td { background: var(--color-primary-light); }
     .data-table tbody tr.grand-total td.col-fixed { background: var(--color-primary-light); }
@@ -2888,7 +2889,6 @@
       border-bottom: var(--border-default); border-right: var(--border-default);
     }
     .cc-matrix td:last-child { border-right: none; }
-    .cc-matrix tbody tr:last-child td { border-bottom: none; }
     /* 고정 라벨 열 */
     .cc-matrix td.cc-lbl {
       position: sticky; z-index: 2; text-align: center; vertical-align: middle;
