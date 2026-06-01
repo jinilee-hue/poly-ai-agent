@@ -2792,19 +2792,30 @@
     .cc-action-btn { height: 40px; border-radius: var(--radius-lg); }
 
     /* 뷰 탭 (세그먼티드 컨트롤) */
+    /* 뷰 탭 — 리포트 목록 카테고리 탭(.category-tab)과 동일 스타일 */
     .cc-tabs {
-      display: inline-flex; padding: 3px;
-      background: var(--color-border-strong); border-radius: var(--radius-lg);
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--color-bg-muted); border-radius: var(--radius-md);
+      padding: 0 8px; height: 44px;
     }
+    [data-theme="dark"] .cc-tabs { background: var(--color-bg-subtle); }
     .cc-tab {
-      padding: 6px 14px; border: none; background: transparent;
+      position: relative; isolation: isolate;
+      height: 44px; padding: 0 16px; border: none; background: transparent;
       font-size: var(--text-sm); font-weight: var(--weight-medium);
       color: var(--color-text-secondary); cursor: pointer;
-      border-radius: var(--radius-md); font-family: var(--font-sans);
-      transition: background 0.15s, color 0.15s;
+      font-family: var(--font-sans); white-space: nowrap;
+      display: flex; align-items: center; justify-content: center;
+      transition: color 0.15s;
+    }
+    .cc-tab::before {
+      content: ''; position: absolute; inset: 0; z-index: -1;
+      border-radius: var(--radius-md); background: var(--color-border);
+      transition: background 0.15s, box-shadow 0.15s;
     }
     .cc-tab:hover { color: var(--color-text-primary); }
-    .cc-tab.active { background: var(--color-bg); color: var(--color-primary); box-shadow: var(--shadow-sm); font-weight: var(--weight-semibold); }
+    .cc-tab.active { color: var(--color-primary); font-weight: var(--weight-semibold); }
+    .cc-tab.active::before { background: var(--color-bg); box-shadow: var(--shadow-sm); }
 
     /* 안내 문구 */
     .cc-note {
