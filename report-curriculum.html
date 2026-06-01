@@ -159,6 +159,45 @@
                 <button class="cond-item" onclick="selectCond('campus','대전',this)">대전</button>
               </div>
             </div></div>
+            <div class="cc-filter"><div class="cond-wrap">
+              <button class="cond-trigger" id="yearCondTrigger" onclick="toggleCondMenu('year')"><span id="yearCondLabel">연도 전체(3개년)</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="yearCondChevron"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="cond-menu" id="yearCondMenu">
+                <button class="cond-item active" onclick="selectYear('all','연도 전체(3개년)',this)">전체(3개년)</button>
+                <button class="cond-item" onclick="selectYear('2024','2024년',this)">2024년</button>
+                <button class="cond-item" onclick="selectYear('2025','2025년',this)">2025년</button>
+                <button class="cond-item" onclick="selectYear('2026','2026년',this)">2026년</button>
+              </div>
+            </div></div>
+            <div class="cc-filter"><div class="cond-wrap">
+              <button class="cond-trigger" id="monthCondTrigger" onclick="toggleCondMenu('month')"><span id="monthCondLabel">월 전체</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="monthCondChevron"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="cond-menu" id="monthCondMenu">
+                <button class="cond-item active" onclick="selectCond('month','월 전체',this)">전체</button>
+                <button class="cond-item" onclick="selectCond('month','3월',this)">3월</button>
+                <button class="cond-item" onclick="selectCond('month','4월',this)">4월</button>
+                <button class="cond-item" onclick="selectCond('month','5월',this)">5월</button>
+                <button class="cond-item" onclick="selectCond('month','6월',this)">6월</button>
+                <button class="cond-item" onclick="selectCond('month','7월',this)">7월</button>
+                <button class="cond-item" onclick="selectCond('month','8월',this)">8월</button>
+                <button class="cond-item" onclick="selectCond('month','9월',this)">9월</button>
+                <button class="cond-item" onclick="selectCond('month','10월',this)">10월</button>
+                <button class="cond-item" onclick="selectCond('month','11월',this)">11월</button>
+                <button class="cond-item" onclick="selectCond('month','12월',this)">12월</button>
+                <button class="cond-item" onclick="selectCond('month','1월',this)">1월</button>
+                <button class="cond-item" onclick="selectCond('month','2월',this)">2월</button>
+              </div>
+            </div></div>
+            <div class="cc-filter"><div class="cond-wrap">
+              <button class="cond-trigger" id="itemCondTrigger" onclick="toggleCondMenu('item')"><span id="itemCondLabel">항목 재학생·재등록</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="itemCondChevron"><polyline points="6 9 12 15 18 9"/></svg></button>
+              <div class="cond-menu" id="itemCondMenu">
+                <button class="cond-item active" onclick="selectCond('item','항목 재학생·재등록',this)">재학생·재등록</button>
+                <button class="cond-item" onclick="selectCond('item','신규입학',this)">신규입학</button>
+                <button class="cond-item" onclick="selectCond('item','신규 외부·내부',this)">신규 외부·내부</button>
+                <button class="cond-item" onclick="selectCond('item','탈퇴',this)">탈퇴</button>
+                <button class="cond-item" onclick="selectCond('item','탈퇴 외부·내부',this)">탈퇴 외부·내부</button>
+                <button class="cond-item" onclick="selectCond('item','증감분석',this)">증감분석</button>
+                <button class="cond-item" onclick="selectCond('item','가동현황',this)">가동현황</button>
+              </div>
+            </div></div>
             <button class="btn btn-secondary" style="width:44px;height:44px;padding:0;justify-content:center;box-sizing:border-box;border-radius:var(--radius-lg);" onclick="refreshReport()" title="새로고침" aria-label="새로고침">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
             </button>
@@ -172,28 +211,6 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Excel
             </button>
-          </div>
-        </div>
-
-        <!-- 연도 / 월 / 항목 칩 -->
-        <div class="cur-chipbar">
-          <div class="cur-chip-row">
-            <span class="cur-chip-label">연도</span>
-            <button class="cur-chip active" data-year="2024" onclick="toggleYear(this)">2024년</button>
-            <button class="cur-chip active" data-year="2025" onclick="toggleYear(this)">2025년</button>
-            <button class="cur-chip active" data-year="2026" onclick="toggleYear(this)">2026년</button>
-          </div>
-          <div class="cur-chip-row">
-            <span class="cur-chip-label">월</span>
-            <button class="cur-chip active">3월</button><button class="cur-chip active">4월</button><button class="cur-chip active">5월</button><button class="cur-chip active">6월</button><button class="cur-chip active">7월</button><button class="cur-chip active">8월</button><button class="cur-chip active">9월</button><button class="cur-chip active">10월</button><button class="cur-chip active">11월</button><button class="cur-chip active">12월</button><button class="cur-chip active">1월</button><button class="cur-chip active">2월</button>
-            <span class="cur-chip-hint">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              대규모 이탈 시기(1월)
-            </span>
-          </div>
-          <div class="cur-chip-row">
-            <span class="cur-chip-label">항목</span>
-            <button class="cur-chip active">재학생·재등록</button><button class="cur-chip">신규입학</button><button class="cur-chip">신규 외부·내부</button><button class="cur-chip">탈퇴</button><button class="cur-chip">탈퇴 외부·내부</button><button class="cur-chip">증감분석</button><button class="cur-chip">가동현황</button>
           </div>
         </div>
 
@@ -212,7 +229,7 @@
             <div class="chart-card-header">
               <div>
                 <span class="chart-card-title">3개년도 학생 수 변동 비교 분석</span>
-                <div style="font-size:var(--text-xs);color:var(--color-text-tertiary);margin-top:2px;">매월 15일 기준 총 재학생 수 · 학사연도 기준(3월~2월)</div>
+                <div style="font-size:var(--text-xs);color:var(--color-text-tertiary);margin-top:2px;">매월 15일 기준 총 재학생 수 · 학사연도 기준(3월~2월) · <span style="color:var(--color-warning);">⚠ 대규모 이탈 시기(1월)</span></div>
               </div>
               <div class="chart-legend" id="curLegend">
                 <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--chart-3)"></div>2024년 추이</div>
@@ -569,13 +586,10 @@
   window.addEventListener('resize', function () { cancelAnimationFrame(_fitRaf); _fitRaf = requestAnimationFrame(fitTables); });
   (function () { const p = document.getElementById('chatPanel'); if (p) p.addEventListener('transitionend', function (e) { if (e.propertyName === 'width') fitTables(); }); })();
 
-  /* 연도 토글 */
-  function toggleYear(btn) {
-    const y = btn.dataset.year;
-    if (activeYears.has(y)) {
-      if (activeYears.size === 1) return; // 최소 1개 유지
-      activeYears.delete(y); btn.classList.remove('active');
-    } else { activeYears.add(y); btn.classList.add('active'); }
+  /* 연도 선택 (셀렉트) — 전체(3개년) 또는 단일 연도 */
+  function selectYear(val, label, btn) {
+    selectCond('year', label, btn);
+    activeYears = (val === 'all') ? new Set(['2024', '2025', '2026']) : new Set([val]);
     document.querySelectorAll('.cur-year-block').forEach(function (b) { b.style.display = activeYears.has(b.dataset.year) ? '' : 'none'; });
     document.querySelectorAll('#curLegend .chart-legend-item').forEach(function (it, idx) {
       const yr = ['2024', '2025', '2026'][idx];
