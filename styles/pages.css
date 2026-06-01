@@ -2785,11 +2785,12 @@
       flex-wrap: wrap; gap: var(--space-3);
       margin-bottom: var(--space-4);
     }
-    .cc-toolbar-filters { display: flex; align-items: flex-end; gap: var(--space-3); flex-wrap: wrap; }
+    .cc-toolbar-filters { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
     .cc-filter { display: flex; flex-direction: column; gap: 4px; }
     .cc-filter-label { font-size: var(--text-xs); font-weight: var(--weight-medium); color: var(--color-text-tertiary); padding-left: 2px; }
+    .cc-toolbar-divider { width: 1px; height: 24px; flex-shrink: 0; background: var(--color-border-strong); }
     .cc-toolbar-actions { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
-    .cc-action-btn { height: 40px; border-radius: var(--radius-lg); }
+    .cc-action-btn { height: 44px; border-radius: var(--radius-lg); }
 
     /* 뷰 탭 (세그먼티드 컨트롤) */
     /* 뷰 탭 — 리포트 목록 카테고리 탭(.category-tab)과 동일 스타일 */
