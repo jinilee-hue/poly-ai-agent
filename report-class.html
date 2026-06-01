@@ -188,7 +188,7 @@
               </div>
               <span class="cc-kpi-title">평균 가동률</span>
             </div>
-            <div class="cc-kpi-value" id="ccGaugeVal">0%</div>
+            <div class="cc-kpi-value"><span id="ccGaugeVal">0</span><span class="cc-kpi-unit">%</span></div>
           </div>
 
           <div class="cc-kpi-card">
@@ -626,7 +626,7 @@
     setText('kpiTotal', total);
     const g = document.getElementById('ccGauge');
     if (g) g.style.setProperty('--val', pct);
-    setText('ccGaugeVal', pct + '%');
+    setText('ccGaugeVal', pct);
   }
 
   /* 요일 필터 (커스텀 cond 드롭다운 — 리포트 목록과 동일 스타일) */
