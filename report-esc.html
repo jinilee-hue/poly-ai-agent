@@ -128,14 +128,15 @@
         <!-- 조회 조건 바 -->
         <div class="view-selector-inner">
           <div class="esc-toolbar-label">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-            조회 조건
             <div class="date-box">
               <input type="text" class="date-input" id="escDate" placeholder="날짜 선택">
               <button class="date-cal-btn" type="button" onclick="escDateFp && escDateFp.open()" aria-label="날짜 선택">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
               </button>
             </div>
+            <button class="btn btn-secondary" style="width:44px;height:44px;padding:0;border-radius:var(--radius-lg);" onclick="refreshReport()" title="새로고침" aria-label="새로고침">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            </button>
           </div>
           <div class="view-selector-right">
             <button class="btn btn-secondary" style="height:44px;border-radius:var(--radius-lg);" onclick="printReport()">
@@ -1024,6 +1025,18 @@
 
   /* 인쇄 */
   function printReport() { window.print(); }
+
+  /* 새로고침 — 차트 재빌드 + 표 폭 재보정 (아이콘 회전 피드백) */
+  function refreshReport() {
+    const btn = document.querySelector('[onclick="refreshReport()"] svg');
+    if (btn) {
+      btn.style.transition = 'transform 0.6s ease';
+      btn.style.transform = 'rotate(360deg)';
+      setTimeout(() => { btn.style.transition = 'none'; btn.style.transform = ''; }, 650);
+    }
+    buildAllCharts();
+    fitDataTable();
+  }
 
   function toggleSubNav(btn) {
     btn.closest('.poly-nav-group').classList.toggle('open');
