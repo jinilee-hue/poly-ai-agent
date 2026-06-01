@@ -582,7 +582,30 @@
       });
     });
     tbody.innerHTML = html;
+    fitMatrix();
   }
+
+  /* 배치표를 가용 폭에 맞춰 축소 — Venus까지 한 화면에 표시 */
+  function fitMatrix() {
+    const wrap = document.querySelector('.cc-matrix-wrap');
+    const table = wrap ? wrap.querySelector('.cc-matrix') : null;
+    if (!wrap || !table) return;
+    table.style.zoom = '';
+    const natural = table.scrollWidth;
+    const avail = wrap.clientWidth;
+    if (!natural || !avail) return;
+    table.style.zoom = Math.min(1, avail / natural);
+  }
+  let _fitRaf;
+  window.addEventListener('load', fitMatrix);
+  window.addEventListener('resize', function () {
+    cancelAnimationFrame(_fitRaf);
+    _fitRaf = requestAnimationFrame(fitMatrix);
+  });
+  (function () {
+    const p = document.getElementById('chatPanel');
+    if (p) p.addEventListener('transitionend', function (e) { if (e.propertyName === 'width') fitMatrix(); });
+  })();
 
   function setText(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
 
@@ -643,7 +666,8 @@
     const isGrid = view === 'grid';
     document.getElementById('view-grid').style.display = isGrid ? '' : 'none';
     document.getElementById('view-other').style.display = isGrid ? 'none' : '';
-    if (!isGrid) setText('otherViewLabel', view === 'list' ? '학생 리스트' : 'Summary');
+    if (isGrid) fitMatrix();
+    else setText('otherViewLabel', view === 'list' ? '학생 리스트' : 'Summary');
   }
 
   /* Excel 다운로드 — 배치표를 평면 시트로 변환 */
