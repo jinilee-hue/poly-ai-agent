@@ -2898,7 +2898,7 @@
     .cc-lbl-pct { font-size: var(--text-xs); font-weight: var(--weight-semibold); color: var(--color-primary); margin-top: 1px; }
 
     /* 학급 카드 */
-    .cc-cell { min-width: 168px; width: 168px; height: 100%; }
+    .cc-cell { min-width: 168px; width: 168px; position: relative; }
     .cc-card {
       display: flex; flex-direction: column; gap: 7px; height: 100%;
       padding: 10px 12px; background: var(--color-bg);
@@ -2918,9 +2918,10 @@
     .cc-seg-strong { background: var(--chart-1); }
     .cc-seg-light { background: var(--chart-3); }
 
-    /* 수업 없음 */
+    /* 수업 없음 — 셀(행) 높이를 꽉 채워 학급 카드와 동일 높이 */
     .cc-empty {
-      display: flex; align-items: center; justify-content: center; height: 100%; min-height: 120px;
+      position: absolute; top: 8px; left: 8px; right: 8px; bottom: 8px;
+      display: flex; align-items: center; justify-content: center;
       background: var(--color-bg-subtle); border: 1px dashed var(--color-border-strong);
       border-radius: var(--radius-md);
       font-size: var(--text-xs); color: var(--color-text-tertiary);
