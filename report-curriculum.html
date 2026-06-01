@@ -240,19 +240,6 @@
             <div class="chart-wrap" style="height:360px;"><canvas id="trendChart" role="img" aria-label="2024·2025년은 3월 약 22,600명에서 2월 약 18,400명으로 연중 감소, 2026년은 3~5월 21,500명대 진행중"></canvas></div>
           </div>
 
-          <!-- 연도별 상세 표 -->
-          <div class="cur-year-block" data-year="2024">
-            <div class="esc-section-title">2024년 · 교육과정별 월별 재학생 수 <span style="font-weight:var(--weight-regular);color:var(--color-text-tertiary);font-size:var(--text-xs);">(매월 15일 기준)</span></div>
-            <div class="data-table-card"><div class="data-table-wrap"><table class="data-table cur-table" id="curTable2024"></table></div></div>
-          </div>
-          <div class="cur-year-block" data-year="2025">
-            <div class="esc-section-title">2025년 · 교육과정별 월별 재학생 수 <span style="font-weight:var(--weight-regular);color:var(--color-text-tertiary);font-size:var(--text-xs);">(매월 15일 기준)</span></div>
-            <div class="data-table-card"><div class="data-table-wrap"><table class="data-table cur-table" id="curTable2025"></table></div></div>
-          </div>
-          <div class="cur-year-block" data-year="2026">
-            <div class="esc-section-title">2026년 · 교육과정별 월별 재학생 수 <span style="font-weight:var(--weight-regular);color:var(--color-text-tertiary);font-size:var(--text-xs);">(매월 15일 기준 · 진행중)</span></div>
-            <div class="data-table-card"><div class="data-table-wrap"><table class="data-table cur-table" id="curTable2026"></table></div></div>
-          </div>
         </div>
 
         <!-- 신규생 및 탈퇴생 추이 -->
@@ -297,6 +284,22 @@
               </div>
             </div>
             <div class="chart-wrap" style="height:380px;"><canvas id="patternChart" role="img" aria-label="2024·2025년 탈퇴생은 3월 0명에서 9월 약 1,200명까지 상승, 10월 급감 후 1월 정점(2025년 최대 1,545명). 12~2월이 대규모 이탈 시기"></canvas></div>
+          </div>
+        </div>
+
+        <!-- 연도별 상세 표 (모든 탭 공통, 그래프 하단) -->
+        <div id="cur-tables">
+          <div class="cur-year-block" data-year="2024">
+            <div class="esc-section-title">2024년 · 교육과정별 월별 재학생 수 <span style="font-weight:var(--weight-regular);color:var(--color-text-tertiary);font-size:var(--text-xs);">(매월 15일 기준)</span></div>
+            <div class="data-table-card"><div class="data-table-wrap"><table class="data-table cur-table" id="curTable2024"></table></div></div>
+          </div>
+          <div class="cur-year-block" data-year="2025">
+            <div class="esc-section-title">2025년 · 교육과정별 월별 재학생 수 <span style="font-weight:var(--weight-regular);color:var(--color-text-tertiary);font-size:var(--text-xs);">(매월 15일 기준)</span></div>
+            <div class="data-table-card"><div class="data-table-wrap"><table class="data-table cur-table" id="curTable2025"></table></div></div>
+          </div>
+          <div class="cur-year-block" data-year="2026">
+            <div class="esc-section-title">2026년 · 교육과정별 월별 재학생 수 <span style="font-weight:var(--weight-regular);color:var(--color-text-tertiary);font-size:var(--text-xs);">(매월 15일 기준 · 진행중)</span></div>
+            <div class="data-table-card"><div class="data-table-wrap"><table class="data-table cur-table" id="curTable2026"></table></div></div>
           </div>
         </div>
 
