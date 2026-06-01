@@ -233,7 +233,7 @@
               <div class="chart-legend">
                 <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--chart-1)"></div>ECP</div>
                 <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--chart-2)"></div>ELE</div>
-                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--chart-4)"></div>GRAD</div>
+                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--chart-3)"></div>GRAD</div>
               </div>
             </div>
             <div style="display:flex;gap:var(--space-4);">
@@ -791,11 +791,11 @@
       '--color-success':        '#0066FF',
       '--color-success-light':  '#E8F0FF',
       '--color-sidebar-active': '#0066FF',
-      '--chart-1': 'rgba(0,102,255,0.55)',
-      '--chart-2': 'rgba(0,102,255,0.32)',
-      '--chart-3': 'rgba(0,102,255,0.16)',
-      '--chart-4': 'rgba(0,102,255,0.42)',
-      '--chart-5': 'rgba(0,102,255,0.11)',
+      '--chart-1': 'rgba(0,102,255,0.85)',
+      '--chart-2': 'rgba(0,102,255,0.45)',
+      '--chart-3': 'rgba(0,102,255,0.20)',
+      '--chart-4': 'rgba(0,102,255,0.30)',
+      '--chart-5': 'rgba(0,102,255,0.12)',
       '--chart-6': 'rgba(0,102,255,0.07)',
       '--color-primary-a08': 'rgba(0,102,255,0.08)',
       '--color-primary-a10': 'rgba(0,102,255,0.10)',
@@ -812,11 +812,11 @@
       '--color-success':        '#BC216D',
       '--color-success-light':  '#FAEAF3',
       '--color-sidebar-active': '#BC216D',
-      '--chart-1': 'rgba(188,33,109,0.55)',
-      '--chart-2': 'rgba(188,33,109,0.32)',
-      '--chart-3': 'rgba(188,33,109,0.16)',
-      '--chart-4': 'rgba(188,33,109,0.42)',
-      '--chart-5': 'rgba(188,33,109,0.11)',
+      '--chart-1': 'rgba(188,33,109,0.85)',
+      '--chart-2': 'rgba(188,33,109,0.45)',
+      '--chart-3': 'rgba(188,33,109,0.20)',
+      '--chart-4': 'rgba(188,33,109,0.30)',
+      '--chart-5': 'rgba(188,33,109,0.12)',
       '--chart-6': 'rgba(188,33,109,0.07)',
       '--color-primary-a08': 'rgba(188,33,109,0.08)',
       '--color-primary-a10': 'rgba(188,33,109,0.10)',
@@ -832,22 +832,22 @@
     poly: {
       '--color-primary-light': 'rgba(0,102,255,0.18)',
       '--color-success-light': 'rgba(0,102,255,0.18)',
-      '--chart-1': 'rgba(0,102,255,0.70)',
-      '--chart-2': 'rgba(0,102,255,0.45)',
-      '--chart-3': 'rgba(0,102,255,0.28)',
-      '--chart-4': 'rgba(0,102,255,0.55)',
-      '--chart-5': 'rgba(0,102,255,0.20)',
-      '--chart-6': 'rgba(0,102,255,0.12)',
+      '--chart-1': 'rgba(0,102,255,0.92)',
+      '--chart-2': 'rgba(0,102,255,0.58)',
+      '--chart-3': 'rgba(0,102,255,0.32)',
+      '--chart-4': 'rgba(0,102,255,0.45)',
+      '--chart-5': 'rgba(0,102,255,0.22)',
+      '--chart-6': 'rgba(0,102,255,0.13)',
     },
     canb: {
       '--color-primary-light': 'rgba(188,33,109,0.18)',
       '--color-success-light': 'rgba(188,33,109,0.18)',
-      '--chart-1': 'rgba(188,33,109,0.70)',
-      '--chart-2': 'rgba(188,33,109,0.45)',
-      '--chart-3': 'rgba(188,33,109,0.28)',
-      '--chart-4': 'rgba(188,33,109,0.55)',
-      '--chart-5': 'rgba(188,33,109,0.20)',
-      '--chart-6': 'rgba(188,33,109,0.12)',
+      '--chart-1': 'rgba(188,33,109,0.92)',
+      '--chart-2': 'rgba(188,33,109,0.58)',
+      '--chart-3': 'rgba(188,33,109,0.32)',
+      '--chart-4': 'rgba(188,33,109,0.45)',
+      '--chart-5': 'rgba(188,33,109,0.22)',
+      '--chart-6': 'rgba(188,33,109,0.13)',
     }
   };
 
@@ -965,9 +965,9 @@
   function buildOpCharts() {
     const ax = _axisColors();
     const colors = {
-      ecp:  _cvar('--chart-1', 'rgba(0,102,255,0.55)'),
-      ele:  _cvar('--chart-2', 'rgba(0,102,255,0.32)'),
-      grad: _cvar('--chart-4', 'rgba(0,102,255,0.42)'),
+      ecp:  _cvar('--chart-1', 'rgba(0,102,255,0.85)'),
+      ele:  _cvar('--chart-2', 'rgba(0,102,255,0.45)'),
+      grad: _cvar('--chart-3', 'rgba(0,102,255,0.20)'),
     };
     const yEl = document.getElementById('opYearChart');
     if (yEl) {
