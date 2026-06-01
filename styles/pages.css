@@ -2794,7 +2794,7 @@
     /* 뷰 탭 (세그먼티드 컨트롤) */
     .cc-tabs {
       display: inline-flex; padding: 3px;
-      background: var(--color-bg-muted); border-radius: var(--radius-lg);
+      background: var(--color-border-strong); border-radius: var(--radius-lg);
     }
     .cc-tab {
       padding: 6px 14px; border: none; background: transparent;
