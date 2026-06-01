@@ -130,14 +130,14 @@
         <div class="cc-toolbar view-selector-inner">
           <div class="cc-toolbar-filters">
             <div class="cc-filter">
-              <span class="cc-filter-label">캠퍼스</span>
               <div class="cond-wrap">
                 <button class="cond-trigger" id="campusCondTrigger" onclick="toggleCondMenu('campus')">
-                  <span id="campusCondLabel">목동매그넷</span>
+                  <span id="campusCondLabel">캠퍼스 선택</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="campusCondChevron"><polyline points="6 9 12 15 18 9"/></svg>
                 </button>
                 <div class="cond-menu" id="campusCondMenu">
-                  <button class="cond-item active" onclick="selectCond('campus','목동매그넷',this)">목동매그넷</button>
+                  <button class="cond-item active" onclick="selectCond('campus','캠퍼스 선택',this)">캠퍼스 선택</button>
+                  <button class="cond-item" onclick="selectCond('campus','목동매그넷',this)">목동매그넷</button>
                   <button class="cond-item" onclick="selectCond('campus','목동',this)">목동</button>
                   <button class="cond-item" onclick="selectCond('campus','대치폴리마그넷',this)">대치폴리마그넷</button>
                   <button class="cond-item" onclick="selectCond('campus','분당',this)">분당</button>
@@ -146,14 +146,13 @@
               </div>
             </div>
             <div class="cc-filter">
-              <span class="cc-filter-label">요일</span>
               <div class="cond-wrap">
                 <button class="cond-trigger" id="dayCondTrigger" onclick="toggleCondMenu('day')">
-                  <span id="dayCondLabel">전체</span>
+                  <span id="dayCondLabel">요일 선택</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="dayCondChevron"><polyline points="6 9 12 15 18 9"/></svg>
                 </button>
                 <div class="cond-menu" id="dayCondMenu">
-                  <button class="cond-item active" onclick="selectDay('all','전체',this)">전체</button>
+                  <button class="cond-item active" onclick="selectDay('all','요일 선택',this)">요일 선택</button>
                   <button class="cond-item" onclick="selectDay('매일','매일',this)">매일</button>
                   <button class="cond-item" onclick="selectDay('월수금','월수금',this)">월수금</button>
                   <button class="cond-item" onclick="selectDay('화목','화목',this)">화목</button>
