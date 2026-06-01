@@ -694,12 +694,13 @@
         cx.restore();
       },
       afterDatasetsDraw: function (chart) {
-        const cx = chart.ctx, ca = chart.chartArea;
+        const cx = chart.ctx, ca = chart.chartArea, xs = chart.scales.x;
+        const x9 = xs.getPixelForValue(9);
         cx.save();
         cx.fillStyle = labelCol;
         cx.font = "600 11px 'Pretendard', 'Inter', sans-serif";
-        cx.textAlign = 'left';
-        cx.fillText('1월: 최대 위기 (최대 1,545명)', ca.left + 8, ca.top + 13);
+        cx.textAlign = 'center';
+        cx.fillText('1월: 최대 위기 (최대 1,545명)', (x9 + ca.right) / 2, ca.top + 13);
         cx.restore();
       }
     };
