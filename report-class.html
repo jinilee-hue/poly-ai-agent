@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>학급 편성 대시보드 | Poly AI Agent</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/common.css">
+  <link rel="stylesheet" href="styles/pages.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+</head>
+<body class="page-report-view">
+
+<!-- 사이드바 -->
+<aside class="poly-sidebar">
+  <div class="poly-sidebar-logo">
+    <a href="home.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+      <img src="https://www.polyinspiration.com/img/main/logo.png" alt="POLY" class="poly-sidebar-brand">
+      <span class="poly-sidebar-tagline">AI 경영 분석 플랫폼</span>
+    </a>
+  </div>
+  <div class="lnb-brand-switch">
+    <button class="lnb-brand-btn" data-brand="poly">POLY</button>
+    <button class="lnb-brand-btn" data-brand="canb">CANB</button>
+    <button class="lnb-brand-btn" data-brand="all">전체</button>
+  </div>
+
+  <a href="home.html" class="poly-new-chat">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    새 채팅
+  </a>
+  <div class="poly-nav-section">
+    <a href="chat-list.html" class="poly-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      채팅
+    </a>
+    <div class="poly-nav-group">
+      <div class="poly-nav-item-row">
+        <a href="projects.html" class="poly-nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          프로젝트
+        </a>
+        <button class="poly-nav-chevron" onclick="toggleSubNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+      <div class="poly-nav-sub">
+        <a href="project-detail.html" class="poly-nav-sub-item">목동 학생 감소 원인 분석</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">2026 상반기 재학생 추이 보고서</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">TEST</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">CANB 캠퍼스 학급 편성 최적화</a>
+      </div>
+    </div>
+    <div class="poly-nav-group open">
+      <div class="poly-nav-item-row">
+        <a href="reports.html" class="poly-nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          리포트
+        </a>
+        <button class="poly-nav-chevron" onclick="toggleSubNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+      <div class="poly-nav-sub">
+        <a href="report-view.html" class="poly-nav-sub-item">PI 학생 분석 리포트</a>
+        <a href="report-view.html" class="poly-nav-sub-item">교육과정별 3개년 학생 수 분석</a>
+        <a href="report-class.html" class="poly-nav-sub-item active">학급 편성 대시보드</a>
+        <a href="report-esc.html" class="poly-nav-sub-item">ESC 학생 현황</a>
+        <a href="report-view.html" class="poly-nav-sub-item">재학생 추이 분석</a>
+      </div>
+    </div>
+  </div>
+  <div class="poly-history-section">
+    <div class="poly-nav-label">최근 채팅</div>
+    <div class="poly-history-item" style="color:var(--color-primary);font-weight:var(--weight-medium);">목동매그넷 학급 편성 현황</div>
+    <div class="poly-history-item">가동률 낮은 반 확인</div>
+    <div class="poly-history-item">2nd Block 마감 학급</div>
+    <div class="poly-history-item">정원 초과 학급 점검</div>
+  </div>
+  <div class="poly-sidebar-footer">
+    <div class="poly-user-avatar">이진</div>
+    <div>
+      <div class="poly-user-name">이진희</div>
+      <div class="poly-user-role">관리자</div>
+    </div>
+    <a href="login.html" class="icon-btn" style="margin-left:auto;text-decoration:none;" title="나가기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </a>
+  </div>
+</aside>
+
+<!-- 뷰 셸 -->
+<div class="view-shell" id="viewShell">
+
+  <!-- 상단바 -->
+  <header class="view-topbar">
+    <div class="view-topbar-left">
+      <a href="reports.html" class="icon-btn" style="text-decoration:none;flex-shrink:0;" title="리포트 목록">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </a>
+      <span class="view-topbar-title">학급 편성 대시보드</span>
+    </div>
+    <div class="view-topbar-right">
+      <button id="theme-toggle-2" class="icon-btn" title="다크 모드">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- 2-패널 -->
+  <div class="view-panels" style="position:relative;">
+
+    <!-- 플로팅 채팅 열기 버튼 -->
+    <button class="chat-fab" id="chatFab" onclick="toggleChat()" title="AI 채팅 열기" aria-label="AI 채팅 패널 열기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </button>
+
+    <!-- 좌측: 데이터 패널 -->
+    <div class="data-panel" id="dataPanel">
+
+      <!-- 인쇄 전용 워터마크 (POLY 로고) -->
+      <img class="print-watermark" src="https://www.polyinspiration.com/img/main/logo.png" alt="" aria-hidden="true">
+
+      <!-- 인쇄 전용 타이틀 -->
+      <div class="print-title-block">
+        <div class="print-title-main">학급 편성 대시보드</div>
+        <div class="print-title-sub">캠퍼스별 학급 편성 현황 및 강의실 가동률</div>
+        <div class="print-title-meta" id="printMeta">캠퍼스 목동매그넷 · 기준일 2026-05-31</div>
+      </div>
+
+      <div class="data-scroll">
+
+        <!-- 툴바 -->
+        <div class="cc-toolbar">
+          <div class="cc-toolbar-filters">
+            <label class="cc-filter">
+              <span class="cc-filter-label">캠퍼스</span>
+              <select class="filter-select" id="campusSelect">
+                <option>목동매그넷</option>
+                <option>목동</option>
+                <option>대치폴리마그넷</option>
+                <option>분당</option>
+                <option>일산</option>
+              </select>
+            </label>
+            <label class="cc-filter">
+              <span class="cc-filter-label">요일</span>
+              <select class="filter-select" id="daySelect">
+                <option value="all">전체</option>
+                <option value="매일">매일</option>
+                <option value="월수금">월수금</option>
+                <option value="화목">화목</option>
+                <option value="월수">월수</option>
+              </select>
+            </label>
+          </div>
+          <div class="cc-toolbar-actions">
+            <div class="cc-tabs">
+              <button class="cc-tab active" onclick="switchView('grid',this)">통합 배치표</button>
+              <button class="cc-tab" onclick="switchView('list',this)">학생 리스트</button>
+              <button class="cc-tab" onclick="switchView('summary',this)">Summary</button>
+            </div>
+            <button class="btn btn-secondary cc-action-btn" onclick="printReport()" title="인쇄">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+              인쇄
+            </button>
+            <button class="btn btn-secondary cc-action-btn" onclick="downloadExcel()" title="Excel 다운로드">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Excel
+            </button>
+          </div>
+        </div>
+
+        <!-- 요약 KPI -->
+        <div class="esc-kpi-grid">
+          <div class="esc-kpi-card cc-gauge-card">
+            <div class="cc-gauge" id="ccGauge" style="--val:0;"><span id="ccGaugeVal">0%</span></div>
+            <div>
+              <div class="esc-kpi-title">평균 가동률</div>
+              <div class="esc-kpi-delta">전체 정원 대비 충원율</div>
+            </div>
+          </div>
+
+          <div class="esc-kpi-card">
+            <div class="esc-kpi-head">
+              <div class="esc-kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              </div>
+              <div class="esc-kpi-title">전체 충원</div>
+            </div>
+            <div class="esc-kpi-body">
+              <div class="esc-kpi-value"><span id="kpiFillVal">0</span><span class="unit" id="kpiFillCap">/0명</span></div>
+            </div>
+          </div>
+
+          <div class="esc-kpi-card">
+            <div class="esc-kpi-head">
+              <div class="esc-kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M14 12h.01"/></svg>
+              </div>
+              <div class="esc-kpi-title">가용 강의실</div>
+            </div>
+            <div class="esc-kpi-body">
+              <div class="esc-kpi-value"><span id="kpiRooms">0</span><span class="unit">개</span></div>
+            </div>
+          </div>
+
+          <div class="esc-kpi-card">
+            <div class="esc-kpi-head">
+              <div class="esc-kpi-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+              <div class="esc-kpi-title">학급 현황</div>
+            </div>
+            <div class="esc-kpi-body" style="margin-bottom:var(--space-4);">
+              <div class="esc-kpi-value"><span id="kpiFull">0</span><span class="unit">개 마감</span></div>
+            </div>
+            <div class="esc-kpi-breakdown">
+              <div class="esc-bd-item"><span class="esc-bd-label">여석 있는 반</span><span class="esc-bd-value"><span id="kpiOpen">0</span>개</span></div>
+              <div class="esc-bd-item"><span class="esc-bd-label">전체 정규반</span><span class="esc-bd-value"><span id="kpiTotal">0</span>개</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 통합 배치표 -->
+        <div id="view-grid">
+          <div class="cc-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            ECP Block ~ 4th Block 까지의 정규반 정보만 표시됩니다. 특강반은 표시되지 않습니다.
+          </div>
+          <div class="cc-legend">
+            <span class="cc-legend-item"><span class="cc-legend-dot cc-seg-strong"></span>진학 · 남</span>
+            <span class="cc-legend-item"><span class="cc-legend-dot cc-seg-light"></span>유입 · 여</span>
+            <span class="cc-legend-sep"></span>
+            <span class="cc-legend-item"><span class="badge badge-success">TO n</span>여석</span>
+            <span class="cc-legend-item"><span class="badge badge-neutral">마감</span>정원 충족</span>
+            <span class="cc-legend-item"><span class="badge badge-warning">TO n</span>충원 주의(60% 미만)</span>
+          </div>
+
+          <div class="data-table-card">
+            <div class="cc-matrix-wrap">
+              <table class="cc-matrix">
+                <thead>
+                  <tr>
+                    <th class="cc-lbl-head cc-blk-head">교시 블럭</th>
+                    <th class="cc-lbl-head cc-day-head">요일 블럭</th>
+                    <th>Earth</th><th>Jupiter</th><th>Mars</th><th>Mercury</th><th>Neptune</th><th>Pluto</th><th>Saturn</th><th>Uranus</th><th>Venus</th>
+                  </tr>
+                </thead>
+                <tbody id="ccBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 다른 뷰 (준비 중) -->
+        <div id="view-other" style="display:none;">
+          <div class="cc-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+            <p><strong id="otherViewLabel">학생 리스트</strong> 화면은 준비 중입니다.</p>
+            <p class="cc-placeholder-sub">통합 배치표 탭에서 학급 편성 현황을 확인하세요.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 우측: AI 채팅 패널 -->
+    <div class="chat-panel" id="chatPanel">
+
+      <div class="chat-header">
+        <div class="chat-header-left">
+          <div class="chat-header-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="chat-header-title">대화</div>
+        </div>
+        <button class="chat-close-btn" onclick="toggleChat()" title="닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="chat-intro" id="chatIntro">
+        <div class="chat-intro-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div>
+          <div class="chat-intro-title">Poly AI</div>
+          <div class="chat-intro-desc">학급 편성 대시보드 데이터를<br>기반으로 인사이트를 제공합니다</div>
+        </div>
+        <button class="chat-insight-btn" onclick="sendMsg('현재 데이터를 분석하여 인사이트를 제공해줘')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          분석하여 인사이트 얻기
+        </button>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+
+        <div class="msg ai">
+          <div class="msg-bubble">
+            안녕하세요! 목동매그넷 학급 편성 대시보드를 보고 계시네요.<br>
+            전체 가동률 89% (353/396) 기준으로 답변 드립니다.
+          </div>
+          <span class="msg-time">15:29</span>
+          <div class="msg-followups">
+            <button class="followup-chip" onclick="sendMsg('가동률이 낮은 반은 어디인가요?')">가동률 낮은 반</button>
+            <button class="followup-chip" onclick="sendMsg('마감된 학급은 몇 개인가요?')">마감 학급 수</button>
+            <button class="followup-chip" onclick="sendMsg('정원을 초과한 반이 있나요?')">정원 초과 반</button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="chat-empty" id="chatEmpty" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <p>데이터에 대해 궁금한 점을 질문해보세요</p>
+        <div class="chat-empty-suggestions">
+          <button class="chat-empty-chip" onclick="sendMsg('여석이 가장 많은 반은?')">여석이 가장 많은 반은?</button>
+          <button class="chat-empty-chip" onclick="sendMsg('정원을 초과한 반이 있나요?')">정원을 초과한 반이 있나요?</button>
+        </div>
+      </div>
+
+      <div class="chat-input-area">
+        <div class="chat-input-wrap">
+          <textarea class="chat-textarea" id="chatInput" placeholder="대화 내에서 질문해보세요..." rows="1"
+            onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMsg();}"></textarea>
+          <button class="chat-send-btn" onclick="sendMsg()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* 테마 */
+  (function () {
+    const t = localStorage.getItem('epTheme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  })();
+
+  function _syncThemeBtns() {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const sunSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
+    const moonSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
+    const btn = document.getElementById('theme-toggle-2');
+    if (btn) { btn.innerHTML = dark ? sunSvg : moonSvg; btn.title = dark ? '라이트 모드' : '다크 모드'; }
+  }
+  function _toggleTheme() {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const next = dark ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    localStorage.setItem('epTheme', next);
+    _syncThemeBtns();
+    applyBrand(localStorage.getItem('polyBrand') || 'poly');
+    window.dispatchEvent(new CustomEvent('themechange'));
+  }
+  document.getElementById('theme-toggle-2').addEventListener('click', _toggleTheme);
+  _syncThemeBtns();
+
+  /* 패널 토글 */
+  let chatOpen = true;
+  function toggleChat() {
+    chatOpen = !chatOpen;
+    const panel = document.getElementById('chatPanel');
+    const fab = document.getElementById('chatFab');
+    if (chatOpen) {
+      panel.classList.remove('collapsed');
+      fab.classList.remove('visible');
+    } else {
+      panel.classList.add('collapsed');
+      fab.classList.add('visible');
+    }
+  }
+
+  /* 채팅 전송 */
+  const AI_RESPONSES = {
+    '가동률이 낮은 반은 어디인가요?': '1st Block(매일) 반들의 가동률이 65%로 가장 낮습니다. 특히 MAG1-Pluto가 6/12(50%)로 여석 6석이 남아 충원이 필요하며, MAG1-Neptune(7/12, 58%)도 주의가 필요합니다.',
+    '마감된 학급은 몇 개인가요?': '전체 33개 정규반 중 14개 반이 마감(정원 충족)되었습니다. 2nd Block 월수금 9개 반 전체와 화목 5개 반이 마감 상태로, 2nd Block 가동률이 98%로 가장 높습니다.',
+    '정원을 초과한 반이 있나요?': 'MAG3-Jupiter(화목)가 13/12로 정원을 1명 초과했습니다. 분반 또는 강의실 조정 검토가 필요합니다.',
+    '여석이 가장 많은 반은?': '여석이 가장 많은 반은 MAG1-Pluto로 6석이 남아 있습니다(6/12, 50%). 그 다음은 MAG1-Neptune 5석(7/12)입니다.',
+    '현재 데이터를 분석하여 인사이트를 제공해줘': '목동매그넷 전체 가동률은 89%(353/396)입니다. ① 2nd Block은 가동률 98%로 거의 포화 상태, ② 1st Block은 65%로 충원 여력이 있어 신규·유입 배치에 적합, ③ MAG1-Pluto(50%)·MAG1-Neptune(58%)은 충원 우선 대상, ④ MAG3-Jupiter는 정원 초과(13/12)로 조정이 필요합니다.',
+  };
+
+  function sendMsg(text) {
+    const input = document.getElementById('chatInput');
+    const msg = text || input.value.trim();
+    if (!msg) return;
+    input.value = '';
+
+    const intro = document.getElementById('chatIntro');
+    if (intro) intro.style.display = 'none';
+
+    const container = document.getElementById('chatMessages');
+
+    const userDiv = document.createElement('div');
+    userDiv.className = 'msg user';
+    const now = new Date();
+    const timeStr = now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+    userDiv.innerHTML = `<div class="msg-bubble">${msg}</div><span class="msg-time">${timeStr}</span>`;
+    container.appendChild(userDiv);
+
+    const loadDiv = document.createElement('div');
+    loadDiv.className = 'msg ai';
+    loadDiv.innerHTML = `<div class="msg-bubble" style="padding:var(--space-3) var(--space-4);"><div class="msg-loading"><span></span><span></span><span></span></div></div>`;
+    container.appendChild(loadDiv);
+    container.scrollTop = container.scrollHeight;
+
+    setTimeout(() => {
+      container.removeChild(loadDiv);
+      const aiDiv = document.createElement('div');
+      aiDiv.className = 'msg ai';
+      const response = AI_RESPONSES[msg] || `"${msg}"에 대한 분석 결과입니다. 현재 학급 편성 대시보드 데이터를 기반으로 답변 드리겠습니다. 더 구체적인 질문을 해주시면 더 정확한 답변을 드릴 수 있습니다.`;
+      aiDiv.innerHTML = `<div class="msg-bubble">${response}</div><span class="msg-time">${timeStr}</span>`;
+      container.appendChild(aiDiv);
+      container.scrollTop = container.scrollHeight;
+    }, 1000);
+  }
+
+  /* LNB 브랜드 스위처 + 컬러 토큰 전환 */
+  const BRAND_TOKENS = {
+    poly: {
+      '--color-primary':        '#0066FF',
+      '--color-primary-light':  '#E8F0FF',
+      '--color-primary-dark':   '#0052CC',
+      '--color-primary-deeper': '#003D99',
+      '--color-success':        '#0066FF',
+      '--color-success-light':  '#E8F0FF',
+      '--color-sidebar-active': '#0066FF',
+      '--chart-1': 'rgba(0,102,255,0.85)',
+      '--chart-2': 'rgba(0,102,255,0.45)',
+      '--chart-3': 'rgba(0,102,255,0.20)',
+      '--chart-4': 'rgba(0,102,255,0.30)',
+      '--chart-5': 'rgba(0,102,255,0.12)',
+      '--chart-6': 'rgba(0,102,255,0.07)',
+      '--color-primary-a08': 'rgba(0,102,255,0.08)',
+      '--color-primary-a10': 'rgba(0,102,255,0.10)',
+      '--color-primary-a15': 'rgba(0,102,255,0.15)',
+      '--color-primary-a25': 'rgba(0,102,255,0.25)',
+      '--color-primary-a30': 'rgba(0,102,255,0.30)',
+      '--color-primary-a50': 'rgba(0,102,255,0.50)',
+    },
+    canb: {
+      '--color-primary':        '#BC216D',
+      '--color-primary-light':  '#FAEAF3',
+      '--color-primary-dark':   '#9A1D5E',
+      '--color-primary-deeper': '#6E1040',
+      '--color-success':        '#BC216D',
+      '--color-success-light':  '#FAEAF3',
+      '--color-sidebar-active': '#BC216D',
+      '--chart-1': 'rgba(188,33,109,0.85)',
+      '--chart-2': 'rgba(188,33,109,0.45)',
+      '--chart-3': 'rgba(188,33,109,0.20)',
+      '--chart-4': 'rgba(188,33,109,0.30)',
+      '--chart-5': 'rgba(188,33,109,0.12)',
+      '--chart-6': 'rgba(188,33,109,0.07)',
+      '--color-primary-a08': 'rgba(188,33,109,0.08)',
+      '--color-primary-a10': 'rgba(188,33,109,0.10)',
+      '--color-primary-a15': 'rgba(188,33,109,0.15)',
+      '--color-primary-a25': 'rgba(188,33,109,0.25)',
+      '--color-primary-a30': 'rgba(188,33,109,0.30)',
+      '--color-primary-a50': 'rgba(188,33,109,0.50)',
+    }
+  };
+  BRAND_TOKENS.all = BRAND_TOKENS.poly;
+
+  const BRAND_DARK_OVERRIDES = {
+    poly: {
+      '--color-primary-light': 'rgba(0,102,255,0.18)',
+      '--color-success-light': 'rgba(0,102,255,0.18)',
+      '--chart-1': 'rgba(0,102,255,0.92)',
+      '--chart-2': 'rgba(0,102,255,0.58)',
+      '--chart-3': 'rgba(0,102,255,0.32)',
+      '--chart-4': 'rgba(0,102,255,0.45)',
+      '--chart-5': 'rgba(0,102,255,0.22)',
+      '--chart-6': 'rgba(0,102,255,0.13)',
+    },
+    canb: {
+      '--color-primary-light': 'rgba(188,33,109,0.18)',
+      '--color-success-light': 'rgba(188,33,109,0.18)',
+      '--chart-1': 'rgba(188,33,109,0.92)',
+      '--chart-2': 'rgba(188,33,109,0.58)',
+      '--chart-3': 'rgba(188,33,109,0.32)',
+      '--chart-4': 'rgba(188,33,109,0.45)',
+      '--chart-5': 'rgba(188,33,109,0.22)',
+      '--chart-6': 'rgba(188,33,109,0.13)',
+    }
+  };
+
+  function applyBrand(brand) {
+    const tokens = BRAND_TOKENS[brand] || BRAND_TOKENS.poly;
+    const root = document.documentElement;
+    Object.entries(tokens).forEach(([k, v]) => root.style.setProperty(k, v));
+    const dark = root.getAttribute('data-theme') === 'dark';
+    const darkKey = brand === 'all' ? 'poly' : brand;
+    if (dark && BRAND_DARK_OVERRIDES[darkKey]) {
+      Object.entries(BRAND_DARK_OVERRIDES[darkKey]).forEach(([k, v]) => root.style.setProperty(k, v));
+    }
+    root.setAttribute('data-brand', brand);
+  }
+
+  /* ── 학급 편성 데이터 ───────────────────────────
+     각 반: [레벨, 재원, 정원, 진학, 유입, 남, 여] · null = 수업 없음 */
+  const ROOMS = ['Earth','Jupiter','Mars','Mercury','Neptune','Pluto','Saturn','Uranus','Venus'];
+  const BLOCKS = [
+    { block: '1st Block', days: [
+      { day: '매일', rooms: [
+        ['MAG1',8,12,0,8,6,2], ['MAG1',8,12,0,8,6,2], null, null,
+        ['MAG1',7,12,0,7,6,1], ['MAG1',6,12,0,6,3,3], ['MAG1',8,12,0,8,2,6],
+        ['MAG1',9,12,0,9,3,6], ['MAG1',9,12,0,9,4,5]
+      ]}
+    ]},
+    { block: '2nd Block', days: [
+      { day: '월수금', rooms: [
+        ['MAG2',12,12,11,1,4,8], ['MAG2',12,12,12,0,8,4], ['MAG2',12,12,11,1,5,7],
+        ['MAG2',12,12,10,2,9,3], ['MAG2',12,12,8,4,7,5], ['MAG2',12,12,9,3,7,5],
+        ['MAG2',12,12,11,1,6,6], ['MAG2',12,12,9,3,7,5], ['MAG2',12,12,12,0,5,7]
+      ]},
+      { day: '화목', rooms: [
+        ['MAG3',10,12,10,0,4,6], ['MAG3',13,12,10,3,5,8], ['MAG3',11,12,10,1,6,5],
+        ['MAG3',12,12,10,2,4,8], ['MAG3',12,12,10,2,5,7], ['MAG3',12,12,11,1,9,3],
+        ['MAG3',11,12,11,0,5,6], ['MAG3',12,12,12,0,5,7], ['MAG3',10,12,10,0,7,3]
+      ]}
+    ]},
+    { block: '3rd Block', days: [
+      { day: '월수', rooms: [
+        ['MAG4',11,12,10,1,7,4], ['MAG4',11,12,10,1,6,5], ['MAG4',11,12,10,1,4,7], null,
+        ['MAG4',11,12,9,2,4,7], ['MAG4',10,12,9,1,3,7], ['MAG4',11,12,8,3,1,10],
+        ['MAG4',11,12,9,2,5,6], ['MAG4',11,12,11,0,4,7]
+      ]}
+    ]}
+  ];
+
+  function renderClass(c, room) {
+    if (!c) return '<div class="cc-empty">수업 없음</div>';
+    const level = c[0], enr = c[1], cap = c[2], jin = c[3], yu = c[4], m = c[5], f = c[6];
+    const pct = Math.round(enr / cap * 100);
+    const remain = cap - enr;
+    let badgeCls, badgeTxt, low = '';
+    if (enr >= cap) { badgeCls = 'badge-neutral'; badgeTxt = '마감'; }
+    else if (pct < 60) { badgeCls = 'badge-warning'; badgeTxt = 'TO ' + remain; low = ' is-low'; }
+    else { badgeCls = 'badge-success'; badgeTxt = 'TO ' + remain; }
+    return '<div class="cc-card' + low + '">'
+      + '<div class="cc-card-top"><span class="cc-card-title">' + level + '-' + room + '</span><span class="badge ' + badgeCls + '">' + badgeTxt + '</span></div>'
+      + '<div class="cc-fill"><span class="cc-fill-count">학생 ' + enr + '/' + cap + '</span><span class="cc-fill-pct">' + pct + '%</span></div>'
+      + '<div class="cc-metric"><div class="cc-metric-head"><span>진학 ' + jin + '</span><span>유입 ' + yu + '</span></div>'
+      +   '<div class="cc-bar"><div class="cc-seg-strong" style="flex:' + jin + '"></div><div class="cc-seg-light" style="flex:' + yu + '"></div></div></div>'
+      + '<div class="cc-metric"><div class="cc-metric-head"><span>남 ' + m + '</span><span>여 ' + f + '</span></div>'
+      +   '<div class="cc-bar"><div class="cc-seg-strong" style="flex:' + m + '"></div><div class="cc-seg-light" style="flex:' + f + '"></div></div></div>'
+      + '</div>';
+  }
+
+  function statOf(days) {
+    let e = 0, c = 0;
+    days.forEach(d => d.rooms.forEach(r => { if (r) { e += r[1]; c += r[2]; } }));
+    return { e, c, p: c ? Math.round(e / c * 100) : 0 };
+  }
+
+  function buildMatrix(dayFilter) {
+    const tbody = document.getElementById('ccBody');
+    if (!tbody) return;
+    let html = '';
+    BLOCKS.forEach(b => {
+      const days = (dayFilter && dayFilter !== 'all') ? b.days.filter(d => d.day === dayFilter) : b.days;
+      if (!days.length) return;
+      days.forEach((d, di) => {
+        html += '<tr>';
+        if (di === 0) {
+          const bs = statOf(days);
+          html += '<td class="cc-lbl cc-blk" rowspan="' + days.length + '">'
+            + '<div class="cc-lbl-name">' + b.block + '</div>'
+            + '<div class="cc-lbl-stat">' + bs.e + '/' + bs.c + '</div>'
+            + '<div class="cc-lbl-pct">' + bs.p + '%</div></td>';
+        }
+        const ds = statOf([d]);
+        html += '<td class="cc-lbl cc-day">'
+          + '<div class="cc-lbl-name">' + d.day + '</div>'
+          + '<div class="cc-lbl-stat">' + ds.e + '/' + ds.c + '</div>'
+          + '<div class="cc-lbl-pct">' + ds.p + '%</div></td>';
+        ROOMS.forEach((room, ri) => {
+          html += '<td class="cc-cell">' + renderClass(d.rooms[ri], room) + '</td>';
+        });
+        html += '</tr>';
+      });
+    });
+    tbody.innerHTML = html;
+  }
+
+  function setText(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+
+  function updateSummary() {
+    let e = 0, c = 0, full = 0, open = 0, total = 0;
+    BLOCKS.forEach(b => b.days.forEach(d => d.rooms.forEach(r => {
+      if (r) { total++; e += r[1]; c += r[2]; if (r[1] >= r[2]) full++; else open++; }
+    })));
+    const pct = c ? Math.round(e / c * 100) : 0;
+    setText('kpiFillVal', e);
+    setText('kpiFillCap', '/' + c + '명');
+    setText('kpiRooms', ROOMS.length);
+    setText('kpiFull', full);
+    setText('kpiOpen', open);
+    setText('kpiTotal', total);
+    const g = document.getElementById('ccGauge');
+    if (g) g.style.setProperty('--val', pct);
+    setText('ccGaugeVal', pct + '%');
+  }
+
+  function filterDay(v) { buildMatrix(v); }
+
+  function switchView(view, btn) {
+    document.querySelectorAll('.cc-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    const isGrid = view === 'grid';
+    document.getElementById('view-grid').style.display = isGrid ? '' : 'none';
+    document.getElementById('view-other').style.display = isGrid ? 'none' : '';
+    if (!isGrid) setText('otherViewLabel', view === 'list' ? '학생 리스트' : 'Summary');
+  }
+
+  /* Excel 다운로드 — 배치표를 평면 시트로 변환 */
+  function downloadExcel() {
+    if (typeof XLSX === 'undefined') return;
+    const aoa = [['교시 블럭', '요일 블럭'].concat(ROOMS)];
+    BLOCKS.forEach(b => b.days.forEach(d => {
+      const row = [b.block, d.day];
+      d.rooms.forEach((r, ri) => row.push(r ? (r[0] + '-' + ROOMS[ri] + ' ' + r[1] + '/' + r[2]) : '수업없음'));
+      aoa.push(row);
+    }));
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    XLSX.utils.book_append_sheet(wb, ws, '학급편성_목동매그넷');
+    XLSX.writeFile(wb, '학급편성_목동매그넷_2026-05-31.xlsx');
+  }
+
+  /* 인쇄 */
+  function printReport() { window.print(); }
+
+  /* 새로고침 — 배치표·요약 재계산 (아이콘 회전 피드백) */
+  function refreshReport() {
+    const btn = document.querySelector('[onclick="refreshReport()"] svg');
+    if (btn) {
+      btn.style.transition = 'transform 0.6s ease';
+      btn.style.transform = 'rotate(360deg)';
+      setTimeout(() => { btn.style.transition = 'none'; btn.style.transform = ''; }, 650);
+    }
+    const dv = document.getElementById('daySelect');
+    buildMatrix(dv ? dv.value : 'all');
+    updateSummary();
+  }
+
+  function toggleSubNav(btn) {
+    btn.closest('.poly-nav-group').classList.toggle('open');
+  }
+
+  /* 초기화 */
+  (function() {
+    const intro = document.getElementById('chatIntro');
+    const msgs  = document.getElementById('chatMessages');
+    if (intro && msgs && msgs.querySelector('.msg')) intro.style.display = 'none';
+
+    const saved = localStorage.getItem('polyBrand') || 'poly';
+    applyBrand(saved);
+    buildMatrix('all');
+    updateSummary();
+
+    document.querySelectorAll('.lnb-brand-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.brand === saved);
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.lnb-brand-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        const brand = this.dataset.brand;
+        localStorage.setItem('polyBrand', brand);
+        applyBrand(brand);
+      });
+    });
+  })();
+</script>
+
+<!-- 채팅 패널 리사이즈 -->
+<script>
+(function() {
+  const panel = document.getElementById('chatPanel');
+  if (!panel) return;
+  const tip = document.createElement('div');
+  tip.className = 'resize-tooltip';
+  tip.textContent = '← 드래그하여 크기 조절';
+  document.body.appendChild(tip);
+  const EDGE = 14;
+  let dragging = false, startX, startW;
+  panel.addEventListener('mousemove', function(e) {
+    if (dragging) return;
+    const fromLeft = e.clientX - panel.getBoundingClientRect().left;
+    if (fromLeft <= EDGE) {
+      panel.style.cursor = 'col-resize';
+      tip.style.left = (e.clientX + 12) + 'px';
+      tip.style.top  = e.clientY + 'px';
+      tip.classList.add('visible');
+    } else {
+      panel.style.cursor = '';
+      tip.classList.remove('visible');
+    }
+  });
+  panel.addEventListener('mouseleave', function() {
+    if (!dragging) { panel.style.cursor = ''; tip.classList.remove('visible'); }
+  });
+  panel.addEventListener('mousedown', function(e) {
+    const fromLeft = e.clientX - panel.getBoundingClientRect().left;
+    if (fromLeft > EDGE) return;
+    dragging = true; startX = e.clientX; startW = panel.offsetWidth;
+    tip.classList.remove('visible');
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+    function onMove(e) {
+      const newW = Math.min(720, Math.max(260, startW + (startX - e.clientX)));
+      panel.style.width = newW + 'px';
+      panel.style.transition = 'none';
+    }
+    function onUp() {
+      dragging = false;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+      panel.style.transition = '';
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    }
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    e.preventDefault();
+  });
+})();
+</script>
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script>
+  /* 요일 필터 (커스텀 셀렉트 change 대응) */
+  (function () {
+    const sel = document.getElementById('daySelect');
+    if (sel) sel.addEventListener('change', function () { filterDay(this.value); });
+  })();
+
+  /* LNB 최근 채팅 — hover 시 x 삭제 버튼 주입 */
+  (function () {
+    document.querySelectorAll('.poly-history-item').forEach(function (item) {
+      if (item.dataset.delReady) return;
+      item.dataset.delReady = '1';
+      var txt = document.createElement('span');
+      txt.className = 'poly-history-text';
+      txt.innerHTML = item.innerHTML;
+      item.innerHTML = '';
+      item.appendChild(txt);
+      var del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'poly-history-del';
+      del.title = '삭제';
+      del.setAttribute('aria-label', '채팅 삭제');
+      del.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      del.addEventListener('click', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        item.remove();
+      });
+      item.appendChild(del);
+    });
+  })();
+</script>
+</body>
+</html>
