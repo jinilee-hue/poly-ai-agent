@@ -2645,6 +2645,17 @@
        ESC 학생 현황 상세 (report-esc.html)
        ══════════════════════════════════════════════════ */
 
+    /* 캠퍼스 표 — 전체 총합계 행 */
+    .data-table tbody tr.grand-total td {
+      background: var(--color-primary-light);
+      font-weight: var(--weight-semibold);
+      color: var(--color-text-primary);
+      border-top: 2px solid var(--color-primary-a30);
+      border-bottom: none;
+    }
+    .data-table tbody tr.grand-total:hover td { background: var(--color-primary-light); }
+    .data-table tbody tr.grand-total td.col-fixed { background: var(--color-primary-light); }
+
     /* 섹션 타이틀 */
     .esc-section-title {
       font-size: var(--text-base);
