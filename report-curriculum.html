@@ -579,9 +579,9 @@
     const yd = DATA[year];
     const monthIdx = ALLVALS.month.filter(function (i) { return SEL.month.has(i); });
     const rowSet = selRowIndices();
-    let thead = '<thead><tr><th class="text-left col-fixed" style="min-width:120px;">구분</th><th class="text-left" style="min-width:72px;">항목</th>';
-    monthIdx.forEach(function (i) { thead += '<th style="text-align:right;">' + MONTHS[i] + '</th>'; });
-    thead += '<th style="text-align:right;border-left:1px solid var(--color-border-strong);">비고</th></tr></thead>';
+    let thead = '<thead><tr><th class="col-fixed" style="min-width:120px;text-align:center;">구분</th><th style="min-width:72px;text-align:center;">항목</th>';
+    monthIdx.forEach(function (i) { thead += '<th style="text-align:center;">' + MONTHS[i] + '</th>'; });
+    thead += '<th style="text-align:center;border-left:1px solid var(--color-border-strong);">비고</th></tr></thead>';
     let tbody = '<tbody>';
     let prevG = null;
     ROWDEFS.forEach(function (rd, i) {
