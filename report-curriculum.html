@@ -588,7 +588,11 @@
       if (!rowSet.has(i)) return;
       const grpStart = prevG !== null && rd.g !== prevG; prevG = rd.g;
       tbody += '<tr class="' + (grpStart ? 'cur-grp-start' : '') + '">';
-      tbody += '<td class="text-left col-fixed cur-gubun">' + (rd.d || '') + '</td>';
+      if (rd.d) {
+        var span = 1;
+        for (var j = i + 1; j < ROWDEFS.length; j++) { if (ROWDEFS[j].d === '' && rowSet.has(j)) span++; else break; }
+        tbody += '<td class="text-left col-fixed cur-gubun"' + (span > 1 ? ' rowspan="' + span + '"' : '') + '>' + rd.d + '</td>';
+      }
       tbody += '<td class="text-left cur-item">' + rd.item + '</td>';
       monthIdx.forEach(function (mi) {
         const c = fmtCell(yd.rows[i][mi], rd.fmt);
