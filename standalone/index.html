@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>POLY · AI 경영 분석 플랫폼 — 변체 3종</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #faf9f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    #__bundler_loading { position: fixed; bottom: 20px; right: 20px; font: 13px/1.4 -apple-system, BlinkMacSystemFont, sans-serif; color: #666; background: #fff; padding: 8px 14px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); z-index: 10000; }
+    #__bundler_thumbnail { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #faf9f5; z-index: 9999; }
+    #__bundler_thumbnail svg { width: 100%; height: 100%; object-fit: contain; }
+    #__bundler_placeholder { color: #999; font-size: 14px; }
+  </style>
+  <noscript>
+    <style>#__bundler_loading { display: none; }</style>
+    <div style="position:fixed;bottom:12px;left:12px;font:13px/1.4 -apple-system,BlinkMacSystemFont,sans-serif;color:#999;background:rgba(255,255,255,0.9);padding:6px 12px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,0.08);z-index:10000;">
+      This page requires JavaScript to display.
+    </div>
+  </noscript>
+</head>
+<body>
+  <div id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#004ea2"></rect><text x="50" y="62" font-size="40" fill="#fff" text-anchor="middle" font-family="sans-serif" font-weight="700">P</text></svg></div>
+  <div id="__bundler_loading">Unpacking...</div>
+
+  <script>
+    
+document.addEventListener('DOMContentLoaded', async function() {
+  const loading = document.getElementById('__bundler_loading');
+  function setStatus(msg) { if (loading) loading.textContent = msg; }
+
+  // Error sink persists across replaceWith since it's on window, not the DOM.
+  window.addEventListener('error', function(e) {
+    var p = document.body || document.documentElement;
+    var d = document.getElementById('__bundler_err') || p.appendChild(document.createElement('div'));
+    d.id = '__bundler_err';
+    d.style.cssText = 'position:fixed;bottom:12px;left:12px;right:12px;font:12px/1.4 ui-monospace,monospace;background:#2a1215;color:#ff8a80;padding:10px 14px;border-radius:8px;border:1px solid #5c2b2e;z-index:99999;white-space:pre-wrap;max-height:40vh;overflow:auto';
+    d.textContent = (d.textContent ? d.textContent + String.fromCharCode(10) : '') +
+      '[bundle] ' + (e.message || e.type) +
+      (e.filename ? ' (' + e.filename.slice(0, 60) + ':' + e.lineno + ')' : '');
+  }, true);
+
+  try {
+    const manifestEl = document.querySelector('script[type="__bundler/manifest"]');
+    const templateEl = document.querySelector('script[type="__bundler/template"]');
+    if (!manifestEl || !templateEl) {
+      setStatus('Error: missing bundle data');
+      console.error('[bundler] Missing script tags — manifestEl:', !!manifestEl, 'templateEl:', !!templateEl);
+      return;
+    }
+
+    const manifest = JSON.parse(manifestEl.textContent);
+    let template = JSON.parse(templateEl.textContent);
+
+    const uuids = Object.keys(manifest);
+    setStatus('Unpacking ' + uuids.length + ' assets...');
+
+    const blobUrls = {};
+    await Promise.all(uuids.map(async (uuid) => {
+      const entry = manifest[uuid];
+      try {
+        const binaryStr = atob(entry.data);
+        const bytes = new Uint8Array(binaryStr.length);
+        for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
+
+        let finalBytes = bytes;
+        if (entry.compressed) {
+          if (typeof DecompressionStream !== 'undefined') {
+            const ds = new DecompressionStream('gzip');
+            const writer = ds.writable.getWriter();
+            const reader = ds.readable.getReader();
+            writer.write(bytes);
+            writer.close();
+            const chunks = [];
+            let totalLen = 0;
+            while (true) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              chunks.push(value);
+              totalLen += value.length;
+            }
+            finalBytes = new Uint8Array(totalLen);
+            let offset = 0;
+            for (const chunk of chunks) { finalBytes.set(chunk, offset); offset += chunk.length; }
+          } else {
+            console.warn('DecompressionStream not available, asset ' + uuid + ' may not render');
+          }
+        }
+
+        blobUrls[uuid] = URL.createObjectURL(new Blob([finalBytes], { type: entry.mime }));
+      } catch (err) {
+        console.error('Failed to decode asset ' + uuid + ':', err);
+        blobUrls[uuid] = URL.createObjectURL(new Blob([], { type: entry.mime }));
+      }
+    }));
+
+    const extResEl = document.querySelector('script[type="__bundler/ext_resources"]');
+    const extResources = extResEl ? JSON.parse(extResEl.textContent) : [];
+    const resourceMap = {};
+    for (const entry of extResources) {
+      if (blobUrls[entry.uuid]) resourceMap[entry.id] = blobUrls[entry.uuid];
+    }
+
+    setStatus('Rendering...');
+    for (const uuid of uuids) template = template.split(uuid).join(blobUrls[uuid]);
+
+    // Strip integrity + crossorigin — blob URLs from a file:// document inherit
+    // a null origin, so crossorigin forces a CORS fetch that SRI then rejects.
+    // The manifest bytes are ours; SRI protects against CDN compromise, not this.
+    template = template.replace(/\s+integrity="[^"]*"/gi, '').replace(/\s+crossorigin="[^"]*"/gi, '');
+
+    const resourceScript = '<script>window.__resources = ' +
+      JSON.stringify(resourceMap).split('</' + 'script>').join('<\\/' + 'script>') +
+      ';</' + 'script>';
+    // Inject after <head> so the DOCTYPE stays first; prepending the script
+    // would push the parser into quirks mode. DOMParser always emits a <head>
+    // (synthesizing one if the source HTML omitted it) but may carry
+    // attributes through, so match the full opening tag. slice() rather than
+    // replace() keeps us clear of $-pattern substitution in resourceScript.
+    const headOpen = template.match(/<head[^>]*>/i);
+    if (headOpen) {
+      const i = headOpen.index + headOpen[0].length;
+      template = template.slice(0, i) + resourceScript + template.slice(i);
+    }
+
+    // Parse the template and swap the root element. Scripts inserted via
+    // DOMParser/replaceWith are inert per spec — re-create each with
+    // createElement so they execute, awaiting onload for src scripts to
+    // preserve ordering (React before ReactDOM before Babel before text/babel).
+    const doc = new DOMParser().parseFromString(template, 'text/html');
+    document.documentElement.replaceWith(doc.documentElement);
+    const dead = Array.from(document.scripts);
+    for (const old of dead) {
+      const s = document.createElement('script');
+      for (const a of old.attributes) s.setAttribute(a.name, a.value);
+      s.textContent = old.textContent;
+      // text/babel scripts with a src: fetch and inline. transformScriptTags
+      // does XHR against the src, but blob:null/ from a file:// origin is
+      // silently dropped. Inlining makes it a plain inline babel script,
+      // which transformScriptTags handles unconditionally.
+      if ((s.type === 'text/babel' || s.type === 'text/jsx') && s.src) {
+        const r = await fetch(s.src);
+        s.textContent = await r.text();
+        s.removeAttribute('src');
+      }
+      const p = s.src ? new Promise(function(r) { s.onload = s.onerror = r; }) : null;
+      old.replaceWith(s);
+      if (p) await p;
+    }
+    // Babel standalone auto-transforms type=text/babel on DOMContentLoaded,
+    // which fired before we swapped the document. Trigger manually if present.
+    if (window.Babel && typeof window.Babel.transformScriptTags === 'function') {
+      window.Babel.transformScriptTags();
+    }
+  } catch (err) {
+    setStatus('Error unpacking: ' + err.message);
+    console.error('Bundle unpack error:', err);
+  }
+});
+
+  </script>
+
+  <script type="__bundler/manifest">
+{"673bbf52-9831-4758-8670-eeab5002b1b7":{"mime":"image/png","compressed":false,"data":"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"},"6d73c82c-9a66-44aa-a54a-af6dee4c43c6":{"mime":"application/javascript","compressed":true,"data":"H4sIAAAAAAAACp2Uz2/URhTH7/tXvPqCHS22UE+NtYIKVaISEivBpao4TOy3a3cnM+7M20QrslJQlyogRFELKqBAFgGlrThElBYO4cKfwjH2/g/V2N4fzhqCONmaefO+n/edr+2tQPvC+e/g/fYdmNy/d/jybTZ6mo3v2pNrN9PnO+9ep3//mY120z9eOHD4z7/Z7hjevQYuA8YvklSsi5A+3oXJrXvZw1fZ82043B9Btjs2rytew+70RUCxFGA7cKUBsMEURNCCUAb9dRTkTl++4WgefgPAW4G2QkIRMhXC5Jf9yY036bMDSPf2Jz9tZ49G2e+3IXtykD26Bnb6cif97Wm69wKy8d1sfDX9b5SNHsLkwc3JnQN4//OvoImJkHEpELIHf6V71yEb7xzu33YMIACpQU5WsHWkoHMKO9ACKyJK9KrnBaFwf9Ah8nhDuQLJ60aeVLEUAQuor71kBntm45T7pfuVF8aavE1c8zQxioOFCjfQ2vJzubgD9hczH37soxpcRI4BSWWf4LHofR8yYicTyQcnDdblE45TkhasvLdoZKCQEZY22pZpYDl+Wc57rkJuhtI04KgjRLJ8sxwVw07nztc00tdEKl7rE9pWlcJqgnVq3ngmHyELXZYkKMKzUcxDm/fKomEDYAgBoyACGx24Mqy4HrlGQCO5FOE6QquSLreL9C3hum3lBHmJ5cDW1tK5rS2weNyNqLR3vh9IJVDpj3cui4relpJ9ES41ShhHomMQy6Ky0ZpiZaOKBR+Y/HNmOpZ1kaEBsBmLUG66bckHbYUd06LA6SJBLms+VVBIfSWOEvkwbM6KS4b68nKzcqBkqj9Qbs4OaKRLRnIV5v8QMieXbSO/yFP1WnRNcppAjn8kjQuCZwvoRcmgKjn3PfgE0WmomhB8TLZdjL4om1Rl57eZfILsNIJNSD4oS7Lb5bjksJGlKNbu1H57ye5WC6yQqZ4Fp6fphNVyyfGPC06hW2P0onK5bdf4btR1xFSSyxfZN/LFWp3+0SQWBDWeLxKU23bNFRiCdSlkDlB8WwYgX6rTrwZ76DeGju34jf8Bp3piRXoHAAA="}}
+  </script>
+
+  <script type="__bundler/ext_resources">
+[]
+  </script>
+
+  <script type="__bundler/template">
+"<!DOCTYPE html>\n<html lang=\"ko\" data-theme=\"light\"><head>\n<meta charset=\"UTF-8\">\n<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n<title>POLY · AI 경영 분석 플랫폼 — 변체 3종<\u002Ftitle>\n<style>/* ============================================================\n   POLY — AI 경영 분석 플랫폼 · 디자인 토큰\n   브랜드 블루: #004EA2 (로고 추출)\n   폰트: Pretendard (깔끔·모던)\n   라이트/다크 토큰 전환\n   ============================================================ */\n\n/* 폰트(Pretendard)는 prefs.js 에서 런타임에 CDN <link> 로 주입한다.\n   (standalone 번들 용량 절감 — 폰트 파일이 인라인되지 않도록) */\n\n:root {\n  /* --- 브랜드 --- */\n  --poly-700: #003c7d;\n  --poly-600: #004ea2;   /* 로고 블루 */\n  --poly-500: #0a63c2;\n  --poly-400: #2a7fe0;   /* 인터랙션 */\n  --poly-300: #6aa6ee;\n  --poly-100: #d8e6f9;\n  --poly-50:  #eef4fd;\n\n  /* --- 데이터 시각화 팔레트 (블루 기반 조화) --- */\n  --viz-1: #004ea2;\n  --viz-2: #2a7fe0;\n  --viz-3: #14b8a6;   /* teal */\n  --viz-4: #f0a020;   /* amber */\n  --viz-5: #e05656;   /* coral (경고/감소) */\n  --viz-grid: rgba(0,0,0,0.07);\n\n  /* --- 라이트 중립 --- */\n  --bg:        #f6f8fb;\n  --surface:   #ffffff;\n  --surface-2: #f0f3f8;\n  --line:      #e3e8f0;\n  --line-strong:#cdd6e3;\n  --ink:       #0f1c2e;\n  --ink-2:     #3c4a5e;\n  --ink-3:     #6b7a8f;\n  --ink-faint: #9aa7b8;\n\n  --ok:   #1f9d6b;\n  --warn: #d98a1f;\n  --down: #d24b4b;\n\n  /* --- 타입 스케일 (1m 노트북, 임원) --- */\n  --font: \"Pretendard\", -apple-system, sans-serif;\n  --t-display: 700 44px/1.1 var(--font);\n  --t-h1: 700 30px/1.18 var(--font);\n  --t-h2: 700 22px/1.25 var(--font);\n  --t-h3: 600 17px/1.35 var(--font);\n  --t-body: 400 15px/1.6 var(--font);\n  --t-small: 400 13px/1.5 var(--font);\n  --t-micro: 600 11px/1.3 var(--font);\n  --num: 700 var(--font);\n\n  /* --- 반경/그림자/간격 --- */\n  --r-sm: 8px;\n  --r-md: 12px;\n  --r-lg: 18px;\n  --r-xl: 24px;\n  --shadow-1: 0 1px 2px rgba(15,28,46,.06), 0 1px 3px rgba(15,28,46,.04);\n  --shadow-2: 0 4px 12px rgba(15,28,46,.08), 0 2px 4px rgba(15,28,46,.05);\n  --shadow-3: 0 18px 48px rgba(15,28,46,.16), 0 6px 16px rgba(15,28,46,.08);\n}\n\n[data-theme=\"dark\"] {\n  --bg:        #0c1320;\n  --surface:   #131c2c;\n  --surface-2: #1b2638;\n  --line:      #243349;\n  --line-strong:#33455f;\n  --ink:       #eaf1fb;\n  --ink-2:     #b6c4d8;\n  --ink-3:     #8395ad;\n  --ink-faint: #5d6e86;\n\n  --poly-50:  #122138;\n  --poly-100: #16304f;\n  --poly-300: #4d8ce0;\n  --poly-400: #4d97f0;\n\n  --viz-grid: rgba(255,255,255,0.08);\n  --ok:   #34c98a;\n  --warn: #e6a943;\n  --down: #ef6a6a;\n\n  --shadow-1: 0 1px 2px rgba(0,0,0,.4);\n  --shadow-2: 0 6px 18px rgba(0,0,0,.45);\n  --shadow-3: 0 22px 56px rgba(0,0,0,.6), 0 8px 20px rgba(0,0,0,.4);\n}\n\n/* ===== 모노톤(Mono) 팔레트 — 무채색 그래파이트, 고급/편집디자인풍 =====\n   data-palette=\"mono\" 를 <html> 에 지정. 브랜드 블루를 그래파이트 톤으로 치환 */\n[data-palette=\"mono\"] {\n  --poly-700: #17191d;\n  --poly-600: #282c33;   /* primary fill (흰 텍스트 대비 확보) */\n  --poly-500: #3b4049;\n  --poly-400: #5c626d;   /* 인터랙션 · 텍스트 강조 */\n  --poly-300: #959aa3;\n  --poly-100: #e3e5e9;\n  --poly-50:  #f2f3f5;\n  --viz-1: #282c33;\n  --viz-2: #5c626d;\n  --viz-3: #959aa3;\n  --viz-4: #c3c7cd;\n  --viz-5: #9c5a4d;       /* 감소 — 절제된 클레이 */\n  --ok:   #4f7a5e;\n  --down: #9c5a4d;\n  --warn: #8f7430;\n}\n[data-theme=\"dark\"][data-palette=\"mono\"] {\n  --poly-700: #33373f;\n  --poly-600: #444a54;\n  --poly-500: #aeb3bb;\n  --poly-400: #b9bec6;\n  --poly-300: #878d97;\n  --poly-100: #2b2f37;\n  --poly-50:  #1d2129;\n  --viz-1: #d6d9de;\n  --viz-2: #9aa0a9;\n  --viz-3: #6b7079;\n  --viz-4: #454b54;\n  --viz-5: #c08374;\n  --ok:   #74ac84;\n  --down: #c2806f;\n}\n/* 모노톤에선 컬러 로고도 무채색으로 */\n[data-palette=\"mono\"] .logo img,\n[data-palette=\"mono\"] .brand img { filter: grayscale(1) contrast(1.05) brightness(.7); }\n[data-theme=\"dark\"][data-palette=\"mono\"] .logo img,\n[data-theme=\"dark\"][data-palette=\"mono\"] .brand img { filter: grayscale(1) contrast(1.05) brightness(1.6); }\n\n/* ===== 각진(Sharp) 모드 — 라운드박스 제거, 편집디자인풍 =====\n   data-corners=\"sharp\" 를 <html> 에 지정. 진짜 원형(상태 점·타이핑)만 유지 */\n[data-corners=\"sharp\"] {\n  --r-sm: 0px; --r-md: 0px; --r-lg: 0px; --r-xl: 0px;\n}\n[data-corners=\"sharp\"] *:not(.dot):not(.typing span) { border-radius: 0 !important; }\n[data-corners=\"sharp\"] .dot,\n[data-corners=\"sharp\"] .typing span { border-radius: 999px !important; }\n[data-corners=\"sharp\"] svg rect { rx: 0 !important; ry: 0 !important; }\n/* 각진 모드에선 그림자를 줄이고 헤어라인 경계로 — 더 단정하게 */\n[data-corners=\"sharp\"] {\n  --shadow-1: 0 1px 0 rgba(15,28,46,.04);\n  --shadow-2: 0 2px 0 rgba(15,28,46,.05);\n  --shadow-3: 0 0 0 1px var(--line-strong), 0 24px 48px rgba(15,28,46,.14);\n}\n[data-theme=\"dark\"][data-corners=\"sharp\"] {\n  --shadow-1: 0 1px 0 rgba(0,0,0,.4);\n  --shadow-2: 0 2px 0 rgba(0,0,0,.5);\n  --shadow-3: 0 0 0 1px var(--line-strong), 0 24px 56px rgba(0,0,0,.6);\n}\n\n* { box-sizing: border-box; }\nhtml, body { margin: 0; padding: 0; }\nbody {\n  font: var(--t-body);\n  color: var(--ink);\n  background: var(--bg);\n  -webkit-font-smoothing: antialiased;\n  font-feature-settings: \"tnum\" 1, \"ss01\" 1;\n}\n.num { font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }\n::selection { background: var(--poly-100); }\n<\u002Fstyle>\n<style>\n  body { min-height: 100vh; }\n  .wrap { max-width: 1120px; margin: 0 auto; padding: 48px 32px 80px; }\n  .top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 52px; }\n  .brand { display: flex; align-items: center; gap: 12px; }\n  .brand img { height: 24px; }\n  .brand .sub { font: 500 12px var(--font); color: var(--ink-faint); padding-left: 12px; border-left: 1px solid var(--line-strong); }\n  .toggle { display: flex; align-items: center; gap: 8px; font: 500 13px var(--font); color: var(--ink-2); cursor: pointer; background: var(--surface); border: 1px solid var(--line); padding: 9px 15px; border-radius: 999px; box-shadow: var(--shadow-1); }\n  .toggle:hover { border-color: var(--line-strong); }\n  .toggle .swatch { width: 13px; height: 13px; border-radius: 4px; background: var(--poly-600); display: inline-block; }\n\n  .hero { max-width: 720px; margin-bottom: 46px; }\n  .hero .eyebrow { font: 600 12px var(--font); letter-spacing: .12em; text-transform: uppercase; color: var(--poly-400); margin-bottom: 16px; }\n  .hero h1 { font: 700 46px/1.1 var(--font); letter-spacing: -0.03em; margin: 0 0 18px; }\n  .hero h1 b { color: var(--poly-600); }\n  .hero p { font: 400 18px/1.6 var(--font); color: var(--ink-2); margin: 0; }\n  .hero .meta { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }\n  .hero .meta span { font: 500 12px var(--font); color: var(--ink-3); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; }\n\n  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }\n  .v { display: flex; flex-direction: column; background: var(--surface); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-1); text-decoration: none; transition: .18s; }\n  .v:hover { transform: translateY(-3px); box-shadow: var(--shadow-3); border-color: var(--poly-300); }\n  .v .preview { height: 178px; border-bottom: 1px solid var(--line); position: relative; overflow: hidden; background: var(--surface-2); }\n  .v .vtag { position: absolute; top: 14px; left: 14px; z-index: 2; width: 30px; height: 30px; border-radius: 8px; background: var(--poly-600); color: #fff; font: 700 14px var(--font); display: grid; place-items: center; }\n  .v .vbody { padding: 22px 22px 24px; flex: 1; display: flex; flex-direction: column; }\n  .v h2 { font: 700 19px var(--font); margin: 0 0 4px; color: var(--ink); }\n  .v .phil { font: 500 13px var(--font); color: var(--poly-500); margin-bottom: 12px; }\n  .v p { font: 400 14px/1.6 var(--font); color: var(--ink-2); margin: 0 0 16px; flex: 1; }\n  .v ul { margin: 0 0 20px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 7px; }\n  .v li { font: 500 12.5px var(--font); color: var(--ink-3); display: flex; gap: 8px; align-items: center; }\n  .v li::before { content: \"\"; width: 5px; height: 5px; border-radius: 99px; background: var(--poly-400); flex: none; }\n  .v .open { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; font: 600 14px var(--font); color: var(--poly-600); }\n  .v:hover .open { gap: 11px; }\n\n  /* mini previews (CSS-only) */\n  .pv { position: absolute; inset: 0; padding: 18px 18px 0 52px; display: flex; flex-direction: column; gap: 6px; }\n  .bar { background: var(--line); border-radius: 4px; }\n  .bar.b { background: var(--poly-300); }\n  .bar.d { background: var(--line-strong); }\n  .row { display: flex; gap: 6px; }\n  .colf { display: flex; flex-direction: column; gap: 6px; flex: 1; }\n  .spark-row { display: flex; align-items: flex-end; gap: 4px; height: 38px; }\n  .spark-row i { flex: 1; background: var(--poly-300); border-radius: 3px 3px 0 0; }\n\n  .foot { margin-top: 40px; display: flex; align-items: center; gap: 14px; padding: 20px 24px; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; }\n  .foot .ic { width: 40px; height: 40px; border-radius: 11px; background: var(--poly-50); color: var(--poly-600); display: grid; place-items: center; flex: none; }\n  .foot .ft { font: 600 14px var(--font); color: var(--ink); }\n  .foot .fd { font: 400 13px var(--font); color: var(--ink-3); }\n  .foot a { margin-left: auto; font: 600 13px var(--font); color: var(--poly-600); text-decoration: none; border: 1px solid var(--poly-100); padding: 9px 16px; border-radius: 10px; }\n  .foot a:hover { background: var(--poly-50); }\n  svg.fic { stroke: currentColor; }\n<\u002Fstyle>\n<\u002Fhead>\n<body>\n<div class=\"wrap\">\n  <div class=\"top\">\n    <div class=\"brand\"><img src=\"673bbf52-9831-4758-8670-eeab5002b1b7\" alt=\"Poly\"><span class=\"sub\">AI 경영 분석 플랫폼<\u002Fspan><\u002Fdiv>\n    <div class=\"controls\" style=\"display:flex;gap:10px\">\n      <button class=\"toggle\" id=\"palette\"><span class=\"swatch\"><\u002Fspan> 브랜드 / 모노톤<\u002Fbutton>\n      <button class=\"toggle\" id=\"corners\">◰ 둥근 / 각진<\u002Fbutton>\n      <button class=\"toggle\" id=\"tog\">◐ 라이트 / 다크<\u002Fbutton>\n    <\u002Fdiv>\n  <\u002Fdiv>\n\n  <div class=\"hero\">\n    <div class=\"eyebrow\">변체 3종 · 클릭 가능한 프로토타입<\u002Fdiv>\n    <h1>묻고, 답 받고, <b>실시간으로 본다<\u002Fb><\u002Fh1>\n    <p>경영진이 빠르게 경영 질문을 던지면 AI가 실시간 데이터와 차트로 답하고, 그 자리에서 리포트까지 여는 플랫폼. 같은 데이터·디자인 시스템 위에서 세 가지 방향을 비교해 보세요.<\u002Fp>\n    <div class=\"meta\"><span>임원 · 데스크톱<\u002Fspan><span>학생 + 재무 지표<\u002Fspan><span>라이트 · 다크<\u002Fspan><span>실제 차트<\u002Fspan><span>Pretendard · #004EA2<\u002Fspan><\u002Fdiv>\n  <\u002Fdiv>\n\n  <div class=\"grid\">\n    <a class=\"v\" href=\"변체 A · 대화 우선.html\">\n      <div class=\"preview\"><div class=\"vtag\">A<\u002Fdiv>\n        <div class=\"pv\">\n          <div class=\"bar d\" style=\"height:11px;width:55%;margin:0 auto\"><\u002Fdiv>\n          <div class=\"bar b\" style=\"height:30px;border-radius:10px\"><\u002Fdiv>\n          <div class=\"row\" style=\"justify-content:center;margin-top:2px\"><div class=\"bar\" style=\"height:13px;width:46px;border-radius:99px\"><\u002Fdiv><div class=\"bar\" style=\"height:13px;width:46px;border-radius:99px\"><\u002Fdiv><div class=\"bar\" style=\"height:13px;width:46px;border-radius:99px\"><\u002Fdiv><\u002Fdiv>\n          <div class=\"row\" style=\"margin-top:8px\"><div class=\"bar\" style=\"height:40px;width:48%;border-radius:8px\"><\u002Fdiv><div class=\"bar\" style=\"height:40px;width:48%;border-radius:8px\"><\u002Fdiv><\u002Fdiv>\n        <\u002Fdiv>\n      <\u002Fdiv>\n      <div class=\"vbody\">\n        <h2>대화 우선<\u002Fh2>\n        <div class=\"phil\">Conversational<\u002Fdiv>\n        <p>중앙 1열 대화 흐름에 차트 카드가 끼어드는, 가장 익숙한 구조. 기존 홈 화면을 계승·정제했습니다.<\u002Fp>\n        <ul><li>큰 질문 입력 + 추천 칩<\u002Fli><li>말풍선 안 인라인 차트<\u002Fli><li>리포트는 우측 슬라이드 패널<\u002Fli><\u002Ful>\n        <span class=\"open\">열기 →<\u002Fspan>\n      <\u002Fdiv>\n    <\u002Fa>\n\n    <a class=\"v\" href=\"변체 B · 대시보드 커맨드센터.html\">\n      <div class=\"preview\"><div class=\"vtag\">B<\u002Fdiv>\n        <div class=\"pv\" style=\"padding-left:18px\">\n          <div class=\"row\"><div class=\"bar\" style=\"height:26px;flex:1;border-radius:6px\"><\u002Fdiv><div class=\"bar\" style=\"height:26px;flex:1;border-radius:6px\"><\u002Fdiv><div class=\"bar\" style=\"height:26px;flex:1;border-radius:6px\"><\u002Fdiv><div class=\"bar\" style=\"height:26px;flex:1;border-radius:6px\"><\u002Fdiv><\u002Fdiv>\n          <div class=\"row\" style=\"margin-top:4px\"><div class=\"colf\" style=\"flex:2\"><div class=\"spark-row\"><i style=\"height:40%\"><\u002Fi><i style=\"height:55%\"><\u002Fi><i style=\"height:48%\"><\u002Fi><i style=\"height:70%\"><\u002Fi><i style=\"height:62%\"><\u002Fi><i style=\"height:85%\"><\u002Fi><\u002Fdiv><\u002Fdiv><div class=\"bar\" style=\"flex:1;height:54px;border-radius:99px\"><\u002Fdiv><\u002Fdiv>\n          <div class=\"bar b\" style=\"height:24px;border-radius:99px;margin-top:6px;width:88%;margin-left:auto;margin-right:auto\"><\u002Fdiv>\n        <\u002Fdiv>\n      <\u002Fdiv>\n      <div class=\"vbody\">\n        <h2>대시보드 커맨드센터<\u002Fh2>\n        <div class=\"phil\">Command Center<\u002Fdiv>\n        <p>KPI·차트가 항상 떠 있는 임원 대시보드. 하단 AI 커맨드바로 묻고, 답을 위젯으로 고정합니다.<\u002Fp>\n        <ul><li>KPI 타일 + 라이브 차트<\u002Fli><li>하단 떠있는 AI 커맨드바<\u002Fli><li>리포트는 카드/타일 그리드<\u002Fli><\u002Ful>\n        <span class=\"open\">열기 →<\u002Fspan>\n      <\u002Fdiv>\n    <\u002Fa>\n\n    <a class=\"v\" href=\"변체 C · 하이브리드 캔버스.html\">\n      <div class=\"preview\"><div class=\"vtag\">C<\u002Fdiv>\n        <div class=\"pv\" style=\"padding-left:18px\">\n          <div class=\"row\" style=\"flex:1;height:100%\"><div class=\"colf\" style=\"flex:38\"><div class=\"bar b\" style=\"height:14px;border-radius:6px;width:80%;margin-left:auto\"><\u002Fdiv><div class=\"bar\" style=\"height:11px;width:60%\"><\u002Fdiv><div class=\"bar\" style=\"height:11px;width:72%\"><\u002Fdiv><\u002Fdiv>\n            <div class=\"colf\" style=\"flex:60\"><div class=\"bar\" style=\"height:46px;border-radius:8px\"><\u002Fdiv><div class=\"row\"><div class=\"bar\" style=\"flex:1;height:34px;border-radius:8px\"><\u002Fdiv><div class=\"bar\" style=\"flex:1;height:34px;border-radius:8px\"><\u002Fdiv><\u002Fdiv><\u002Fdiv><\u002Fdiv>\n        <\u002Fdiv>\n      <\u002Fdiv>\n      <div class=\"vbody\">\n        <h2>하이브리드 캔버스<\u002Fh2>\n        <div class=\"phil\">Analyst Workspace<\u002Fdiv>\n        <p>좌측 대화 / 우측 작업 캔버스. 질문할수록 분석 카드가 쌓이고, 드래그로 정리해 리포트로 저장합니다.<\u002Fp>\n        <ul><li>대화 + 라이브 캔버스 분할<\u002Fli><li>답변이 카드로 누적 · 드래그 정렬<\u002Fli><li>캔버스를 그대로 리포트로<\u002Fli><\u002Ful>\n        <span class=\"open\">열기 →<\u002Fspan>\n      <\u002Fdiv>\n    <\u002Fa>\n  <\u002Fdiv>\n\n  <div class=\"foot\">\n    <div class=\"ic\"><svg class=\"fic\" width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M8 3h8l4 4v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"><\u002Fpath><path d=\"M9 13h6 M9 17h4\"><\u002Fpath><\u002Fsvg><\u002Fdiv>\n    <div><div class=\"ft\">Junior Pass — 방향 확인 문서<\u002Fdiv><div class=\"fd\">디자인 시스템 선언과 3변체 와이어프레임 초안<\u002Fdiv><\u002Fdiv>\n    <a href=\"Junior Pass.html\">문서 보기 →<\u002Fa>\n  <\u002Fdiv>\n<\u002Fdiv>\n\n<script src=\"6d73c82c-9a66-44aa-a54a-af6dee4c43c6\"><\u002Fscript>\n<script>\n  document.getElementById(\"tog\").addEventListener(\"click\", function () {\n    window.PolyPrefs.toggleTheme();\n  });\n  document.getElementById(\"corners\").addEventListener(\"click\", function () {\n    window.PolyPrefs.toggleCorners();\n  });\n  document.getElementById(\"palette\").addEventListener(\"click\", function () {\n    window.PolyPrefs.togglePalette();\n  });\n<\u002Fscript>\n\n\n<\u002Fbody><\u002Fhtml>"
+  </script>
+</body>
+</html>
