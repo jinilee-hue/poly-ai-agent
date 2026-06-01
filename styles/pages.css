@@ -2988,11 +2988,18 @@
     .cur-chip-hint { display: inline-flex; align-items: center; gap: 4px; margin-left: var(--space-2); font-size: var(--text-xs); color: var(--color-warning); }
     .cur-chip-hint svg { width: 13px; height: 13px; }
 
-    .cur-tabwrap { margin-bottom: var(--space-4); }
-    /* 탭 감싸는 회색 컨테이너 제거 — 개별 탭만 노출 */
-    .cur-tabwrap .cc-tabs { background: transparent; padding: 0; height: auto; gap: var(--space-2); }
-    .cur-tabwrap .cc-tab::before { background: transparent; }
-    .cur-tabwrap .cc-tab.active::before { background: var(--color-primary-light); box-shadow: none; }
+    /* 탭 — 언더라인 스타일 (활성: 파란 텍스트 + 하단 밑줄) */
+    .cur-tabwrap { margin-bottom: var(--space-4); border-bottom: var(--border-default); }
+    .cur-tabwrap .cc-tabs { background: transparent; padding: 0; height: auto; gap: var(--space-5); }
+    .cur-tabwrap .cc-tab { height: 42px; padding: 0 4px; border-radius: 0; position: relative; }
+    .cur-tabwrap .cc-tab::before { display: none; }
+    .cur-tabwrap .cc-tab::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+      background: transparent; transition: background 0.15s;
+    }
+    .cur-tabwrap .cc-tab:hover { color: var(--color-text-primary); }
+    .cur-tabwrap .cc-tab.active { color: var(--color-primary); font-weight: var(--weight-semibold); }
+    .cur-tabwrap .cc-tab.active::after { background: var(--color-primary); }
 
     /* 연도별 상세 표 (밀도 높은 다열 표) */
     .cur-year-block { margin-top: var(--space-6); margin-bottom: var(--space-6); }
