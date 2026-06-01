@@ -2142,7 +2142,8 @@
       border-radius: var(--radius-lg);
       overflow: hidden;
     }
-    .data-table-wrap { overflow-x: auto; }
+    .data-table-wrap { overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+    .data-table-wrap::-webkit-scrollbar { display: none; }
     .data-table {
       width: 100%;
       border-collapse: collapse;
@@ -2866,7 +2867,8 @@
     .cc-legend .badge { font-size: 10px; }
 
     /* 배치표 매트릭스 */
-    .cc-matrix-wrap { overflow-x: auto; }
+    .cc-matrix-wrap { overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+    .cc-matrix-wrap::-webkit-scrollbar { display: none; }
     .cc-matrix { border-collapse: separate; border-spacing: 0; width: 100%; }
     .cc-matrix thead th {
       position: sticky; top: 0; z-index: 3;
