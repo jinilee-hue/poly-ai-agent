@@ -255,11 +255,39 @@
           </div>
         </div>
 
+        <!-- 신규생 및 탈퇴생 추이 -->
+        <div id="view-flow" style="display:none;">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <div>
+                <span class="chart-card-title">순수 신규생 및 순수 탈퇴생 월별 추이 (2024–2026)</span>
+                <div style="font-size:var(--text-xs);color:var(--color-text-tertiary);margin-top:2px;">전체 기간 연속 타임라인 · 순수 신규 입학생(외부 유입) / 순수 탈퇴생(외부 탈퇴)</div>
+              </div>
+              <div class="chart-legend">
+                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--chart-1)"></div>순수 신규 입학생</div>
+                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--chart-2)"></div>순수 탈퇴생</div>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:340px;"><canvas id="flowLineChart" role="img" aria-label="2024~2026 월별 순수 신규 입학생과 순수 탈퇴생 추이. 매년 9월 신규 유입 정점, 12~1월 탈퇴 정점, 3월 학년 시작 시 0으로 리셋"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <span class="chart-card-title">연도별 순수 신규 입학생 및 순수 탈퇴생 누적 비교</span>
+              <div class="chart-legend">
+                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--chart-1)"></div>순수 신규 입학생</div>
+                <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--chart-2)"></div>순수 탈퇴생</div>
+              </div>
+            </div>
+            <div class="chart-wrap" style="height:320px;"><canvas id="flowBarChart" role="img" aria-label="연도별 누적: 2024년 신규 6,261·탈퇴 10,346, 2025년 신규 5,848·탈퇴 10,171, 2026년(3개월) 신규 803·탈퇴 1,150"></canvas></div>
+          </div>
+        </div>
+
+        <!-- 탈퇴생 발생 패턴 (준비 중) -->
         <div id="view-other" style="display:none;">
           <div class="cc-placeholder">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18.7 8l-5.1 5.2-2.8-2.7L7 14.3"/></svg>
-            <p><strong id="otherViewLabel">신규생 및 탈퇴생 추이</strong> 화면은 준비 중입니다.</p>
-            <p class="cc-placeholder-sub">학생수 변동 비교 탭에서 3개년 추이와 상세 표를 확인하세요.</p>
+            <p><strong>탈퇴생 발생 패턴</strong> 화면은 준비 중입니다.</p>
+            <p class="cc-placeholder-sub">학생수 변동 비교 / 신규생 및 탈퇴생 추이 탭에서 분석 데이터를 확인하세요.</p>
           </div>
         </div>
 
@@ -571,6 +599,66 @@
     });
   }
 
+  /* 신규생/탈퇴생 추이 (연속 타임라인) */
+  function fyLabels(startY) {
+    const out = [];
+    for (let i = 0; i < 12; i++) {
+      const m = ((3 + i - 1) % 12) + 1;
+      const y = (3 + i) > 12 ? startY + 1 : startY;
+      out.push(String(y).slice(2) + '-' + String(m).padStart(2, '0'));
+    }
+    return out;
+  }
+  const FLOW_LABELS = fyLabels(2024).concat(fyLabels(2025)).concat(fyLabels(2026).slice(0, 3));
+  const FLOW_NEW = DATA[2024].rows[7].concat(DATA[2025].rows[7]).concat(DATA[2026].rows[7].slice(0, 3));
+  const FLOW_LEAVE = DATA[2024].rows[12].concat(DATA[2025].rows[12]).concat(DATA[2026].rows[12].slice(0, 3));
+  let _flowLine = null, _flowBar = null;
+  function buildFlowCharts() {
+    const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const grid = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
+    const tick = dark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)';
+    const c1 = _cvar('--chart-1', 'rgba(0,102,255,0.85)'), c2 = _cvar('--chart-2', 'rgba(0,102,255,0.50)');
+    const lc = document.getElementById('flowLineChart');
+    if (lc) {
+      if (_flowLine) _flowLine.destroy();
+      _flowLine = new Chart(lc, {
+        type: 'line',
+        data: { labels: FLOW_LABELS, datasets: [
+          { label: '순수 신규 입학생', data: FLOW_NEW, borderColor: c1, backgroundColor: 'transparent', borderWidth: 2.5, tension: 0.35, pointRadius: 2.5, pointHoverRadius: 5, pointBackgroundColor: c1, pointBorderColor: 'transparent', pointBorderWidth: 0 },
+          { label: '순수 탈퇴생', data: FLOW_LEAVE, borderColor: c2, backgroundColor: 'transparent', borderWidth: 2.5, borderDash: [5, 4], tension: 0.35, pointRadius: 2.5, pointHoverRadius: 5, pointBackgroundColor: c2, pointBorderColor: 'transparent', pointBorderWidth: 0 }
+        ] },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: function (c) { return c.dataset.label + ': ' + (c.parsed.y != null ? c.parsed.y.toLocaleString() + '명' : '—'); } } } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: tick, font: { size: 10 }, maxRotation: 0, autoSkip: true, maxTicksLimit: 10 } },
+            y: { grid: { color: grid }, ticks: { color: tick, font: { size: 11 }, callback: function (v) { return v.toLocaleString(); } }, border: { display: false } }
+          }
+        }
+      });
+    }
+    const bc = document.getElementById('flowBarChart');
+    if (bc) {
+      if (_flowBar) _flowBar.destroy();
+      _flowBar = new Chart(bc, {
+        type: 'bar',
+        data: { labels: ['2024년', '2025년', '2026년(3개월)'], datasets: [
+          { label: '순수 신규 입학생', data: [6261, 5848, 803], backgroundColor: c1, borderRadius: 4, barPercentage: 0.6, categoryPercentage: 0.6, maxBarThickness: 48 },
+          { label: '순수 탈퇴생', data: [10346, 10171, 1150], backgroundColor: c2, borderRadius: 4, barPercentage: 0.6, categoryPercentage: 0.6, maxBarThickness: 48 }
+        ] },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false }, tooltip: { callbacks: { label: function (c) { return c.dataset.label + ': ' + c.parsed.y.toLocaleString() + '명'; } } } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: tick, font: { size: 12 } } },
+            y: { grid: { color: grid }, ticks: { color: tick, font: { size: 11 }, callback: function (v) { return v.toLocaleString(); } }, border: { display: false } }
+          }
+        }
+      });
+    }
+  }
+  function rebuildAllCharts() { buildChart(); buildFlowCharts(); }
+
   /* 표 폭 맞춤 */
   function fitTables() {
     document.querySelectorAll('.cur-table').forEach(function (table) {
@@ -625,11 +713,11 @@
   function switchView(view, btn) {
     document.querySelectorAll('.cc-tab').forEach(t => t.classList.remove('active'));
     btn.classList.add('active');
-    const isCompare = view === 'compare';
-    document.getElementById('view-compare').style.display = isCompare ? '' : 'none';
-    document.getElementById('view-other').style.display = isCompare ? 'none' : '';
-    if (isCompare) { buildChart(); fitTables(); }
-    else { const lbl = document.getElementById('otherViewLabel'); if (lbl) lbl.textContent = view === 'flow' ? '신규생 및 탈퇴생 추이' : '탈퇴생 발생 패턴'; }
+    document.getElementById('view-compare').style.display = view === 'compare' ? '' : 'none';
+    document.getElementById('view-flow').style.display = view === 'flow' ? '' : 'none';
+    document.getElementById('view-other').style.display = view === 'pattern' ? '' : 'none';
+    if (view === 'compare') { buildChart(); fitTables(); }
+    else if (view === 'flow') { buildFlowCharts(); }
   }
 
   /* Excel */
@@ -667,7 +755,7 @@
     applyBrand(saved);
     buildYearTable(2024); buildYearTable(2025); buildYearTable(2026);
     buildChart(); fitTables();
-    window.addEventListener('themechange', buildChart);
+    window.addEventListener('themechange', rebuildAllCharts);
     document.querySelectorAll('.lnb-brand-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.brand === saved);
       btn.addEventListener('click', function () {
@@ -675,7 +763,7 @@
         this.classList.add('active');
         const brand = this.dataset.brand;
         localStorage.setItem('polyBrand', brand);
-        applyBrand(brand); buildChart();
+        applyBrand(brand); rebuildAllCharts();
       });
     });
   })();
