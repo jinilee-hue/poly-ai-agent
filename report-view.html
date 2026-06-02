@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -122,7 +122,7 @@
       <div class="print-title-block">
         <div class="print-title-main">PI 학생 분석 리포트</div>
         <div class="print-title-sub" id="printSubTitle">전년 대비 증감 추이 분석 (캠퍼스별)</div>
-        <div class="print-title-meta" id="printMeta">기준일 2026-05-15 · 77개 캠퍼스</div>
+        <div class="print-title-meta" id="printMeta">기준일 2026-05-15 · 68개 캠퍼스</div>
       </div>
 
       <div class="data-scroll">
@@ -146,7 +146,7 @@
             </div>
           </div>
           <div class="view-selector-right">
-            <span class="view-count-badge" id="viewCountBadge">기준일 2026-05-15 · 77개 캠퍼스</span>
+            <span class="view-count-badge" id="viewCountBadge">기준일 2026-05-15 · 68개 캠퍼스</span>
             <button class="btn btn-secondary" style="height:44px;border-radius:var(--radius-lg);" onclick="printReport()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
               인쇄
@@ -191,424 +191,21 @@
                 <tr class="sub-header">
                   <th class="group-border">전월</th>
                   <th>당월</th>
-                  <th>월별 중감<br><small>(B-A)</small></th>
-                  <th>월별 중감율<br><small>(B/A)</small></th>
+                  <th>월별 증감<br><small>(B-A)</small></th>
+                  <th>월별 증감율<br><small>(B/A)</small></th>
                   <th class="group-border">전월</th>
                   <th>당월</th>
-                  <th>월별 중감<br><small>(F-E)</small></th>
-                  <th>월별 중감율<br><small>(F/E)</small></th>
-                  <th class="group-border">중감 차<br><small>(G-C)</small></th>
-                  <th>중감율 차<br><small>(H-D)</small></th>
-                  <th class="group-border">중감<br><small>(E-A)</small></th>
-                  <th>중감율<br><small>(E/A)</small></th>
-                  <th class="group-border">중감<br><small>(F-B)</small></th>
-                  <th>중감율<br><small>(F/B)</small></th>
+                  <th>월별 증감<br><small>(F-E)</small></th>
+                  <th>월별 증감율<br><small>(F/E)</small></th>
+                  <th class="group-border">증감 차<br><small>(G-C)</small></th>
+                  <th>증감율 차<br><small>(H-D)</small></th>
+                  <th class="group-border">증감<br><small>(E-A)</small></th>
+                  <th>증감율<br><small>(E/A)</small></th>
+                  <th class="group-border">증감<br><small>(F-B)</small></th>
+                  <th>증감율<br><small>(F/B)</small></th>
                 </tr>
               </thead>
-              <tbody>
-                <!-- ── 서울권 ── -->
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
-                  <td>대치폴리마그넷</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">186</td>
-                  <td class="num-neutral" style="text-align:right;">182</td>
-                  <td class="num-neg" style="text-align:right;">-4</td>
-                  <td class="num-neg" style="text-align:right;">-2.20%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">137</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">128</td>
-                  <td class="num-neg" style="text-align:right;">-9</td>
-                  <td class="num-neg" style="text-align:right;">-6.60%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-5</td>
-                  <td class="num-neg" style="text-align:right;">-4.4%p</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-49</td>
-                  <td class="num-neg" style="text-align:right;">-26.30%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-54</td>
-                  <td class="num-neg" style="text-align:right;">-29.70%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
-                  <td>목동</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">962</td>
-                  <td class="num-neutral" style="text-align:right;">967</td>
-                  <td class="num-pos" style="text-align:right;">+5</td>
-                  <td class="num-pos" style="text-align:right;">0.50%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">878</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">873</td>
-                  <td class="num-neg" style="text-align:right;">-5</td>
-                  <td class="num-neg" style="text-align:right;">-0.60%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-10</td>
-                  <td class="num-neg" style="text-align:right;">-1.1%p</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-84</td>
-                  <td class="num-neg" style="text-align:right;">-8.70%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-94</td>
-                  <td class="num-neg" style="text-align:right;">-9.70%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
-                  <td>목동에그넷</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">360</td>
-                  <td class="num-neutral" style="text-align:right;">356</td>
-                  <td class="num-neg" style="text-align:right;">-4</td>
-                  <td class="num-neg" style="text-align:right;">-1.10%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">345</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">335</td>
-                  <td class="num-neg" style="text-align:right;">-10</td>
-                  <td class="num-neg" style="text-align:right;">-2.90%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-6</td>
-                  <td class="num-neg" style="text-align:right;">-1.8%p</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-15</td>
-                  <td class="num-neg" style="text-align:right;">-4.20%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-21</td>
-                  <td class="num-neg" style="text-align:right;">-5.90%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
-                  <td>목동엠폴리</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">440</td>
-                  <td class="num-neutral" style="text-align:right;">435</td>
-                  <td class="num-neg" style="text-align:right;">-5</td>
-                  <td class="num-neg" style="text-align:right;">-1.10%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">438</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">423</td>
-                  <td class="num-neg" style="text-align:right;">-15</td>
-                  <td class="num-neg" style="text-align:right;">-3.40%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-10</td>
-                  <td class="num-neg" style="text-align:right;">-2.3%p</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-2</td>
-                  <td class="num-neg" style="text-align:right;">-0.50%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-12</td>
-                  <td class="num-neg" style="text-align:right;">-2.80%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
-                  <td>송파</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">488</td>
-                  <td class="num-neutral" style="text-align:right;">486</td>
-                  <td class="num-neg" style="text-align:right;">-2</td>
-                  <td class="num-neg" style="text-align:right;">-0.40%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">503</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">491</td>
-                  <td class="num-neg" style="text-align:right;">-12</td>
-                  <td class="num-neg" style="text-align:right;">-2.40%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-10</td>
-                  <td class="num-neg" style="text-align:right;">-2%p</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+15</td>
-                  <td class="num-pos" style="text-align:right;">3.10%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+5</td>
-                  <td class="num-pos" style="text-align:right;">1.00%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
-                  <td>엠아이엘</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">153</td>
-                  <td class="num-neutral" style="text-align:right;">162</td>
-                  <td class="num-pos" style="text-align:right;">+9</td>
-                  <td class="num-pos" style="text-align:right;">5.90%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">194</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">190</td>
-                  <td class="num-neg" style="text-align:right;">-4</td>
-                  <td class="num-neg" style="text-align:right;">-2.10%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-13</td>
-                  <td class="num-neg" style="text-align:right;">-8%p</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+41</td>
-                  <td class="num-pos" style="text-align:right;">26.80%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+28</td>
-                  <td class="num-pos" style="text-align:right;">17.30%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
-                  <td>위례</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">372</td>
-                  <td class="num-neutral" style="text-align:right;">365</td>
-                  <td class="num-neg" style="text-align:right;">-7</td>
-                  <td class="num-neg" style="text-align:right;">-1.90%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">374</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">365</td>
-                  <td class="num-neg" style="text-align:right;">-9</td>
-                  <td class="num-neg" style="text-align:right;">-2.40%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-2</td>
-                  <td class="num-neg" style="text-align:right;">-0.5%p</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+2</td>
-                  <td class="num-pos" style="text-align:right;">0.50%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">0</td>
-                  <td class="num-neutral" style="text-align:right;">0.00%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">서울권</td>
-                  <td>중계</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">379</td>
-                  <td class="num-neutral" style="text-align:right;">377</td>
-                  <td class="num-neg" style="text-align:right;">-2</td>
-                  <td class="num-neg" style="text-align:right;">-0.50%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">300</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">299</td>
-                  <td class="num-neg" style="text-align:right;">-1</td>
-                  <td class="num-neg" style="text-align:right;">-0.30%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+1</td>
-                  <td class="num-pos" style="text-align:right;">0.2%p</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-79</td>
-                  <td class="num-neg" style="text-align:right;">-20.80%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-78</td>
-                  <td class="num-neg" style="text-align:right;">-20.70%</td>
-                </tr>
-                <!-- 소계 행 -->
-                <tr class="subtotal">
-                  <td class="col-fixed">-</td>
-                  <td class="col-fixed" style="left:60px;">-</td>
-                  <td>직영 / 서울권(8개) 소계</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">3,340</td>
-                  <td class="num-neutral" style="text-align:right;">3,330</td>
-                  <td class="num-neg" style="text-align:right;">-10</td>
-                  <td class="num-neg" style="text-align:right;">-0.30%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">3,169</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">3,104</td>
-                  <td class="num-neg" style="text-align:right;">-65</td>
-                  <td class="num-neg" style="text-align:right;">-2.10%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-55</td>
-                  <td class="num-neg" style="text-align:right;">-1.8%p</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-171</td>
-                  <td class="num-neg" style="text-align:right;">-5.10%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-226</td>
-                  <td class="num-neg" style="text-align:right;">-6.80%</td>
-                </tr>
-                <!-- ── 경인권 ── -->
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
-                  <td>광교</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">381</td>
-                  <td class="num-neutral" style="text-align:right;">375</td>
-                  <td class="num-neg" style="text-align:right;">-6</td>
-                  <td class="num-neg" style="text-align:right;">-1.60%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">379</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">372</td>
-                  <td class="num-neg" style="text-align:right;">-7</td>
-                  <td class="num-neg" style="text-align:right;">-1.80%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-1</td>
-                  <td class="num-neg" style="text-align:right;">-0.2%p</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-2</td>
-                  <td class="num-neg" style="text-align:right;">-0.50%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-3</td>
-                  <td class="num-neg" style="text-align:right;">-0.80%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
-                  <td>광명</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">352</td>
-                  <td class="num-neutral" style="text-align:right;">349</td>
-                  <td class="num-neg" style="text-align:right;">-3</td>
-                  <td class="num-neg" style="text-align:right;">-0.90%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">362</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">365</td>
-                  <td class="num-pos" style="text-align:right;">+3</td>
-                  <td class="num-pos" style="text-align:right;">0.80%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+6</td>
-                  <td class="num-pos" style="text-align:right;">1.7%p</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+10</td>
-                  <td class="num-pos" style="text-align:right;">2.80%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+16</td>
-                  <td class="num-pos" style="text-align:right;">4.60%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
-                  <td>분당</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">468</td>
-                  <td class="num-neutral" style="text-align:right;">460</td>
-                  <td class="num-neg" style="text-align:right;">-8</td>
-                  <td class="num-neg" style="text-align:right;">-1.70%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">404</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">393</td>
-                  <td class="num-neg" style="text-align:right;">-11</td>
-                  <td class="num-neg" style="text-align:right;">-2.70%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-3</td>
-                  <td class="num-neg" style="text-align:right;">-1%p</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-64</td>
-                  <td class="num-neg" style="text-align:right;">-13.70%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-67</td>
-                  <td class="num-neg" style="text-align:right;">-14.60%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
-                  <td>분당엠폴리</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">583</td>
-                  <td class="num-neutral" style="text-align:right;">576</td>
-                  <td class="num-neg" style="text-align:right;">-7</td>
-                  <td class="num-neg" style="text-align:right;">-1.20%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">600</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">596</td>
-                  <td class="num-neg" style="text-align:right;">-4</td>
-                  <td class="num-neg" style="text-align:right;">-0.70%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+3</td>
-                  <td class="num-pos" style="text-align:right;">0.5%p</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+17</td>
-                  <td class="num-pos" style="text-align:right;">2.90%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+20</td>
-                  <td class="num-pos" style="text-align:right;">3.50%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
-                  <td>송도</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">463</td>
-                  <td class="num-neutral" style="text-align:right;">459</td>
-                  <td class="num-neg" style="text-align:right;">-4</td>
-                  <td class="num-neg" style="text-align:right;">-0.90%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">412</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">403</td>
-                  <td class="num-neg" style="text-align:right;">-9</td>
-                  <td class="num-neg" style="text-align:right;">-2.20%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-5</td>
-                  <td class="num-neg" style="text-align:right;">-1.3%p</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-51</td>
-                  <td class="num-neg" style="text-align:right;">-11.00%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-56</td>
-                  <td class="num-neg" style="text-align:right;">-12.20%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
-                  <td>수지별관</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">211</td>
-                  <td class="num-neutral" style="text-align:right;">200</td>
-                  <td class="num-neg" style="text-align:right;">-11</td>
-                  <td class="num-neg" style="text-align:right;">-5.20%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">223</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">221</td>
-                  <td class="num-neg" style="text-align:right;">-2</td>
-                  <td class="num-neg" style="text-align:right;">-0.90%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+9</td>
-                  <td class="num-pos" style="text-align:right;">4.3%p</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+12</td>
-                  <td class="num-pos" style="text-align:right;">5.70%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+21</td>
-                  <td class="num-pos" style="text-align:right;">10.50%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
-                  <td>수지본관</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">434</td>
-                  <td class="num-neutral" style="text-align:right;">424</td>
-                  <td class="num-neg" style="text-align:right;">-10</td>
-                  <td class="num-neg" style="text-align:right;">-2.30%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">384</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">375</td>
-                  <td class="num-neg" style="text-align:right;">-9</td>
-                  <td class="num-neg" style="text-align:right;">-2.30%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+1</td>
-                  <td class="num-neutral" style="text-align:right;">0%p</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-50</td>
-                  <td class="num-neg" style="text-align:right;">-11.50%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-49</td>
-                  <td class="num-neg" style="text-align:right;">-11.60%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
-                  <td>영통엠폴리</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">276</td>
-                  <td class="num-neutral" style="text-align:right;">273</td>
-                  <td class="num-neg" style="text-align:right;">-3</td>
-                  <td class="num-neg" style="text-align:right;">-1.10%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">288</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">287</td>
-                  <td class="num-neg" style="text-align:right;">-1</td>
-                  <td class="num-neg" style="text-align:right;">-0.30%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+2</td>
-                  <td class="num-pos" style="text-align:right;">0.8%p</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+12</td>
-                  <td class="num-pos" style="text-align:right;">4.30%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+14</td>
-                  <td class="num-pos" style="text-align:right;">5.10%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
-                  <td>운정</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">225</td>
-                  <td class="num-neutral" style="text-align:right;">226</td>
-                  <td class="num-pos" style="text-align:right;">+1</td>
-                  <td class="num-pos" style="text-align:right;">0.40%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">293</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">285</td>
-                  <td class="num-neg" style="text-align:right;">-8</td>
-                  <td class="num-neg" style="text-align:right;">-2.70%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-9</td>
-                  <td class="num-neg" style="text-align:right;">-3.1%p</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+68</td>
-                  <td class="num-pos" style="text-align:right;">30.20%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+59</td>
-                  <td class="num-pos" style="text-align:right;">26.10%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
-                  <td>일산</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">338</td>
-                  <td class="num-neutral" style="text-align:right;">341</td>
-                  <td class="num-pos" style="text-align:right;">+3</td>
-                  <td class="num-pos" style="text-align:right;">0.90%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">297</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">293</td>
-                  <td class="num-neg" style="text-align:right;">-4</td>
-                  <td class="num-neg" style="text-align:right;">-1.30%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-7</td>
-                  <td class="num-neg" style="text-align:right;">-2.2%p</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-41</td>
-                  <td class="num-neg" style="text-align:right;">-12.10%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-48</td>
-                  <td class="num-neg" style="text-align:right;">-14.10%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
-                  <td>일산엠폴리</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">279</td>
-                  <td class="num-neutral" style="text-align:right;">265</td>
-                  <td class="num-neg" style="text-align:right;">-14</td>
-                  <td class="num-neg" style="text-align:right;">-5.00%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">278</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">270</td>
-                  <td class="num-neg" style="text-align:right;">-8</td>
-                  <td class="num-neg" style="text-align:right;">-2.90%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+6</td>
-                  <td class="num-pos" style="text-align:right;">2.1%p</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-1</td>
-                  <td class="num-neg" style="text-align:right;">-0.40%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+5</td>
-                  <td class="num-pos" style="text-align:right;">1.90%</td>
-                </tr>
-                <tr>
-                  <td class="col-fixed" style="font-size:var(--text-xs);">직영</td>
-                  <td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">경인권</td>
-                  <td>정발</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">424</td>
-                  <td class="num-neutral" style="text-align:right;">419</td>
-                  <td class="num-neg" style="text-align:right;">-5</td>
-                  <td class="num-neg" style="text-align:right;">-1.20%</td>
-                  <td class="num-neutral" style="text-align:right;border-left:1px solid var(--color-border-strong);">353</td>
-                  <td class="num-neutral" style="text-align:right;font-weight:var(--weight-semibold);">352</td>
-                  <td class="num-neg" style="text-align:right;">-1</td>
-                  <td class="num-neg" style="text-align:right;">-0.30%</td>
-                  <td class="num-pos" style="text-align:right;border-left:1px solid var(--color-border-strong);">+4</td>
-                  <td class="num-pos" style="text-align:right;">0.9%p</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-71</td>
-                  <td class="num-neg" style="text-align:right;">-16.70%</td>
-                  <td class="num-neg" style="text-align:right;border-left:1px solid var(--color-border-strong);">-67</td>
-                  <td class="num-neg" style="text-align:right;">-16.00%</td>
-                </tr>
-              </tbody>
+              <tbody id="dataTbody"></tbody>
             </table>
           </div>
         </div>
@@ -717,6 +314,136 @@
   </div>
 </div>
 
+<script>
+  /* ── PI 학생 분석 데이터 테이블 — 캠퍼스별 전년 대비 증감 (기준일 2026-05-15) ──
+     v = [전년전월, 전년당월, B-A, B/A, 금년전월, 금년당월, F-E, F/E, G-C, H-D(%p), E-A, E/A, F-B, F/B] */
+  const TABLE_ROWS = [
+    /* 직영 · 서울권 (8개) */
+    {op:'직영', region:'서울권', name:'대치폴리마그넷', v:[186,182,-4,'-2.20%',137,128,-9,'-6.60%',-5,'-4.4%p',-49,'-26.30%',-54,'-29.70%']},
+    {op:'직영', region:'서울권', name:'목동',           v:[962,967,5,'0.50%',878,873,-5,'-0.60%',-10,'-1.1%p',-84,'-8.70%',-94,'-9.70%']},
+    {op:'직영', region:'서울권', name:'목동매그넷',     v:[360,356,-4,'-1.10%',345,335,-10,'-2.90%',-6,'-1.8%p',-15,'-4.20%',-21,'-5.90%']},
+    {op:'직영', region:'서울권', name:'목동엠폴리',     v:[440,435,-5,'-1.10%',438,423,-15,'-3.40%',-10,'-2.3%p',-2,'-0.50%',-12,'-2.80%']},
+    {op:'직영', region:'서울권', name:'송파',           v:[488,486,-2,'-0.40%',503,491,-12,'-2.40%',-10,'-2%p',15,'3.10%',5,'1.00%']},
+    {op:'직영', region:'서울권', name:'엠아이엘',       v:[153,162,9,'5.90%',194,190,-4,'-2.10%',-13,'-8%p',41,'26.80%',28,'17.30%']},
+    {op:'직영', region:'서울권', name:'위례',           v:[372,365,-7,'-1.90%',374,365,-9,'-2.40%',-2,'-0.5%p',2,'0.50%',0,'0.00%']},
+    {op:'직영', region:'서울권', name:'중계',           v:[379,377,-2,'-0.50%',300,299,-1,'-0.30%',1,'0.2%p',-79,'-20.80%',-78,'-20.70%']},
+    {sub:1, name:'직영 / 서울권(8개) 소계', v:[3340,3330,-10,'-0.30%',3169,3104,-65,'-2.10%',-55,'-1.8%p',-171,'-5.10%',-226,'-6.80%']},
+    /* 직영 · 경인권 (12개) */
+    {op:'직영', region:'경인권', name:'광교',       v:[381,375,-6,'-1.60%',379,372,-7,'-1.80%',-1,'-0.2%p',-2,'-0.50%',-3,'-0.80%']},
+    {op:'직영', region:'경인권', name:'광명',       v:[352,349,-3,'-0.90%',362,365,3,'0.80%',6,'1.7%p',10,'2.80%',16,'4.60%']},
+    {op:'직영', region:'경인권', name:'분당',       v:[468,460,-8,'-1.70%',404,393,-11,'-2.70%',-3,'-1%p',-64,'-13.70%',-67,'-14.60%']},
+    {op:'직영', region:'경인권', name:'분당엠폴리', v:[583,576,-7,'-1.20%',600,596,-4,'-0.70%',3,'0.5%p',17,'2.90%',20,'3.50%']},
+    {op:'직영', region:'경인권', name:'송도',       v:[463,459,-4,'-0.90%',412,403,-9,'-2.20%',-5,'-1.3%p',-51,'-11.00%',-56,'-12.20%']},
+    {op:'직영', region:'경인권', name:'수지별관',   v:[211,200,-11,'-5.20%',223,221,-2,'-0.90%',9,'4.3%p',12,'5.70%',21,'10.50%']},
+    {op:'직영', region:'경인권', name:'수지본관',   v:[434,424,-10,'-2.30%',384,375,-9,'-2.30%',1,'0%p',-50,'-11.50%',-49,'-11.60%']},
+    {op:'직영', region:'경인권', name:'영통엠폴리', v:[276,273,-3,'-1.10%',288,287,-1,'-0.30%',2,'0.8%p',12,'4.30%',14,'5.10%']},
+    {op:'직영', region:'경인권', name:'운정',       v:[225,226,1,'0.40%',293,285,-8,'-2.70%',-9,'-3.1%p',68,'30.20%',59,'26.10%']},
+    {op:'직영', region:'경인권', name:'일산',       v:[338,341,3,'0.90%',297,293,-4,'-1.30%',-7,'-2.2%p',-41,'-12.10%',-48,'-14.10%']},
+    {op:'직영', region:'경인권', name:'일산엠폴리', v:[279,265,-14,'-5.00%',278,270,-8,'-2.90%',6,'2.1%p',-1,'-0.40%',5,'1.90%']},
+    {op:'직영', region:'경인권', name:'정발',       v:[424,419,-5,'-1.20%',353,352,-1,'-0.30%',4,'0.9%p',-71,'-16.70%',-67,'-16.00%']},
+    {sub:1, name:'직영 / 경인권(12개) 소계', v:[4434,4367,-67,'-1.50%',4273,4212,-61,'-1.40%',6,'0.1%p',-161,'-3.60%',-155,'-3.50%']},
+    /* 직영 · 비수도권 (3개) */
+    {op:'직영', region:'비수도권', name:'대전',     v:[788,786,-2,'-0.30%',826,820,-6,'-0.70%',-4,'-0.4%p',38,'4.80%',34,'4.30%']},
+    {op:'직영', region:'비수도권', name:'대전엠폴리', v:[401,389,-12,'-3.00%',438,439,1,'0.20%',13,'3.2%p',37,'9.20%',50,'12.90%']},
+    {op:'직영', region:'비수도권', name:'유성',     v:[568,567,-1,'-0.20%',548,547,-1,'-0.20%',0,'0%p',-20,'-3.50%',-20,'-3.50%']},
+    {sub:1, name:'직영 / 비수도권(3개) 소계', v:[1757,1742,-15,'-0.90%',1812,1806,-6,'-0.30%',9,'0.6%p',55,'3.10%',64,'3.70%']},
+    {sub:1, name:'직영(23개) 소계', v:[9531,9439,-92,'-1.00%',9254,9122,-132,'-1.40%',-40,'-0.4%p',-277,'-2.90%',-317,'-3.40%']},
+    /* 분원 · 서울권 (10개) */
+    {op:'분원', region:'서울권', name:'강동',   v:[394,386,-8,'-2.00%',393,391,-2,'-0.50%',6,'1.5%p',-1,'-0.30%',5,'1.30%']},
+    {op:'분원', region:'서울권', name:'강서',   v:[338,333,-5,'-1.50%',277,278,1,'0.40%',6,'1.9%p',-61,'-18.00%',-55,'-16.50%']},
+    {op:'분원', region:'서울권', name:'관악',   v:[468,459,-9,'-1.90%',412,402,-10,'-2.40%',-1,'-0.5%p',-56,'-12.00%',-57,'-12.40%']},
+    {op:'분원', region:'서울권', name:'광진',   v:[312,307,-5,'-1.60%',239,228,-11,'-4.60%',-6,'-3%p',-73,'-23.40%',-79,'-25.70%']},
+    {op:'분원', region:'서울권', name:'동대문', v:[315,302,-13,'-4.10%',298,293,-5,'-1.70%',8,'2.4%p',-17,'-5.40%',-9,'-3.00%']},
+    {op:'분원', region:'서울권', name:'마포',   v:[502,493,-9,'-1.80%',441,438,-3,'-0.70%',6,'1.1%p',-61,'-12.20%',-55,'-11.20%']},
+    {op:'분원', region:'서울권', name:'서대문', v:[251,247,-4,'-1.60%',212,208,-4,'-1.90%',0,'-0.3%p',-39,'-15.50%',-39,'-15.80%']},
+    {op:'분원', region:'서울권', name:'성동',   v:[318,313,-5,'-1.60%',322,314,-8,'-2.50%',-3,'-0.9%p',4,'1.30%',1,'0.30%']},
+    {op:'분원', region:'서울권', name:'성북',   v:[397,386,-11,'-2.80%',354,342,-12,'-3.40%',-1,'-0.6%p',-43,'-10.80%',-44,'-11.40%']},
+    {op:'분원', region:'서울권', name:'은평',   v:[276,277,1,'0.40%',272,265,-7,'-2.60%',-8,'-3%p',-4,'-1.40%',-12,'-4.30%']},
+    {sub:1, name:'분원 / 서울권(10개) 소계', v:[3571,3503,-68,'-1.90%',3220,3159,-61,'-1.90%',7,'0%p',-351,'-9.80%',-344,'-9.80%']},
+    /* 분원 · 경인권 (13개) */
+    {op:'분원', region:'경인권', name:'구리/남양주', v:[290,284,-6,'-2.10%',241,232,-9,'-3.70%',-3,'-1.6%p',-49,'-16.90%',-52,'-18.30%']},
+    {op:'분원', region:'경인권', name:'김포',     v:[427,418,-9,'-2.10%',347,341,-6,'-1.70%',3,'0.4%p',-80,'-18.70%',-77,'-18.40%']},
+    {op:'분원', region:'경인권', name:'남동',     v:[114,113,-1,'-0.90%',125,125,0,'0.00%',1,'0.9%p',11,'9.60%',12,'10.60%']},
+    {op:'분원', region:'경인권', name:'덕양',     v:[296,297,1,'0.30%',275,272,-3,'-1.10%',-4,'-1.4%p',-21,'-7.10%',-25,'-8.40%']},
+    {op:'분원', region:'경인권', name:'동탄',     v:[579,573,-6,'-1.00%',516,504,-12,'-2.30%',-6,'-1.3%p',-63,'-10.90%',-69,'-12.00%']},
+    {op:'분원', region:'경인권', name:'부천',     v:[342,339,-3,'-0.90%',303,300,-3,'-1.00%',0,'-0.1%p',-39,'-11.40%',-39,'-11.50%']},
+    {op:'분원', region:'경인권', name:'서수원',   v:[0,0,0,'-',43,45,2,'4.70%',2,'-',43,'-',45,'-']},
+    {op:'분원', region:'경인권', name:'시흥장현', v:[146,143,-3,'-2.10%',163,161,-2,'-1.20%',1,'0.9%p',17,'11.60%',18,'12.60%']},
+    {op:'분원', region:'경인권', name:'영통',     v:[277,277,0,'0.00%',278,281,3,'1.10%',3,'1.1%p',1,'0.40%',4,'1.40%']},
+    {op:'분원', region:'경인권', name:'청라',     v:[207,198,-9,'-4.30%',217,218,1,'0.50%',10,'4.8%p',10,'4.80%',20,'10.10%']},
+    {op:'분원', region:'경인권', name:'평촌',     v:[689,684,-5,'-0.70%',672,666,-6,'-0.90%',-1,'-0.2%p',-17,'-2.50%',-18,'-2.60%']},
+    {op:'분원', region:'경인권', name:'평택지제', v:[108,107,-1,'-0.90%',147,145,-2,'-1.40%',-1,'-0.5%p',39,'36.10%',38,'35.50%']},
+    {op:'분원', region:'경인권', name:'하남미사', v:[265,258,-7,'-2.60%',234,228,-6,'-2.60%',1,'0%p',-31,'-11.70%',-30,'-11.60%']},
+    {sub:1, name:'분원 / 경인권(13개) 소계', v:[3740,3691,-49,'-1.30%',3561,3518,-43,'-1.20%',6,'0.1%p',-179,'-4.80%',-173,'-4.70%']},
+    /* 분원 · 비수도권 (22개) */
+    {op:'분원', region:'비수도권', name:'광산',     v:[113,111,-2,'-1.80%',132,133,1,'0.80%',3,'2.6%p',19,'16.80%',22,'19.80%']},
+    {op:'분원', region:'비수도권', name:'광안',     v:[173,169,-4,'-2.30%',125,125,0,'0.00%',4,'2.3%p',-48,'-27.70%',-44,'-26.00%']},
+    {op:'분원', region:'비수도권', name:'광주봉선', v:[126,119,-7,'-5.60%',169,170,1,'0.60%',8,'6.2%p',43,'34.10%',51,'42.90%']},
+    {op:'분원', region:'비수도권', name:'구미',     v:[331,327,-4,'-1.20%',335,329,-6,'-1.80%',-2,'-0.6%p',4,'1.20%',2,'0.60%']},
+    {op:'분원', region:'비수도권', name:'김해',     v:[184,183,-1,'-0.50%',174,171,-3,'-1.70%',-2,'-1.2%p',-10,'-5.40%',-12,'-6.60%']},
+    {op:'분원', region:'비수도권', name:'달서',     v:[272,264,-8,'-2.90%',221,213,-8,'-3.60%',0,'-0.7%p',-51,'-18.80%',-51,'-19.30%']},
+    {op:'분원', region:'비수도권', name:'대구북구', v:[244,235,-9,'-3.70%',232,233,1,'0.40%',10,'4.1%p',-12,'-4.90%',-2,'-0.90%']},
+    {op:'분원', region:'비수도권', name:'동래',     v:[234,228,-6,'-2.60%',275,283,8,'2.90%',14,'5.5%p',41,'17.50%',55,'24.10%']},
+    {op:'분원', region:'비수도권', name:'마산',     v:[238,230,-8,'-3.40%',235,237,2,'0.90%',10,'4.3%p',-3,'-1.30%',7,'3.00%']},
+    {op:'분원', region:'비수도권', name:'부산명지', v:[132,128,-4,'-3.00%',184,190,6,'3.30%',10,'6.3%p',52,'39.40%',62,'48.40%']},
+    {op:'분원', region:'비수도권', name:'부산화명', v:[145,143,-2,'-1.40%',156,155,-1,'-0.60%',1,'0.8%p',11,'7.60%',12,'8.40%']},
+    {op:'분원', region:'비수도권', name:'세종',     v:[361,353,-8,'-2.20%',342,343,1,'0.30%',9,'2.5%p',-19,'-5.30%',-10,'-2.80%']},
+    {op:'분원', region:'비수도권', name:'수성',     v:[450,437,-13,'-2.90%',408,410,2,'0.50%',15,'3.4%p',-42,'-9.30%',-27,'-6.20%']},
+    {op:'분원', region:'비수도권', name:'울산남구', v:[149,148,-1,'-0.70%',137,141,4,'2.90%',5,'3.6%p',-12,'-8.10%',-7,'-4.70%']},
+    {op:'분원', region:'비수도권', name:'원주',     v:[77,77,0,'0.00%',125,119,-6,'-4.80%',-6,'-4.8%p',48,'62.30%',42,'54.50%']},
+    {op:'분원', region:'비수도권', name:'전주',     v:[327,321,-6,'-1.80%',293,293,0,'0.00%',6,'1.8%p',-34,'-10.40%',-28,'-8.70%']},
+    {op:'분원', region:'비수도권', name:'진주',     v:[174,168,-6,'-3.40%',227,223,-4,'-1.80%',2,'1.6%p',53,'30.50%',55,'32.70%']},
+    {op:'분원', region:'비수도권', name:'창원',     v:[321,320,-1,'-0.30%',302,300,-2,'-0.70%',-1,'-0.4%p',-19,'-5.90%',-20,'-6.30%']},
+    {op:'분원', region:'비수도권', name:'천안',     v:[426,427,1,'0.20%',457,455,-2,'-0.40%',-3,'-0.6%p',31,'7.30%',28,'6.60%']},
+    {op:'분원', region:'비수도권', name:'청주',     v:[615,608,-7,'-1.10%',619,594,-25,'-4.00%',-18,'-2.9%p',4,'0.70%',-14,'-2.30%']},
+    {op:'분원', region:'비수도권', name:'포항',     v:[349,350,1,'0.30%',348,358,10,'2.90%',9,'2.6%p',-1,'-0.30%',8,'2.30%']},
+    {op:'분원', region:'비수도권', name:'해운대',   v:[246,237,-9,'-3.70%',251,251,0,'0.00%',9,'3.7%p',5,'2.00%',14,'5.90%']},
+    {sub:1, name:'분원 / 비수도권(22개) 소계', v:[5687,5583,-104,'-1.80%',5747,5726,-21,'-0.40%',83,'1.4%p',60,'1.10%',143,'2.60%']},
+    {sub:1, name:'분원(45개) 소계', v:[12998,12777,-221,'-1.70%',12528,12403,-125,'-1.00%',96,'0.7%p',-470,'-3.60%',-374,'-2.90%']},
+    /* 총계 */
+    {grand:1, name:'총계(68개)', v:[22529,22216,-313,'-1.40%',21782,21525,-257,'-1.20%',56,'0.2%p',-747,'-3.30%',-691,'-3.10%']},
+  ];
+  /* 컬럼별 스타일: neutral=항상 중립색(원수치), border=그룹 좌측 구분선, semibold=강조(금년 당월) */
+  const TABLE_COLS = [
+    {neutral:true, border:true}, {neutral:true}, {}, {},
+    {neutral:true, border:true}, {neutral:true, semibold:true}, {}, {},
+    {border:true}, {}, {border:true}, {}, {border:true}, {}
+  ];
+  function _tcell(val, neutral) {
+    if (val === '-' || val === null || val === undefined) return {cls:'num-neutral', text:'-'};
+    const num = typeof val === 'number' ? val : parseFloat(String(val).replace(/[^0-9.\-]/g, ''));
+    const text = typeof val === 'number' ? val.toLocaleString('ko-KR') : val;
+    let cls = 'num-neutral';
+    if (!neutral) { if (num > 0) cls = 'num-pos'; else if (num < 0) cls = 'num-neg'; }
+    return {cls, text};
+  }
+  (function renderDataTable() {
+    const tbody = document.getElementById('dataTbody');
+    if (!tbody) return;
+    let html = '';
+    for (const r of TABLE_ROWS) {
+      const trClass = r.grand ? ' class="grand-total"' : (r.sub ? ' class="subtotal"' : '');
+      html += `<tr${trClass}>`;
+      if (r.sub || r.grand) {
+        html += `<td class="col-fixed">-</td><td class="col-fixed" style="left:60px;">-</td>`;
+      } else {
+        html += `<td class="col-fixed" style="font-size:var(--text-xs);">${r.op}</td>`;
+        html += `<td class="col-fixed" style="left:60px;font-size:var(--text-xs);color:var(--color-text-secondary);">${r.region}</td>`;
+      }
+      html += `<td>${r.name}</td>`;
+      r.v.forEach((val, i) => {
+        const c = TABLE_COLS[i];
+        const f = _tcell(val, c.neutral);
+        let style = 'text-align:right;';
+        if (c.border) style += 'border-left:1px solid var(--color-border-strong);';
+        if (c.semibold) style += 'font-weight:var(--weight-semibold);';
+        html += `<td class="${f.cls}" style="${style}">${f.text}</td>`;
+      });
+      html += `</tr>`;
+    }
+    tbody.innerHTML = html;
+  })();
+</script>
 <script>
   /* 테마 */
   (function () {
@@ -856,7 +583,7 @@
   BRAND_TOKENS.all = BRAND_TOKENS.poly;
 
   /* 전년/금년 비교 차트 */
-  const _chartLabels = ['대치폴리', '목동', '목동에그넷', '목동엠폴리', '송파', '엠아이엘', '위례', '중계', '광교', '광명', '분당', '분당엠폴리', '송도', '수지별관', '수지본관', '영통엠폴리', '운정', '일산', '일산엠폴리'];
+  const _chartLabels = ['대치폴리', '목동', '목동매그넷', '목동엠폴리', '송파', '엠아이엘', '위례', '중계', '광교', '광명', '분당', '분당엠폴리', '송도', '수지별관', '수지본관', '영통엠폴리', '운정', '일산', '일산엠폴리'];
   const _prevYear    = [182, 967, 356, 435, 486, 162, 365, 377, 375, 349, 460, 576, 459, 200, 424, 273, 226, 341, 265];
   const _thisYear    = [128, 873, 335, 423, 491, 190, 365, 299, 372, 365, 393, 596, 403, 221, 375, 287, 285, 293, 270];
   let _compareChart = null;
