@@ -662,8 +662,6 @@
     const grid = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
     const tick = dark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)';
     const c1 = _cvar('--chart-1', 'rgba(0,102,255,0.85)'), c2 = _cvar('--chart-2', 'rgba(0,102,255,0.50)'), c3 = _cvar('--chart-3', 'rgba(0,102,255,0.24)');
-    const grayNew   = dark ? 'rgba(165,172,182,0.45)' : 'rgba(198,203,210,0.80)';
-    const grayLeave = dark ? 'rgba(138,146,158,0.55)' : 'rgba(168,175,186,0.85)';
     const lc = document.getElementById('flowLineChart');
     if (lc) {
       if (_flowLine) _flowLine.destroy();
@@ -690,8 +688,8 @@
       _flowBar = new Chart(bc, {
         type: 'bar',
         data: { labels: ['2024년', '2025년', '2026년(3개월)'], datasets: [
-          { label: '순수 신규 입학생', data: [6261, 5848, 803], backgroundColor: [grayNew, c3, c3], borderRadius: 4, barPercentage: 0.6, categoryPercentage: 0.6, maxBarThickness: 48 },
-          { label: '순수 탈퇴생', data: [10346, 10171, 1150], backgroundColor: [grayLeave, c2, c2], borderRadius: 4, barPercentage: 0.6, categoryPercentage: 0.6, maxBarThickness: 48 }
+          { label: '순수 신규 입학생', data: [6261, 5848, 803], backgroundColor: c3, borderRadius: 4, barPercentage: 0.6, categoryPercentage: 0.6, maxBarThickness: 48 },
+          { label: '순수 탈퇴생', data: [10346, 10171, 1150], backgroundColor: c2, borderRadius: 4, barPercentage: 0.6, categoryPercentage: 0.6, maxBarThickness: 48 }
         ] },
         options: {
           responsive: true, maintainAspectRatio: false,

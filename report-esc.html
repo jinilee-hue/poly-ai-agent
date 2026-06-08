@@ -942,19 +942,15 @@
     });
   }
 
-  function _stackedConfig(labels, ecp, ele, grad, ax, colors, grayFirst) {
-    function bg(col, gray) {
-      if (!grayFirst) return col;
-      return labels.map(function(_, i) { return i === 0 ? gray : col; });
-    }
+  function _stackedConfig(labels, ecp, ele, grad, ax, colors) {
     return {
       type: 'bar',
       data: {
         labels: labels,
         datasets: [
-          { label: 'ECP',  data: ecp,  backgroundColor: bg(colors.ecp,  colors.ecpGray),  borderColor: ax.cardBg, borderWidth: 1, borderRadius: 2, barPercentage: 0.55, maxBarThickness: 40, stack: 's' },
-          { label: 'ELE',  data: ele,  backgroundColor: bg(colors.ele,  colors.eleGray),  borderColor: ax.cardBg, borderWidth: 1, borderRadius: 2, barPercentage: 0.55, maxBarThickness: 40, stack: 's' },
-          { label: 'GRAD', data: grad, backgroundColor: bg(colors.grad, colors.gradGray), borderColor: ax.cardBg, borderWidth: 1, borderRadius: 2, barPercentage: 0.55, maxBarThickness: 40, stack: 's' },
+          { label: 'ECP',  data: ecp,  backgroundColor: colors.ecp,  borderColor: ax.cardBg, borderWidth: 1, borderRadius: 2, barPercentage: 0.55, maxBarThickness: 40, stack: 's' },
+          { label: 'ELE',  data: ele,  backgroundColor: colors.ele,  borderColor: ax.cardBg, borderWidth: 1, borderRadius: 2, barPercentage: 0.55, maxBarThickness: 40, stack: 's' },
+          { label: 'GRAD', data: grad, backgroundColor: colors.grad, borderColor: ax.cardBg, borderWidth: 1, borderRadius: 2, barPercentage: 0.55, maxBarThickness: 40, stack: 's' },
         ]
       },
       options: {
@@ -974,18 +970,15 @@
     const dark = document.documentElement.getAttribute('data-theme') === 'dark';
     const ax = _axisColors();
     const colors = {
-      ecp:      _cvar('--chart-1', 'rgba(0,102,255,0.85)'),
-      ele:      _cvar('--chart-2', 'rgba(0,102,255,0.45)'),
-      grad:     _cvar('--chart-3', 'rgba(0,102,255,0.20)'),
-      ecpGray:  dark ? 'rgba(115,123,135,0.55)' : 'rgba(148,155,165,0.85)',
-      eleGray:  dark ? 'rgba(143,150,162,0.48)' : 'rgba(178,184,193,0.80)',
-      gradGray: dark ? 'rgba(168,174,184,0.40)' : 'rgba(205,209,215,0.75)',
+      ecp:  _cvar('--chart-1', 'rgba(0,102,255,0.85)'),
+      ele:  _cvar('--chart-2', 'rgba(0,102,255,0.45)'),
+      grad: _cvar('--chart-3', 'rgba(0,102,255,0.20)'),
     };
     const yEl = document.getElementById('opYearChart');
     if (yEl) {
       if (_opYearChart) _opYearChart.destroy();
       _opYearChart = new Chart(yEl, _stackedConfig(
-        ['24년','25년','26년'], [2035,1998,1849], [5327,5255,4874], [1958,2134,2231], ax, colors, true
+        ['24년','25년','26년'], [2035,1998,1849], [5327,5255,4874], [1958,2134,2231], ax, colors
       ));
     }
     const mEl = document.getElementById('opMonthChart');
