@@ -89,7 +89,10 @@ function setChartDefaults() {
   Chart.defaults.datasets.bar.barPercentage = 0.45;
   Chart.defaults.datasets.bar.maxBarThickness = 32;
 
-  // 선그래프: 왼쪽에서 오른쪽으로 그려지는 애니메이션
+}
+
+// 선그래프: 왼쪽에서 오른쪽으로 그려지는 애니메이션 (파일 로드 즉시 적용)
+if (typeof Chart !== 'undefined') {
   Chart.overrides['line'] = Chart.overrides['line'] || {};
   Chart.overrides['line'].animation = {
     x: {
