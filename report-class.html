@@ -137,7 +137,6 @@
     .smry-hbar-wrap{position:relative;height:220px;}
     .smry-cross-table{width:100%;border-collapse:collapse;font-size:12px;}
     .smry-cross-table th{padding:8px 10px;text-align:center;font-weight:var(--weight-medium);color:var(--color-text-secondary);background:var(--color-bg-subtle);border-top:var(--border-default);border-bottom:var(--border-default);}
-    .smry-cross-table th:first-child{text-align:left;}
     .smry-cross-table td{padding:10px;text-align:center;border-bottom:var(--border-default);}
     .smry-cross-table td:first-child{text-align:left;font-weight:var(--weight-medium);color:var(--color-text-secondary);background:var(--color-bg-subtle);}
     .smry-cross-table tr:last-child td{border-bottom:none;}
@@ -150,12 +149,14 @@
     .smry-cross-sub{display:block;font-size:10px;color:var(--color-text-tertiary);margin-top:1px;}
 
     /* ── MAP 예약/레벨별 대기 패널 ─────────────────── */
-    #view-map { margin-top: var(--space-4); border: var(--border-default); border-radius: var(--radius-lg); background: #fff; overflow: hidden; }
-    .map-wrap { display: flex; position: relative; }
-    .map-wrap::after { content: ''; position: absolute; top: 0; left: 212px; width: 1px; height: 100%; background: var(--color-border); }
-    .map-sidebar { width: 212px; flex-shrink: 0; display: flex; flex-direction: column; align-self: flex-start; background: #fff; }
+    #view-map { margin-top: var(--space-4); border: var(--border-default); border-radius: var(--radius-lg); background: #fff; overflow: hidden; position: relative; }
+    .map-toast { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(4px); background: rgba(17,24,39,0.85); color: #fff; font-size: 12px; padding: 7px 18px; border-radius: 20px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.25s ease, transform 0.25s ease; z-index: 20; }
+    .map-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .map-wrap { display: flex; position: relative; min-height: 440px; }
+    .map-wrap::after { content: ''; position: absolute; top: 0; left: 260px; width: 1px; height: 100%; background: var(--color-border); }
+    .map-sidebar { width: 260px; flex-shrink: 0; display: flex; flex-direction: column; align-self: flex-start; background: #fff; }
     .map-sidebar-head { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-4); border-bottom: var(--border-default); gap: var(--space-2); }
-    .map-sidebar-title { font-size: 11px; font-weight: var(--weight-semibold); color: var(--color-text-secondary); line-height: 1.3; }
+    .map-sidebar-title { font-size: 11px; font-weight: var(--weight-semibold); color: var(--color-text-secondary); line-height: 1.3; white-space: nowrap; }
     .map-sidebar-scroll { overflow-y: auto; overflow-x: hidden; }
     .map-tbl { width: 100%; border-collapse: collapse; }
     .map-tbl thead th { font-size: 11px; font-weight: var(--weight-medium); color: var(--color-text-tertiary); padding: var(--space-2) var(--space-3); text-align: center; border-bottom: var(--border-default); background: #fff; position: sticky; top: 0; z-index: 1; }
@@ -169,11 +170,12 @@
     .map-tbl tr.map-row-sel td { color: var(--color-primary); }
     .map-tbl tr.map-row-sel td:first-child { color: var(--color-primary); }
     .map-num-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; font-size: 11px; font-weight: var(--weight-semibold); background: var(--color-primary); color: #fff; }
-    .map-detail-wrap { flex: 1; overflow-y: auto; padding: var(--space-4) var(--space-5); min-width: 0; }
+    .map-detail-wrap { flex: 1; overflow-y: auto; padding: var(--space-4) var(--space-5); min-width: 0; display: flex; flex-direction: column; }
     .map-grade-section { margin-bottom: var(--space-4); }
     .map-grade-section:last-child { margin-bottom: 0; }
     .map-grade-chip { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; background: var(--color-text-primary); color: #fff; font-size: 12px; font-weight: var(--weight-semibold); margin-bottom: var(--space-2); }
-    .map-section-card { border: var(--border-default); border-radius: var(--radius-lg); overflow: hidden; }
+    .map-section-card { overflow: hidden; }
+    .map-section-card + .map-section-card { border-top: var(--border-default); }
     .map-detail-head { padding: var(--space-3) var(--space-4); border-bottom: var(--border-default); }
     .map-detail-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text-primary); margin-bottom: var(--space-2); display: flex; align-items: center; gap: var(--space-2); }
     .map-gender-row { display: flex; align-items: center; gap: var(--space-3); }
@@ -181,14 +183,14 @@
     .map-gender-bar-fill { height: 100%; background: var(--color-primary); border-radius: 4px; transition: width 0.4s ease; }
     .map-gender-stat { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--color-text-secondary); white-space: nowrap; }
     .map-gender-stat strong { font-weight: var(--weight-semibold); color: var(--color-text-primary); }
-    .map-gender-total { font-size: 15px; font-weight: var(--weight-bold); color: var(--color-primary); white-space: nowrap; margin-left: var(--space-1); }
+    .map-gender-total { display: inline-flex; align-items: center; font-size: 13px; font-weight: var(--weight-bold); color: var(--color-primary); background: var(--color-primary-light); padding: 2px 10px; border-radius: 20px; white-space: nowrap; margin-left: var(--space-2); }
     .map-detail-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .map-detail-tbl thead th { font-size: 11px; font-weight: var(--weight-medium); color: var(--color-text-tertiary); padding: var(--space-2) var(--space-4); text-align: left; border-bottom: var(--border-default); }
+    .map-detail-tbl thead th { font-size: 11px; font-weight: var(--weight-medium); color: var(--color-text-tertiary); padding: var(--space-2) var(--space-4); text-align: center; border-bottom: var(--border-default); }
     .map-detail-tbl tbody td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border); }
     .map-detail-tbl tbody tr:last-child td { border-bottom: none; }
-    .map-gender-m { color: var(--color-primary); font-weight: var(--weight-semibold); }
+    .map-gender-m { color: var(--color-text-secondary); font-weight: var(--weight-semibold); }
     .map-gender-f { color: var(--color-text-secondary); font-weight: var(--weight-semibold); }
-    .map-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-3); color: var(--color-text-tertiary); font-size: 13px; padding: 60px var(--space-8); text-align: center; }
+    .map-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-3); color: var(--color-text-tertiary); font-size: 13px; text-align: center; }
     .map-empty svg { color: var(--color-border-strong); }
     .cc-action-btn.map-on { background: var(--color-text-primary) !important; color: #fff !important; border-color: transparent !important; }
     [data-theme="dark"] .map-tbl tbody tr:hover { background: rgba(255,255,255,0.03); }
@@ -387,6 +389,7 @@
             </div>
             <div class="map-detail-wrap" id="mapDetailWrap"></div>
           </div>
+          <div id="mapToast" class="map-toast"></div>
         </div>
 
         <!-- 요약 KPI (한 줄: 좌측 타이틀 / 우측 수치) -->
@@ -1199,6 +1202,15 @@
   var _mapOpen = false;
   var _mapSelGrades = [];
   var _mapLastView = 'grid';
+  var _mapToastTimer = null;
+
+  function _showMapToast(msg) {
+    var t = document.getElementById('mapToast');
+    t.textContent = msg;
+    t.classList.add('show');
+    if (_mapToastTimer) clearTimeout(_mapToastTimer);
+    _mapToastTimer = setTimeout(function() { t.classList.remove('show'); }, 2200);
+  }
 
   var MAP_DATA = [
     { grade: '5세',   rsv: 0, level: '-',    wait: 0, rsvStudents: [], waitStudents: [] },
@@ -1301,9 +1313,9 @@
       + '<div class="map-detail-head">'
       + '<div class="map-detail-title">' + (isRsv ? iconRsv : iconWait) + title + '</div>'
       + '<div class="map-gender-row">'
-      + '<span class="map-gender-stat"><span style="color:var(--color-primary)">남</span>&nbsp;<strong>' + males + '</strong></span>'
+      + '<span class="map-gender-stat"><span>남</span>&nbsp;<strong' + (males > females ? ' style="color:var(--color-primary)"' : '') + '>' + males + '</strong></span>'
       + '<div class="map-gender-bar-track"><div class="map-gender-bar-fill" style="width:' + malePct + '%"></div></div>'
-      + '<span class="map-gender-stat"><span>여</span>&nbsp;<strong>' + females + '</strong></span>'
+      + '<span class="map-gender-stat"><span>여</span>&nbsp;<strong' + (females > males ? ' style="color:var(--color-primary)"' : '') + '>' + females + '</strong></span>'
       + '<span class="map-gender-total">' + total + '명</span>'
       + '</div>'
       + '</div>'
@@ -1320,15 +1332,17 @@
       return;
     }
     var html = '';
+    var emptyGrades = [];
     MAP_DATA.forEach(function(row) {
       if (_mapSelGrades.indexOf(row.grade) === -1) return;
       var cards = '';
       if (row.rsvStudents.length > 0) cards += _buildMapCard(row.rsvStudents, true,  row.grade, row.level);
       if (row.waitStudents.length > 0) cards += _buildMapCard(row.waitStudents, false, row.grade, row.level);
-      if (!cards) cards = '<div class="map-section-card" style="padding:var(--space-4);color:var(--color-text-tertiary);font-size:13px;text-align:center;">예약 및 대기 학생이 없습니다</div>';
+      if (!cards) { emptyGrades.push(row.grade); return; }
       html += '<div class="map-grade-section">' + cards + '</div>';
     });
     el.innerHTML = html;
+    if (emptyGrades.length > 0) _showMapToast(emptyGrades.join(', ') + ' 예약 및 대기 학생이 없습니다');
   }
 
   function refreshMapView() {
