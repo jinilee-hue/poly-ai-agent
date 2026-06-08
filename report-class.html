@@ -163,8 +163,8 @@
     .map-tbl tbody tr { cursor: pointer; transition: background 0.1s; }
     .map-tbl tbody tr:hover { background: rgba(0,0,0,0.03); }
     .map-tbl tbody tr.map-row-sel { background: var(--color-primary-a08); }
-    .map-tbl td { font-size: 12px; padding: var(--space-2) var(--space-3); text-align: center; color: var(--color-text-tertiary); border-bottom: 1px solid var(--color-border); }
-    .map-tbl tbody tr:last-child td { border-bottom: none !important; }
+    .map-tbl td { font-size: 12px; padding: var(--space-2) var(--space-3); text-align: center; color: var(--color-text-tertiary); }
+    .map-tbl tbody tr + tr td { border-top: 1px solid var(--color-border); }
     .map-tbl td:first-child { text-align: left; font-weight: var(--weight-medium); color: var(--color-text-primary); }
     .map-tbl tr.map-row-sel td { color: var(--color-primary); }
     .map-tbl tr.map-row-sel td:first-child { color: var(--color-primary); }
@@ -1250,21 +1250,18 @@
   }
 
   function _renderMapTable() {
-    var last = MAP_DATA.length - 1;
-    document.getElementById('mapTbody').innerHTML = MAP_DATA.map(function(d, idx) {
+    document.getElementById('mapTbody').innerHTML = MAP_DATA.map(function(d) {
       function numCell(n) {
         return n > 0
           ? '<span class="map-num-badge">' + n + '</span>'
           : '<span style="color:var(--color-border-strong)">0</span>';
       }
       var sel = _mapSelGrades.indexOf(d.grade) > -1 ? ' map-row-sel' : '';
-      var nb  = idx === last ? ' style="border-bottom:none"' : '';
-      var lvl = idx === last ? ' style="color:var(--color-text-tertiary);border-bottom:none"' : ' style="color:var(--color-text-tertiary)"';
       return '<tr class="' + sel + '" onclick="selectMapGrade(\'' + d.grade + '\')">'
-        + '<td' + nb + '>' + d.grade + '</td>'
-        + '<td' + nb + '>' + numCell(d.rsv) + '</td>'
-        + '<td' + lvl + '>' + d.level + '</td>'
-        + '<td' + nb + '>' + numCell(d.wait) + '</td>'
+        + '<td>' + d.grade + '</td>'
+        + '<td>' + numCell(d.rsv) + '</td>'
+        + '<td style="color:var(--color-text-tertiary)">' + d.level + '</td>'
+        + '<td>' + numCell(d.wait) + '</td>'
         + '</tr>';
     }).join('');
   }
