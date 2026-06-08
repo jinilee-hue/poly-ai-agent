@@ -91,15 +91,11 @@ function setChartDefaults() {
 
 }
 
-// 선그래프: 왼쪽에서 오른쪽으로 그려지는 애니메이션 (파일 로드 즉시 적용)
-if (typeof Chart !== 'undefined') {
-  Chart.overrides['line'] = Chart.overrides['line'] || {};
-  Chart.overrides['line'].animation = {
+// 선그래프 왼쪽→오른쪽 드로잉 애니메이션 옵션 반환
+function lineAnim() {
+  return {
     x: {
-      type: 'number',
-      easing: 'linear',
-      duration: 50,
-      from: NaN,
+      type: 'number', easing: 'linear', duration: 50, from: NaN,
       delay: function(ctx) {
         if (ctx.type !== 'data' || ctx.xStarted) return 0;
         ctx.xStarted = true;
@@ -107,9 +103,7 @@ if (typeof Chart !== 'undefined') {
       }
     },
     y: {
-      type: 'number',
-      easing: 'linear',
-      duration: 50,
+      type: 'number', easing: 'linear', duration: 50,
       from: function(ctx) {
         if (ctx.type !== 'data') return;
         return ctx.index === 0

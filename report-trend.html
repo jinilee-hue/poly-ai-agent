@@ -507,6 +507,7 @@
       type: 'line',
       data: { labels: MONTHS, datasets: datasets },
       options: {
+        animation: lineAnim(),
         responsive: true, maintainAspectRatio: false,
         interaction: { mode: 'index', intersect: false },
         plugins: {

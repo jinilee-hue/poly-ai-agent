@@ -632,6 +632,7 @@
       type: 'line',
       data: { labels: MONTHS, datasets: datasets },
       options: {
+        animation: lineAnim(),
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false }, tooltip: { callbacks: { label: function (c) { return c.dataset.label + ': ' + (c.parsed.y != null ? c.parsed.y.toLocaleString() + '명' : '—'); } } } },
         scales: {
@@ -671,6 +672,7 @@
           { label: '순수 탈퇴생', data: FLOW_LEAVE, borderColor: c2, backgroundColor: 'transparent', borderWidth: 2.5, borderDash: [5, 4], tension: 0.35, pointRadius: 2.5, pointHoverRadius: 5, pointBackgroundColor: c2, pointBorderColor: 'transparent', pointBorderWidth: 0 }
         ] },
         options: {
+          animation: lineAnim(),
           responsive: true, maintainAspectRatio: false,
           plugins: { legend: { display: false }, tooltip: { callbacks: { label: function (c) { return c.dataset.label + ': ' + (c.parsed.y != null ? c.parsed.y.toLocaleString() + '명' : '—'); } } } },
           scales: {
@@ -745,6 +747,7 @@
       type: 'line',
       data: { labels: MONTHS, datasets: [ ds('2024년 탈퇴', PAT['2024'], c3, [6, 4]), ds('2025년 탈퇴', PAT['2025'], c2), ds('2026년 진행중', PAT['2026'], c1) ] },
       options: {
+        animation: lineAnim(),
         responsive: true, maintainAspectRatio: false,
         plugins: { legend: { display: false }, tooltip: { callbacks: { label: function (c) { return c.dataset.label + ': ' + (c.parsed.y != null ? c.parsed.y.toLocaleString() + '명' : '—'); } } } },
         scales: {
