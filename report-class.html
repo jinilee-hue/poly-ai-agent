@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="styles/common.css">
   <link rel="stylesheet" href="styles/pages.css">
   <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     /* ── 학생 리스트 뷰 ── */
     .sl-tabbar{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:var(--border-default);margin-bottom:var(--space-4);}
@@ -30,51 +31,56 @@
     .sl-head-row1{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-2);}
     .sl-head-name{font-size:var(--text-sm);font-weight:var(--weight-semibold);color:var(--color-text-primary);}
     .sl-chip-row{display:flex;align-items:center;gap:4px;margin-bottom:var(--space-2);}
-    .sl-chip{font-size:10px;padding:2px 5px;border-radius:var(--radius-sm);background:var(--color-bg);border:var(--border-default);color:var(--color-text-secondary);line-height:1.4;}
-    .sl-teacher-btn{font-size:10px;padding:2px 8px;border-radius:var(--radius-full);background:#374151;color:#fff;border:none;cursor:pointer;margin-left:auto;white-space:nowrap;}
+    .sl-chip{font-size:11px;padding:2px 5px;border-radius:var(--radius-sm);background:var(--color-bg);border:var(--border-default);color:var(--color-text-secondary);line-height:1.4;}
+    .sl-teacher-btn{font-size:11px;padding:2px 8px;border-radius:var(--radius-full);background:#374151;color:#fff;border:none;cursor:pointer;margin-left:auto;white-space:nowrap;}
     .sl-metric-wrap{display:flex;align-items:center;gap:var(--space-2);}
     .sl-metrics{flex:1;min-width:0;}
     .sl-metric-row{margin-bottom:4px;}
     .sl-metric-row:last-child{margin-bottom:0;}
-    .sl-metric-label{display:flex;justify-content:space-between;font-size:10px;color:var(--color-text-secondary);margin-bottom:3px;}
-    .sl-mbar{height:4px;background:var(--color-bg-muted);border-radius:4px;display:flex;overflow:hidden;transform:translateZ(0);}
+    .sl-metric-label{display:flex;justify-content:space-between;font-size:11px;color:var(--color-text-secondary);margin-bottom:3px;}
+    .sl-mbar{height:4px;background:var(--color-bg-muted);border-radius:4px;display:flex;overflow:hidden;transform:translateZ(0);transition:height .15s ease;}
+    .sl-mbar:hover{height:7px;}
     .cc-seg-jin,.cc-seg-yu{transform:translateZ(0);}
     .sl-mbar .cc-seg-strong,.sl-mbar .cc-seg-light{border-radius:0;}
     .sl-stat-box{text-align:right;flex-shrink:0;}
     .sl-pct{font-size:20px;font-weight:var(--weight-bold);color:var(--color-text-primary);line-height:1.1;}
     .sl-pct.low{color:var(--color-warning);}
-    .sl-count{font-size:10px;color:var(--color-text-secondary);white-space:nowrap;}
+    .sl-count{font-size:11px;color:var(--color-text-secondary);white-space:nowrap;}
     /* 학생 행 */
     .sl-body{flex:1;}
     .sl-student{display:flex;align-items:flex-start;gap:var(--space-2);padding:var(--space-2) var(--space-3);border-bottom:1px solid var(--color-border);}
     .sl-student:last-child{border-bottom:none;}
-    .sl-num{font-size:10px;color:var(--color-text-tertiary);width:14px;text-align:right;flex-shrink:0;padding-top:2px;}
-    .sl-type-dot{width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:var(--weight-bold);flex-shrink:0;}
+    .sl-num{font-size:11px;color:var(--color-text-tertiary);width:14px;text-align:right;flex-shrink:0;padding-top:2px;}
+    .sl-type-dot{width:18px;height:18px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:var(--weight-bold);flex-shrink:0;}
     .sl-type-yu{background:var(--color-primary-light,#E8F0FF);color:var(--color-primary);}
     .sl-type-jin{background:var(--color-primary);color:#fff;}
     .sl-name-wrap{flex:1;min-width:0;}
-    .sl-name-ko{font-size:var(--text-xs);font-weight:var(--weight-medium);color:var(--color-text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .sl-name-en{font-size:9px;color:var(--color-text-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-    .sl-name-date{font-size:9px;color:var(--color-text-tertiary);}
+    .sl-name-ko{font-size:var(--text-sm);font-weight:var(--weight-medium);color:var(--color-text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .sl-name-en{font-size:11px;color:var(--color-text-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .sl-name-date{font-size:11px;color:var(--color-text-tertiary);}
     .sl-meta{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
-    .sl-g-m,.sl-g-f{font-size:10px;color:var(--color-text-secondary);font-weight:var(--weight-medium);}
-    .sl-fam{font-size:9px;padding:1px 5px;border-radius:var(--radius-sm);background:var(--color-primary-light);color:var(--color-primary);font-weight:var(--weight-semibold);cursor:pointer;user-select:none;}
+    .sl-g-m,.sl-g-f{font-size:11px;color:var(--color-text-secondary);font-weight:var(--weight-medium);}
+    .sl-fam{font-size:11px;padding:1px 5px;border-radius:var(--radius-sm);background:var(--color-primary-light);color:var(--color-primary);font-weight:var(--weight-semibold);cursor:pointer;user-select:none;}
     .sl-fam-pop{position:fixed;z-index:999;background:var(--color-bg);border:var(--border-default);border-radius:var(--radius-md);box-shadow:var(--shadow-md);padding:10px 12px;min-width:210px;display:none;}
-    .sl-fam-pop-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;}
-    .sl-fam-pop-title{font-size:11px;font-weight:var(--weight-semibold);color:var(--color-text-secondary);}
+    .sl-fam-pop[style*="display: block"]{animation:slPopIn .12s ease;}
+    @keyframes slPopIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+    .sl-fam-pop-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-bottom:8px;margin-bottom:8px;border-bottom:var(--border-default);}
+    .sl-fam-pop-title{font-size:11px;font-weight:var(--weight-semibold);color:var(--color-text-secondary);display:flex;align-items:center;justify-content:space-between;width:100%;}
     .sl-fam-pop-close{background:none;border:none;cursor:pointer;color:var(--color-text-tertiary);font-size:16px;line-height:1;padding:0;}
     .sl-fam-pop-member{font-size:12px;color:var(--color-text-primary);padding:3px 0;}
+    .sl-teacher-cnt{background:var(--color-primary-light);color:var(--color-primary);font-weight:var(--weight-semibold);border-radius:var(--radius-full);padding:2px 8px;font-size:11px;}
+    .sl-teacher-num{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:var(--radius-sm);background:var(--color-bg-subtle);color:var(--color-text-secondary);font-size:11px;font-weight:var(--weight-medium);flex-shrink:0;margin-right:6px;}
     /* 공석 행 */
     .sl-vacant{display:flex;align-items:center;gap:var(--space-2);padding:5px var(--space-3);border-bottom:1px solid var(--color-border);background:var(--color-bg-subtle);}
     .sl-vacant:last-child{border-bottom:none;}
-    .sl-vacant-num{font-size:10px;color:var(--color-text-secondary);width:14px;text-align:right;flex-shrink:0;}
+    .sl-vacant-num{font-size:11px;color:var(--color-text-secondary);width:14px;text-align:right;flex-shrink:0;}
     .sl-vacant-label{font-size:var(--text-xs);color:var(--color-text-secondary);}
     /* 푸터 */
-    .sl-footer{padding:var(--space-2) var(--space-3);border-top:var(--border-default);background:var(--color-bg-muted);text-align:center;font-size:10px;color:var(--color-text-tertiary);}
+    .sl-footer{padding:var(--space-2) var(--space-3);border-top:var(--border-default);background:var(--color-bg-muted);text-align:center;font-size:11px;color:var(--color-text-tertiary);}
     /* null 강의실 */
     .sl-null-card{min-width:0;background:var(--color-bg-muted);border:var(--border-default);border-radius:var(--radius-lg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:180px;opacity:.45;}
     .sl-null-room{font-size:var(--text-xs);font-weight:var(--weight-medium);color:var(--color-text-secondary);}
-    .sl-null-sub{font-size:9px;color:var(--color-text-tertiary);}
+    .sl-null-sub{font-size:11px;color:var(--color-text-tertiary);}
     /* 충원 주의 */
     .sl-card.is-low{border-color:#d97706;}
     /* 대기생 */
@@ -82,7 +88,7 @@
     .sl-wait-section{border-top:2px solid var(--color-border);}
     .sl-wait-student{display:flex;align-items:flex-start;gap:var(--space-2);padding:var(--space-2) var(--space-3);border-bottom:1px solid var(--color-border);background:var(--color-bg-muted);}
     .sl-wait-student:last-child{border-bottom:none;}
-    .sl-footer-btn{width:100%;padding:var(--space-2) var(--space-3);border:none;border-top:var(--border-default);background:var(--color-bg-muted);text-align:center;font-size:10px;color:var(--color-primary);cursor:pointer;}
+    .sl-footer-btn{width:100%;padding:var(--space-2) var(--space-3);border:none;border-top:var(--border-default);background:var(--color-bg-muted);text-align:center;font-size:11px;color:var(--color-primary);cursor:pointer;}
     /* 학급 상세 모달 */
     .cdm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1100;display:flex;align-items:center;justify-content:center;padding:24px;}
     .cdm-box{background:var(--color-bg);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);width:100%;max-width:960px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;}
@@ -91,7 +97,7 @@
     .cdm-title-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
     .cdm-title{font-size:20px;font-weight:var(--weight-semibold);color:var(--color-text-primary);white-space:nowrap;}
     .cdm-teacher-info{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;}
-    .cdm-teacher-chip{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:4px 10px;border-radius:var(--radius-full);background:var(--color-bg-muted);color:var(--color-text-secondary);font-weight:var(--weight-medium);white-space:nowrap;}
+    .cdm-teacher-chip{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:4px 10px;border-radius:var(--radius-full);background:var(--color-primary-light);color:var(--color-primary);font-weight:var(--weight-medium);white-space:nowrap;}
     .cdm-stats{overflow-x:auto;}
     .cdm-stats-inner{display:flex;flex-direction:row;align-items:stretch;gap:0;padding:var(--space-4);margin:0 var(--space-6) var(--space-4);border:var(--border-default);border-radius:var(--radius-md);background:var(--color-bg);}
     .cdm-stat{display:flex;flex-direction:column;gap:4px;padding:0 24px;border-right:var(--border-default);flex-shrink:0;}
@@ -114,6 +120,34 @@
     .cc-card{cursor:pointer;}
     .cc-card:hover{box-shadow:0 0 0 2px var(--color-primary-a25,rgba(0,102,255,0.25));}
     .cc-card.is-low:hover{box-shadow:0 0 0 2px rgba(217,119,6,0.30);}
+
+    /* ── Summary 뷰 ── */
+    .smry-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-3);margin-bottom:var(--space-4);}
+    .smry-kpi-card{background:var(--color-bg);border:var(--border-default);border-radius:var(--radius-lg);padding:var(--space-5);display:flex;flex-direction:column;gap:var(--space-2);}
+    .smry-kpi-label{font-size:var(--text-xs);color:var(--color-text-secondary);font-weight:var(--weight-medium);}
+    .smry-kpi-sub{font-size:11px;color:var(--color-text-tertiary);margin-top:2px;}
+    .smry-kpi-val{font-size:28px;font-weight:var(--weight-bold);color:var(--color-primary);line-height:1;}
+    .smry-kpi-val.neutral{color:var(--color-text-primary);}
+    .smry-two-col{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-bottom:var(--space-4);}
+    .smry-section{display:flex;flex-direction:column;gap:var(--space-3);}
+    .smry-section-head{display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);font-weight:var(--weight-semibold);color:var(--color-text-primary);padding-bottom:var(--space-2);}
+    .smry-section-head::before{content:'';display:inline-block;width:3px;height:16px;background:var(--color-primary);border-radius:2px;flex-shrink:0;}
+    .smry-card{background:var(--color-bg);border:var(--border-default);border-radius:var(--radius-lg);padding:var(--space-4);}
+    .smry-card-title{font-size:var(--text-xs);font-weight:var(--weight-semibold);color:var(--color-text-secondary);margin-bottom:var(--space-3);}
+    .smry-chart-wrap{position:relative;height:200px;}
+    .smry-hbar-wrap{position:relative;height:220px;}
+    .smry-cross-table{width:100%;border-collapse:collapse;font-size:12px;}
+    .smry-cross-table th{padding:8px 10px;text-align:center;font-weight:var(--weight-medium);color:var(--color-text-secondary);background:var(--color-bg-subtle);border-top:var(--border-default);border-bottom:var(--border-default);}
+    .smry-cross-table th:first-child{text-align:left;}
+    .smry-cross-table td{padding:10px;text-align:center;border-bottom:var(--border-default);}
+    .smry-cross-table td:first-child{text-align:left;font-weight:var(--weight-medium);color:var(--color-text-secondary);background:var(--color-bg-subtle);}
+    .smry-cross-table tr:last-child td{border-bottom:none;}
+    .smry-cell-hi{background:var(--color-primary-light);color:var(--color-primary);font-weight:var(--weight-semibold);border-radius:var(--radius-sm);}
+    .smry-cell-md{background:var(--color-primary-a08,rgba(0,102,255,0.08));color:var(--color-text-primary);}
+    .smry-cell-lo{color:var(--color-text-secondary);}
+    .smry-cell-none{color:var(--color-text-tertiary);}
+    .smry-cross-val{display:block;font-size:13px;}
+    .smry-cross-sub{display:block;font-size:10px;color:var(--color-text-tertiary);margin-top:1px;}
   </style>
 </head>
 <body class="page-report-view">
@@ -376,13 +410,86 @@
           <div class="sl-scroll" id="slCards"></div>
         </div>
 
-        <!-- Summary 뷰 (준비 중) -->
+        <!-- Summary 뷰 -->
         <div id="view-summary" style="display:none;">
-          <div class="cc-placeholder">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-            <p><strong>Summary</strong> 화면은 준비 중입니다.</p>
-            <p class="cc-placeholder-sub">통합 배치표 탭에서 학급 편성 현황을 확인하세요.</p>
+
+          <!-- KPI 4종 -->
+          <div class="smry-kpi-grid">
+            <div class="smry-kpi-card">
+              <div class="smry-kpi-label">충원률</div>
+              <div class="smry-kpi-val" id="smryFillPct">—</div>
+              <div class="smry-kpi-sub" id="smryFillDet">—</div>
+            </div>
+            <div class="smry-kpi-card">
+              <div class="smry-kpi-label">잔여 TO</div>
+              <div class="smry-kpi-val neutral" id="smryTO">—</div>
+              <div class="smry-kpi-sub" id="smryTODet">—</div>
+            </div>
+            <div class="smry-kpi-card">
+              <div class="smry-kpi-label">강의실 가동률</div>
+              <div class="smry-kpi-val" id="smryUtilPct">—</div>
+              <div class="smry-kpi-sub" id="smryUtilDet">—</div>
+            </div>
+            <div class="smry-kpi-card">
+              <div class="smry-kpi-label">학급 · 강의실</div>
+              <div style="display:flex;align-items:baseline;gap:6px;">
+                <div class="smry-kpi-val neutral" id="smryClassCnt">—</div>
+                <div style="font-size:14px;color:var(--color-text-tertiary);">/ <span id="smryRoomCnt">—</span> 강의실</div>
+              </div>
+              <div class="smry-kpi-sub" id="smryBlockDet">—</div>
+            </div>
           </div>
+
+          <!-- 2컬럼: 충원률 | 가동률 -->
+          <div class="smry-two-col">
+
+            <!-- 좌: 충원률·TO -->
+            <div class="smry-section">
+              <div class="smry-section-head">충원률 · TO</div>
+              <div class="smry-card">
+                <div class="smry-card-title">교시별 충원률</div>
+                <div class="smry-chart-wrap"><canvas id="smryBlockFillChart"></canvas></div>
+              </div>
+              <div class="smry-card">
+                <div class="smry-card-title">요일별 충원률</div>
+                <div class="smry-chart-wrap"><canvas id="smryDayFillChart"></canvas></div>
+              </div>
+              <div class="smry-card">
+                <div class="smry-card-title">강의실별 충원률</div>
+                <div class="smry-hbar-wrap"><canvas id="smryRoomFillChart"></canvas></div>
+              </div>
+            </div>
+
+            <!-- 우: 강의실 가동률 -->
+            <div class="smry-section">
+              <div class="smry-section-head">강의실 가동률</div>
+              <div class="smry-card">
+                <div class="smry-card-title">교시별 가동률</div>
+                <div class="smry-chart-wrap"><canvas id="smryBlockUtilChart"></canvas></div>
+              </div>
+              <div class="smry-card">
+                <div class="smry-card-title">요일별 가동률</div>
+                <div class="smry-chart-wrap"><canvas id="smryDayUtilChart"></canvas></div>
+              </div>
+              <div class="smry-card">
+                <div class="smry-card-title">강의실별 가동률</div>
+                <div class="smry-hbar-wrap"><canvas id="smryRoomUtilChart"></canvas></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 교차표 2종 -->
+          <div class="smry-two-col">
+            <div class="smry-card">
+              <div class="smry-card-title">교시 × 요일 충원률</div>
+              <table class="smry-cross-table" id="smryCrossFillTable"></table>
+            </div>
+            <div class="smry-card">
+              <div class="smry-card-title">교시 × 요일 가동률</div>
+              <table class="smry-cross-table" id="smryCrossUtilTable"></table>
+            </div>
+          </div>
+
         </div>
 
       </div>
@@ -671,9 +778,9 @@
       + '<div class="cc-card-top"><span class="cc-card-title">' + level + '-' + room + '</span><span class="badge ' + badgeCls + '">' + badgeTxt + '</span></div>'
       + '<div class="cc-fill"><span class="cc-fill-count">학생 ' + enr + '/' + cap + '</span><span class="cc-fill-pct">' + pct + '%</span></div>'
       + '<div class="cc-metric"><div class="cc-metric-head"><span>진학 ' + B(jin, jin>=yu) + '</span><span>유입 ' + B(yu, yu>=jin) + '</span></div>'
-      +   '<div class="sl-mbar"><div class="' + (jin>=yu?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + jin + '"></div><div class="' + (yu>=jin?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + yu + '"></div></div></div>'
+      +   '<div class="sl-mbar" data-tip="진학 ' + (jin+yu>0?Math.round(jin/(jin+yu)*100):0) + '% · 유입 ' + (jin+yu>0?Math.round(yu/(jin+yu)*100):0) + '%"><div class="' + (jin>=yu?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + jin + '"></div><div class="' + (yu>=jin?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + yu + '"></div></div></div>'
       + '<div class="cc-metric"><div class="cc-metric-head"><span>남 ' + B(m, m>=f) + '</span><span>여 ' + B(f, f>=m) + '</span></div>'
-      +   '<div class="sl-mbar"><div class="' + (m>=f?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + m + '"></div><div class="' + (f>=m?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + f + '"></div></div></div>'
+      +   '<div class="sl-mbar" data-tip="남학생 ' + (m+f>0?Math.round(m/(m+f)*100):0) + '% · 여학생 ' + (m+f>0?Math.round(f/(m+f)*100):0) + '%"><div class="' + (m>=f?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + m + '"></div><div class="' + (f>=m?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + f + '"></div></div></div>'
       + '</div>';
   }
 
@@ -804,7 +911,186 @@
     document.getElementById('view-summary').style.display = view === 'summary' ? '' : 'none';
     if (view === 'grid') fitMatrix();
     if (view === 'list') { _slBlockIdx = 0; _slDayIdx = 0; buildStudentList(); }
+    if (view === 'summary') buildSummaryCharts();
   }
+
+  /* ── Summary 차트 ─────────────────────────────── */
+  var _smryCharts = {};
+
+  function buildSummaryCharts() {
+    if (typeof Chart === 'undefined') return;
+    Object.values(_smryCharts).forEach(function(ch) { if (ch) ch.destroy(); });
+    _smryCharts = {};
+
+    var cs = getComputedStyle(document.documentElement);
+    var c1 = cs.getPropertyValue('--chart-1').trim() || 'rgba(0,102,255,0.85)';
+    var c2 = cs.getPropertyValue('--chart-2').trim() || 'rgba(0,102,255,0.45)';
+    var c3 = cs.getPropertyValue('--chart-3').trim() || 'rgba(0,102,255,0.20)';
+    var textColor = cs.getPropertyValue('--color-text-secondary').trim() || '#6B7280';
+    var gridColor = cs.getPropertyValue('--color-border').trim() || '#E5E7EB';
+
+    function barColor(pct) { return pct >= 80 ? c1 : pct >= 60 ? c2 : c3; }
+    function fmt1(v) { return v.toFixed(1) + '%'; }
+
+    var DAY_EXPAND = { '매일':['월','화','수','목','금'], '월수금':['월','수','금'], '화목':['화','목'], '월수':['월','수'], '화목금':['화','목','금'] };
+    var WEEKDAYS = ['월','화','수','목','금'];
+
+    /* ── 교시별 ── */
+    var bFill = [], bUtil = [];
+    BLOCKS.forEach(function(b) {
+      var e=0,c=0,occ=0,tot=0;
+      b.days.forEach(function(d) { d.rooms.forEach(function(r) { tot++; if(r){e+=r[1];c+=r[2];occ++;} }); });
+      bFill.push(c ? Math.round(e/c*1000)/10 : 0);
+      bUtil.push(tot ? Math.round(occ/tot*1000)/10 : 0);
+    });
+
+    /* ── 요일별 ── */
+    var wdE={}, wdC={}, wdOcc={}, wdTot={};
+    WEEKDAYS.forEach(function(wd){ wdE[wd]=0; wdC[wd]=0; wdOcc[wd]=0; wdTot[wd]=0; });
+    BLOCKS.forEach(function(b) {
+      b.days.forEach(function(d) {
+        var wds = DAY_EXPAND[d.day] || [d.day];
+        wds.forEach(function(wd) {
+          if (!wdE.hasOwnProperty(wd)) return;
+          d.rooms.forEach(function(r) {
+            wdTot[wd]++;
+            if (r) { wdE[wd]+=r[1]; wdC[wd]+=r[2]; wdOcc[wd]++; }
+          });
+        });
+      });
+    });
+    var dayFill = WEEKDAYS.map(function(wd){ return wdC[wd] ? Math.round(wdE[wd]/wdC[wd]*1000)/10 : 0; });
+    var dayUtil = WEEKDAYS.map(function(wd){ return wdTot[wd] ? Math.round(wdOcc[wd]/wdTot[wd]*1000)/10 : 0; });
+
+    /* ── 강의실별 (충원률 내림차순 정렬) ── */
+    var rFill = [], rUtil = [];
+    ROOMS.forEach(function(room, ri) {
+      var e=0,c=0,occ=0,tot=0;
+      BLOCKS.forEach(function(b) { b.days.forEach(function(d) { tot++; var r=d.rooms[ri]; if(r){e+=r[1];c+=r[2];occ++;} }); });
+      rFill.push(c ? Math.round(e/c*1000)/10 : 0);
+      rUtil.push(tot ? Math.round(occ/tot*1000)/10 : 0);
+    });
+    var fillIdx = ROOMS.map(function(_,i){return i;}).sort(function(a,b){return rFill[b]-rFill[a];});
+    var utilIdx = ROOMS.map(function(_,i){return i;}).sort(function(a,b){return rUtil[b]-rUtil[a];});
+
+    /* ── KPI 업데이트 ── */
+    var totalE=0,totalC=0,totalOcc=0,totalTot=0;
+    BLOCKS.forEach(function(b) { b.days.forEach(function(d) { d.rooms.forEach(function(r){ totalTot++; if(r){totalE+=r[1];totalC+=r[2];totalOcc++;} }); }); });
+    var fillPct = totalC ? (totalE/totalC*100).toFixed(1) : 0;
+    var utilPct = totalTot ? (totalOcc/totalTot*100).toFixed(1) : 0;
+    document.getElementById('smryFillPct').textContent  = fillPct + '%';
+    document.getElementById('smryFillDet').textContent  = totalE + ' / ' + totalC + '명';
+    document.getElementById('smryTO').textContent       = totalC - totalE;
+    document.getElementById('smryTODet').textContent    = '정원 ' + totalC + '명';
+    document.getElementById('smryUtilPct').textContent  = utilPct + '%';
+    document.getElementById('smryUtilDet').textContent  = totalOcc + ' / ' + totalTot + ' 슬롯';
+    document.getElementById('smryClassCnt').textContent = totalOcc;
+    document.getElementById('smryRoomCnt').textContent  = ROOMS.length;
+    document.getElementById('smryBlockDet').textContent = BLOCKS.length + '개 교시 운영';
+
+    /* ── 차트 공통 옵션 ── */
+    function barOpts(isHoriz) {
+      return {
+        indexAxis: isHoriz ? 'y' : 'x',
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: function(ctx){ return ' ' + ctx.parsed[isHoriz?'x':'y'].toFixed(1) + '%'; } } },
+          datalabels: { display: false }
+        },
+        scales: {
+          x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } }, max: isHoriz ? 100 : undefined },
+          y: { grid: { color: isHoriz ? 'transparent' : gridColor }, ticks: { color: textColor, font: { size: 11 } }, max: isHoriz ? undefined : 100 }
+        }
+      };
+    }
+
+    function makeBarDs(data, labels) {
+      return { labels: labels, datasets: [{ data: data, backgroundColor: data.map(barColor), barPercentage: 0.55, maxBarThickness: 40, borderRadius: 3 }] };
+    }
+
+    var bLabels = BLOCKS.map(function(b){ return b.block; });
+
+    _smryCharts.blockFill = new Chart(document.getElementById('smryBlockFillChart'), { type:'bar', data: makeBarDs(bFill, bLabels), options: barOpts(false) });
+    _smryCharts.blockUtil = new Chart(document.getElementById('smryBlockUtilChart'), { type:'bar', data: makeBarDs(bUtil, bLabels), options: barOpts(false) });
+    _smryCharts.dayFill   = new Chart(document.getElementById('smryDayFillChart'),   { type:'bar', data: makeBarDs(dayFill, WEEKDAYS), options: barOpts(false) });
+    _smryCharts.dayUtil   = new Chart(document.getElementById('smryDayUtilChart'),   { type:'bar', data: makeBarDs(dayUtil, WEEKDAYS), options: barOpts(false) });
+
+    var fillRoomLabels = fillIdx.map(function(i){ return ROOMS[i]; });
+    var fillRoomData   = fillIdx.map(function(i){ return rFill[i]; });
+    var utilRoomLabels = utilIdx.map(function(i){ return ROOMS[i]; });
+    var utilRoomData   = utilIdx.map(function(i){ return rUtil[i]; });
+
+    _smryCharts.roomFill = new Chart(document.getElementById('smryRoomFillChart'), { type:'bar', data: makeBarDs(fillRoomData, fillRoomLabels), options: barOpts(true) });
+    _smryCharts.roomUtil = new Chart(document.getElementById('smryRoomUtilChart'), { type:'bar', data: makeBarDs(utilRoomData, utilRoomLabels), options: barOpts(true) });
+
+    /* ── 교차표 ── */
+    function cellClass(v) {
+      if (v === null) return 'smry-cell-none';
+      if (v >= 80) return 'smry-cell-hi';
+      if (v >= 60) return 'smry-cell-md';
+      return 'smry-cell-lo';
+    }
+
+    function buildCrossTable(tableId, getter) {
+      var head = '<thead><tr><th>교시</th>' + WEEKDAYS.map(function(wd){ return '<th>'+wd+'</th>'; }).join('') + '<th>합계</th></tr></thead>';
+      var body = '<tbody>';
+      var colE = {}, colC = {}, colOcc = {}, colTot = {};
+      WEEKDAYS.forEach(function(wd){ colE[wd]=0; colC[wd]=0; colOcc[wd]=0; colTot[wd]=0; });
+      var totE=0,totC=0,totOcc=0,totTot=0;
+
+      BLOCKS.forEach(function(b) {
+        body += '<tr><td>' + b.block + '</td>';
+        var rowE=0,rowC=0,rowOcc=0,rowTot=0;
+        WEEKDAYS.forEach(function(wd) {
+          var dayGroup = null;
+          b.days.forEach(function(d){ if ((DAY_EXPAND[d.day]||[d.day]).indexOf(wd) >= 0) dayGroup = d; });
+          if (!dayGroup) { body += '<td class="smry-cell-none">—</td>'; return; }
+          var res = getter(dayGroup);
+          var v = res.pct, sub = res.sub;
+          var cls = cellClass(v);
+          body += '<td class="'+cls+'"><span class="smry-cross-val">'+v.toFixed(1)+'%</span><span class="smry-cross-sub">'+sub+'</span></td>';
+          colE[wd]  += res.e||0; colC[wd]  += res.c||0;
+          colOcc[wd]+= res.occ||0; colTot[wd]+= res.tot||0;
+          rowE+=res.e||0; rowC+=res.c||0; rowOcc+=res.occ||0; rowTot+=res.tot||0;
+        });
+        var rowPct = rowC ? rowE/rowC*100 : (rowTot ? rowOcc/rowTot*100 : 0);
+        var rowSub = rowC ? rowE+'/'+rowC : rowOcc+'/'+rowTot;
+        body += '<td class="'+cellClass(rowPct)+'"><span class="smry-cross-val">'+rowPct.toFixed(1)+'%</span><span class="smry-cross-sub">'+rowSub+'</span></td>';
+        body += '</tr>';
+        totE+=rowE; totC+=rowC; totOcc+=rowOcc; totTot+=rowTot;
+      });
+
+      /* 합계 행 */
+      body += '<tr><td>합계</td>';
+      WEEKDAYS.forEach(function(wd) {
+        if (!colTot[wd]) { body += '<td class="smry-cell-none">—</td>'; return; }
+        var v = colC[wd] ? colE[wd]/colC[wd]*100 : (colTot[wd] ? colOcc[wd]/colTot[wd]*100 : 0);
+        var sub = colC[wd] ? colE[wd]+'/'+colC[wd] : colOcc[wd]+'/'+colTot[wd];
+        body += '<td class="'+cellClass(v)+'"><span class="smry-cross-val">'+v.toFixed(1)+'%</span><span class="smry-cross-sub">'+sub+'</span></td>';
+      });
+      var totPct = totC ? totE/totC*100 : (totTot ? totOcc/totTot*100 : 0);
+      var totSub = totC ? totE+'/'+totC : totOcc+'/'+totTot;
+      body += '<td class="'+cellClass(totPct)+' smry-cell-hi"><span class="smry-cross-val">'+totPct.toFixed(1)+'%</span><span class="smry-cross-sub">'+totSub+'</span></td>';
+      body += '</tr></tbody>';
+      document.getElementById(tableId).innerHTML = head + body;
+    }
+
+    buildCrossTable('smryCrossFillTable', function(d) {
+      var e=0,c=0;
+      d.rooms.forEach(function(r){ if(r){e+=r[1];c+=r[2];} });
+      return { pct: c ? e/c*100 : 0, sub: e+'/'+c+'명', e:e, c:c };
+    });
+    buildCrossTable('smryCrossUtilTable', function(d) {
+      var occ=0,tot=0;
+      d.rooms.forEach(function(r){ tot++; if(r) occ++; });
+      return { pct: tot ? occ/tot*100 : 0, sub: occ+'/'+tot, occ:occ, tot:tot };
+    });
+  }
+
+  window.addEventListener('themechange', function() {
+    if (document.getElementById('view-summary').style.display !== 'none') buildSummaryCharts();
+  });
 
   /* Excel 다운로드 — 배치표를 평면 시트로 변환 */
   function downloadExcel() {
@@ -1149,16 +1435,16 @@ function renderSlCards() {
       html += '<div class="sl-card' + (low ? ' is-low' : '') + '">';
       html += '<div class="sl-head" style="cursor:pointer" onclick="openClassDetail(' + _slBlockIdx + ',' + di + ',' + ri + ')">';
       html += '<div class="sl-head-row1"><span class="sl-head-name">' + level + '-' + roomName + '</span><span class="badge ' + bCls + '">' + bTxt + '</span></div>';
-      html += '<div class="sl-chip-row"><span class="sl-chip">' + level + '</span><span class="sl-chip">' + day.day + '</span><span class="sl-chip">' + roomName + '</span><button class="sl-teacher-btn" onclick="event.stopPropagation();openTeacherPop(this,\'' + level + '-' + roomName + '\')">담당교사</button></div>';
+      html += '<div class="sl-chip-row"><span class="sl-chip">' + level + '</span><span class="sl-chip">' + day.day + '</span><span class="sl-chip">' + roomName + '</span><button class="sl-teacher-btn" onmouseenter="openTeacherPop(this,\'' + level + '-' + roomName + '\')" onmouseleave="scheduleHideTeacherPop()">담당교사</button></div>';
       /* 진학/유입 + 남/여 바 */
       html += '<div class="sl-metric-wrap">';
       html += '<div class="sl-metrics">';
       var slDomColor = low ? '#d97706' : 'var(--color-primary)';
       var slB = function(v, dom) { return dom ? '<b style="color:' + slDomColor + ';font-weight:600">' + v + '</b>' : v; };
       html += '<div class="sl-metric-row"><div class="sl-metric-label"><span>진학 ' + slB(jin, jin>=yu) + '</span><span>유입 ' + slB(yu, yu>=jin) + '</span></div>';
-      html += '<div class="sl-mbar"><div class="' + (jin>=yu?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + jin + '"></div><div class="' + (yu>=jin?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + yu + '"></div></div></div>';
+      html += '<div class="sl-mbar" data-tip="진학 ' + (jin+yu>0?Math.round(jin/(jin+yu)*100):0) + '% · 유입 ' + (jin+yu>0?Math.round(yu/(jin+yu)*100):0) + '%"><div class="' + (jin>=yu?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + jin + '"></div><div class="' + (yu>=jin?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + yu + '"></div></div></div>';
       html += '<div class="sl-metric-row"><div class="sl-metric-label"><span>남학생 ' + slB(m, m>=f) + '</span><span>여학생 ' + slB(f, f>=m) + '</span></div>';
-      html += '<div class="sl-mbar"><div class="' + (m>=f?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + m + '"></div><div class="' + (f>=m?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + f + '"></div></div></div>';
+      html += '<div class="sl-mbar" data-tip="남학생 ' + (m+f>0?Math.round(m/(m+f)*100):0) + '% · 여학생 ' + (m+f>0?Math.round(f/(m+f)*100):0) + '%"><div class="' + (m>=f?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + m + '"></div><div class="' + (f>=m?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + f + '"></div></div></div>';
       html += '</div>';
       html += '<div class="sl-stat-box"><div class="sl-pct' + (low ? ' low' : '') + '">' + pct + '<span style="font-size:13px;font-weight:400">%</span></div>';
       html += '<div class="sl-count">학생 ' + enr + '/' + cap + '</div></div>';
@@ -1176,7 +1462,7 @@ function renderSlCards() {
         html += '<div class="sl-name-en">' + s.en + '</div>';
         html += '<div class="sl-name-date">' + s.s + ' ' + level + ' 시작</div></div>';
         html += '<div class="sl-meta"><span class="' + (s.g === '남' ? 'sl-g-m' : 'sl-g-f') + '">' + s.g + '</span>';
-        if (s.f) html += '<span class="sl-fam" onclick="openFamPop(this,\'' + s.n + '\')">가족</span>';
+        if (s.f) html += '<span class="sl-fam" onmouseenter="openFamPop(this,\'' + s.n + '\')" onmouseleave="scheduleHideFamPop()">가족</span>';
         html += '</div></div>';
       }
       /* 공석 */
@@ -1222,46 +1508,44 @@ function setSlBlock(idx) {
   buildStudentList();
 }
 
+var _famHideTimer = null;
+var _teacherHideTimer = null;
+
 function openFamPop(btn, name) {
+  clearTimeout(_famHideTimer);
   var data = SL_FAM_DATA[name];
   if (!data) return;
-  document.removeEventListener('click', _famPopOutside);
   var pop = document.getElementById('slFamPop');
-  document.getElementById('slFamPopTitle').textContent = '가족 관계 (' + data.rel + ')';
+  document.getElementById('slFamPopTitle').innerHTML = '<span style="display:inline-flex;align-items:center;gap:4px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>가족 관계 (' + data.rel + ')</span>';
   var html = '';
-  data.members.forEach(function(m) {
-    html += '<div class="sl-fam-pop-member">' + m.level + ' ' + m.n + ' (' + m.en + ')</div>';
+  data.members.forEach(function(m, i) {
+    html += '<div class="sl-fam-pop-member"><span class="sl-teacher-num">' + (i + 1) + '</span>' + m.level + ' ' + m.n + ' (' + m.en + ')</div>';
   });
   document.getElementById('slFamPopList').innerHTML = html;
   var r = btn.getBoundingClientRect();
   pop.style.top  = (r.bottom + 4) + 'px';
-  pop.style.left = r.left + 'px';
   pop.style.display = 'block';
-  setTimeout(function() { document.addEventListener('click', _famPopOutside); }, 0);
+  requestAnimationFrame(function() {
+    var left = r.left;
+    if (left + pop.offsetWidth + 8 > window.innerWidth) left = r.right - pop.offsetWidth;
+    pop.style.left = Math.max(4, left) + 'px';
+  });
 }
-
-function _famPopOutside(e) {
-  var pop = document.getElementById('slFamPop');
-  if (!pop.contains(e.target)) {
-    pop.style.display = 'none';
-    document.removeEventListener('click', _famPopOutside);
-  }
+function scheduleHideFamPop() {
+  _famHideTimer = setTimeout(function() { document.getElementById('slFamPop').style.display = 'none'; }, 200);
 }
-
-function closeFamPop() {
-  document.getElementById('slFamPop').style.display = 'none';
-  document.removeEventListener('click', _famPopOutside);
-}
+function keepFamPop() { clearTimeout(_famHideTimer); }
+function closeFamPop() { clearTimeout(_famHideTimer); document.getElementById('slFamPop').style.display = 'none'; }
 
 function openTeacherPop(btn, key) {
+  clearTimeout(_teacherHideTimer);
   var data = SL_TEACHER_DATA[key];
   if (!data) return;
-  document.removeEventListener('click', _teacherPopOutside);
   var pop = document.getElementById('slTeacherPop');
-  document.getElementById('slTeacherPopTitle').textContent = '담당 교사 목록  ' + data.length + '명';
+  document.getElementById('slTeacherPopTitle').innerHTML = '<span style="display:inline-flex;align-items:center;gap:4px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>담당 교사 목록</span><span class="sl-teacher-cnt">' + data.length + '명</span>';
   var html = '';
-  data.forEach(function(t) {
-    html += '<div class="sl-fam-pop-member">' + t.role + ': ' + t.n + '</div>';
+  data.forEach(function(t, i) {
+    html += '<div class="sl-fam-pop-member"><span class="sl-teacher-num">' + (i + 1) + '</span>' + t.role + ': ' + t.n + '</div>';
   });
   document.getElementById('slTeacherPopList').innerHTML = html;
   var r = btn.getBoundingClientRect();
@@ -1271,21 +1555,12 @@ function openTeacherPop(btn, key) {
     var left = r.right - pop.offsetWidth;
     pop.style.left = Math.max(4, left) + 'px';
   });
-  setTimeout(function() { document.addEventListener('click', _teacherPopOutside); }, 0);
 }
-
-function _teacherPopOutside(e) {
-  var pop = document.getElementById('slTeacherPop');
-  if (!pop.contains(e.target)) {
-    pop.style.display = 'none';
-    document.removeEventListener('click', _teacherPopOutside);
-  }
+function scheduleHideTeacherPop() {
+  _teacherHideTimer = setTimeout(function() { document.getElementById('slTeacherPop').style.display = 'none'; }, 200);
 }
-
-function closeTeacherPop() {
-  document.getElementById('slTeacherPop').style.display = 'none';
-  document.removeEventListener('click', _teacherPopOutside);
-}
+function keepTeacherPop() { clearTimeout(_teacherHideTimer); }
+function closeTeacherPop() { clearTimeout(_teacherHideTimer); document.getElementById('slTeacherPop').style.display = 'none'; }
 
 /* ── 학급 상세 모달 ─────────────────────────────── */
 var _cdmTeacherKey = '';
@@ -1353,7 +1628,7 @@ function openClassDetail(bi, di, ri) {
     var s = students[si];
     var typeTxt = s.t === '유' ? '유입' : '진학';
     var famHtml = s.f
-      ? '<span class="sl-fam" onclick="event.stopPropagation();openFamPop(this,\'' + s.n + '\')">가족</span>'
+      ? '<span class="sl-fam" onmouseenter="openFamPop(this,\'' + s.n + '\')" onmouseleave="scheduleHideFamPop()">가족</span>'
       : '<span style="color:var(--color-text-tertiary)">-</span>';
     html += '<tr>'
       + '<td style="color:var(--color-text-secondary)">' + typeTxt + '</td>'
@@ -1386,6 +1661,28 @@ function cdmOverlayClick(e) {
   if (e.target === document.getElementById('classDetailModal')) closeClassDetail();
 }
 
+/* 바 그래프 호버 툴팁 */
+(function() {
+  var tip = document.createElement('div');
+  tip.style.cssText = 'position:fixed;z-index:9999;background:rgba(17,17,17,0.88);color:#fff;font-size:11px;line-height:1.4;padding:5px 10px;border-radius:6px;pointer-events:none;white-space:nowrap;opacity:0;transition:opacity .12s ease;';
+  document.body.appendChild(tip);
+  document.addEventListener('mouseover', function(e) {
+    var bar = e.target.closest && e.target.closest('.sl-mbar[data-tip]');
+    if (bar) { tip.textContent = bar.getAttribute('data-tip'); tip.style.opacity = '1'; }
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (tip.style.opacity === '1') {
+      var x = e.clientX + 14, y = e.clientY - 34;
+      if (x + tip.offsetWidth + 8 > window.innerWidth) x = e.clientX - tip.offsetWidth - 14;
+      tip.style.left = x + 'px'; tip.style.top = y + 'px';
+    }
+  });
+  document.addEventListener('mouseout', function(e) {
+    var from = e.target.closest && e.target.closest('.sl-mbar[data-tip]');
+    var to = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('.sl-mbar[data-tip]');
+    if (from && !to) tip.style.opacity = '0';
+  });
+})();
 
 </script>
 
@@ -1468,19 +1765,17 @@ function cdmOverlayClick(e) {
 </div>
 
 <!-- 가족 관계 팝오버 -->
-<div id="slFamPop" class="sl-fam-pop">
+<div id="slFamPop" class="sl-fam-pop" onmouseenter="keepFamPop()" onmouseleave="scheduleHideFamPop()">
   <div class="sl-fam-pop-head">
     <span id="slFamPopTitle" class="sl-fam-pop-title"></span>
-    <button class="sl-fam-pop-close" onclick="closeFamPop()">×</button>
   </div>
   <div id="slFamPopList"></div>
 </div>
 
 <!-- 담당교사 팝오버 -->
-<div id="slTeacherPop" class="sl-fam-pop">
+<div id="slTeacherPop" class="sl-fam-pop" onmouseenter="keepTeacherPop()" onmouseleave="scheduleHideTeacherPop()">
   <div class="sl-fam-pop-head">
     <span id="slTeacherPopTitle" class="sl-fam-pop-title"></span>
-    <button class="sl-fam-pop-close" onclick="closeTeacherPop()">×</button>
   </div>
   <div id="slTeacherPopList"></div>
 </div>
