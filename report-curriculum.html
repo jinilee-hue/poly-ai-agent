@@ -449,15 +449,15 @@
   const ROWDEFS = [
     {g:'재학생', d:'당월 재학생 수', item:'총 학생수', fmt:'int'},
     {g:'재학생', d:'당월 재등록 수', item:'총 학생수', fmt:'int'},
-    {g:'재학생', d:'', item:'구성비', fmt:'pct'},
-    {g:'재학생', d:'전월 학생 재등록률', item:'재등록률', fmt:'pct'},
-    {g:'신규', d:'신규인원 수', item:'총 학생수', fmt:'int'},
+    {g:'재학생', d:'', item:'구성비', fmt:'rate'},
+    {g:'재학생', d:'전월 학생 재등록률', item:'재등록률', fmt:'rate'},
+    {g:'신규', d:'신규인원 수', item:'총 학생수', fmt:'cnt-pos'},
     {g:'신규', d:'신규유입률', item:'유입률', fmt:'pct'},
-    {g:'신규', d:'누적 신규 입학생', item:'총 학생수', fmt:'int'},
-    {g:'신규', d:'순수 신규생 수', item:'외부 신규', fmt:'int'},
+    {g:'신규', d:'누적 신규 입학생', item:'총 학생수', fmt:'cnt-pos'},
+    {g:'신규', d:'순수 신규생 수', item:'외부 신규', fmt:'cnt-pos'},
     {g:'신규', d:'레벨 변동 유입 수', item:'내부 유입', fmt:'int'},
     {g:'이탈', d:'이탈인원 수', item:'총 학생수', fmt:'int'},
-    {g:'이탈', d:'탈퇴률', item:'탈퇴률', fmt:'pct'},
+    {g:'이탈', d:'탈퇴률', item:'탈퇴률', fmt:'rate'},
     {g:'이탈', d:'누적 탈퇴생', item:'총 학생수', fmt:'int'},
     {g:'이탈', d:'순수 탈퇴생 수', item:'외부 탈퇴', fmt:'int'},
     {g:'이탈', d:'레벨 변동 이탈 수', item:'내부 이탈', fmt:'int'},
@@ -466,7 +466,7 @@
     {g:'증감', d:'9월 대비 당월', item:'증감', fmt:'delta'},
     {g:'가동', d:'당월 가동 학급수', item:'학급 수', fmt:'int'},
     {g:'가동', d:'학급당 평균', item:'학생수', fmt:'dec'},
-    {g:'가동', d:'당월 평균 가동률', item:'가동률', fmt:'pct'},
+    {g:'가동', d:'당월 평균 가동률', item:'가동률', fmt:'rate'},
   ];
   const N = null;
   const DATA = {
@@ -564,8 +564,10 @@
   function fmtCell(v, fmt) {
     if (v === null || v === undefined) return { t: '—', c: 'num-neutral' };
     if (fmt === 'int') return { t: v.toLocaleString(), c: 'num-neutral' };
-    if (fmt === 'pct') return { t: v.toFixed(1) + '%', c: 'num-neutral' };
-    if (fmt === 'dec') return { t: v.toFixed(1), c: 'num-neutral' };
+    if (fmt === 'cnt-pos') return { t: v.toLocaleString(), c: v > 0 ? 'num-pos' : 'num-neutral' };
+    if (fmt === 'rate') { return { t: v.toFixed(1) + '%', c: 'num-neutral' }; }
+    if (fmt === 'pct') { return { t: v.toFixed(1) + '%', c: v > 0 ? 'num-pos' : 'num-neutral' }; }
+    if (fmt === 'dec') { return { t: v.toFixed(1), c: 'num-neutral' }; }
     if (fmt === 'delta') {
       if (v === 0) return { t: '0', c: 'num-neutral' };
       return { t: (v > 0 ? '+' : '') + v.toLocaleString(), c: v > 0 ? 'num-pos' : 'num-neg' };
@@ -580,8 +582,8 @@
     const monthIdx = ALLVALS.month.filter(function (i) { return SEL.month.has(i); });
     const rowSet = selRowIndices();
     let thead = '<thead><tr><th class="col-fixed" style="min-width:120px;text-align:center;">구분</th><th style="min-width:72px;text-align:center;">항목</th>';
-    monthIdx.forEach(function (i) { thead += '<th style="text-align:center;">' + MONTHS[i] + '</th>'; });
-    thead += '<th style="text-align:center;border-left:1px solid var(--color-border-strong);">비고</th></tr></thead>';
+    monthIdx.forEach(function (i) { thead += '<th style="text-align:center;border-left:1px solid var(--color-border);">' + MONTHS[i] + '</th>'; });
+    thead += '<th style="text-align:center;border-left:1px solid var(--color-border);">비고</th></tr></thead>';
     let tbody = '<tbody>';
     let prevG = null;
     ROWDEFS.forEach(function (rd, i) {
@@ -596,14 +598,14 @@
       tbody += '<td class="text-left cur-item">' + rd.item + '</td>';
       monthIdx.forEach(function (mi) {
         const c = fmtCell(yd.rows[i][mi], rd.fmt);
-        tbody += '<td class="' + c.c + '" style="text-align:right;">' + c.t + '</td>';
+        tbody += '<td class="' + c.c + '" style="text-align:right;border-left:1px solid var(--color-border);">' + c.t + '</td>';
       });
       const note = yd.notes[i];
       if (note) {
-        const nc = note.indexOf('-') === 0 ? 'num-neg' : (note.indexOf('+') === 0 ? 'num-pos' : 'num-neutral');
-        tbody += '<td class="' + nc + '" style="text-align:right;font-weight:var(--weight-semibold);border-left:1px solid var(--color-border-strong);">' + note + '</td>';
+        const noteNum = parseFloat(String(note).replace(/[+,]/g, '')); const nc = noteNum > 0 ? 'num-pos' : (noteNum < 0 ? 'num-neg' : 'num-neutral');
+        tbody += '<td class="' + nc + '" style="text-align:right;font-weight:var(--weight-semibold);border-left:1px solid var(--color-border);">' + note + '</td>';
       } else {
-        tbody += '<td style="border-left:1px solid var(--color-border-strong);"></td>';
+        tbody += '<td style="border-left:1px solid var(--color-border);"></td>';
       }
       tbody += '</tr>';
     });

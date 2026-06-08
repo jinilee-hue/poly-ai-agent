@@ -182,27 +182,27 @@
                   <th rowspan="2" class="col-fixed" style="min-width:60px;">운영구분</th>
                   <th rowspan="2" class="col-fixed" style="min-width:52px;left:60px;">권역</th>
                   <th rowspan="2" style="min-width:90px;">캠퍼스명</th>
-                  <th colspan="4" style="text-align:center;border-left:1px solid var(--color-border-strong);">전년</th>
-                  <th colspan="4" style="text-align:center;border-left:1px solid var(--color-border-strong);">금년</th>
-                  <th colspan="2" style="text-align:center;border-left:1px solid var(--color-border-strong);">전년→금년 월별</th>
-                  <th colspan="2" style="text-align:center;border-left:1px solid var(--color-border-strong);">전월 연간</th>
-                  <th colspan="2" style="text-align:center;border-left:1px solid var(--color-border-strong);">당월 연간</th>
+                  <th colspan="4" style="text-align:center;border-left:1px solid var(--color-border);">전년</th>
+                  <th colspan="4" style="text-align:center;border-left:1px solid var(--color-border);">금년</th>
+                  <th colspan="2" style="text-align:center;border-left:1px solid var(--color-border);">전년→금년 월별</th>
+                  <th colspan="2" style="text-align:center;border-left:1px solid var(--color-border);">전월 연간</th>
+                  <th colspan="2" style="text-align:center;border-left:1px solid var(--color-border);">당월 연간</th>
                 </tr>
                 <tr class="sub-header">
                   <th class="group-border">전월</th>
-                  <th>당월</th>
-                  <th>월별 증감<br><small>(B-A)</small></th>
-                  <th>월별 증감율<br><small>(B/A)</small></th>
+                  <th class="group-border">당월</th>
+                  <th class="group-border">월별 증감<br><small>(B-A)</small></th>
+                  <th class="group-border">월별 증감율<br><small>(B/A)</small></th>
                   <th class="group-border">전월</th>
-                  <th>당월</th>
-                  <th>월별 증감<br><small>(F-E)</small></th>
-                  <th>월별 증감율<br><small>(F/E)</small></th>
+                  <th class="group-border">당월</th>
+                  <th class="group-border">월별 증감<br><small>(F-E)</small></th>
+                  <th class="group-border">월별 증감율<br><small>(F/E)</small></th>
                   <th class="group-border">증감 차<br><small>(G-C)</small></th>
-                  <th>증감율 차<br><small>(H-D)</small></th>
+                  <th class="group-border">증감율 차<br><small>(H-D)</small></th>
                   <th class="group-border">증감<br><small>(E-A)</small></th>
-                  <th>증감율<br><small>(E/A)</small></th>
+                  <th class="group-border">증감율<br><small>(E/A)</small></th>
                   <th class="group-border">증감<br><small>(F-B)</small></th>
-                  <th>증감율<br><small>(F/B)</small></th>
+                  <th class="group-border">증감율<br><small>(F/B)</small></th>
                 </tr>
               </thead>
               <tbody id="dataTbody"></tbody>
@@ -405,9 +405,9 @@
   ];
   /* 컬럼별 스타일: neutral=항상 중립색(원수치), border=그룹 좌측 구분선, semibold=강조(금년 당월) */
   const TABLE_COLS = [
-    {neutral:true, border:true}, {neutral:true}, {}, {},
-    {neutral:true, border:true}, {neutral:true, semibold:true}, {}, {},
-    {border:true}, {}, {border:true}, {}, {border:true}, {}
+    {neutral:true, border:true}, {neutral:true, border:true}, {border:true}, {border:true},
+    {neutral:true, border:true}, {neutral:true, semibold:true, border:true}, {border:true}, {border:true},
+    {border:true}, {border:true}, {border:true}, {border:true}, {border:true}, {border:true}
   ];
   function _tcell(val, neutral) {
     if (val === '-' || val === null || val === undefined) return {cls:'num-neutral', text:'-'};
@@ -435,7 +435,7 @@
         const c = TABLE_COLS[i];
         const f = _tcell(val, c.neutral);
         let style = 'text-align:right;';
-        if (c.border) style += 'border-left:1px solid var(--color-border-strong);';
+        if (c.border) style += 'border-left:1px solid var(--color-border);';
         if (c.semibold) style += 'font-weight:var(--weight-semibold);';
         html += `<td class="${f.cls}" style="${style}">${f.text}</td>`;
       });

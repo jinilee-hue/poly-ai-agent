@@ -37,7 +37,8 @@
     .sl-metric-row{margin-bottom:4px;}
     .sl-metric-row:last-child{margin-bottom:0;}
     .sl-metric-label{display:flex;justify-content:space-between;font-size:10px;color:var(--color-text-secondary);margin-bottom:3px;}
-    .sl-mbar{height:5px;background:var(--color-bg);border-radius:2px;display:flex;overflow:hidden;}
+    .sl-mbar{height:4px;background:var(--color-bg-muted);border-radius:4px;display:flex;overflow:hidden;transform:translateZ(0);}
+    .cc-seg-jin,.cc-seg-yu{transform:translateZ(0);}
     .sl-mbar .cc-seg-strong,.sl-mbar .cc-seg-light{border-radius:0;}
     .sl-stat-box{text-align:right;flex-shrink:0;}
     .sl-pct{font-size:20px;font-weight:var(--weight-bold);color:var(--color-text-primary);line-height:1.1;}
@@ -64,10 +65,10 @@
     .sl-fam-pop-close{background:none;border:none;cursor:pointer;color:var(--color-text-tertiary);font-size:16px;line-height:1;padding:0;}
     .sl-fam-pop-member{font-size:12px;color:var(--color-text-primary);padding:3px 0;}
     /* 공석 행 */
-    .sl-vacant{display:flex;align-items:center;gap:var(--space-2);padding:5px var(--space-3);border-bottom:1px solid var(--color-border);opacity:.35;}
+    .sl-vacant{display:flex;align-items:center;gap:var(--space-2);padding:5px var(--space-3);border-bottom:1px solid var(--color-border);background:var(--color-bg-subtle);}
     .sl-vacant:last-child{border-bottom:none;}
-    .sl-vacant-num{font-size:10px;color:var(--color-text-tertiary);width:14px;text-align:right;flex-shrink:0;}
-    .sl-vacant-label{font-size:var(--text-xs);color:var(--color-text-tertiary);}
+    .sl-vacant-num{font-size:10px;color:var(--color-text-secondary);width:14px;text-align:right;flex-shrink:0;}
+    .sl-vacant-label{font-size:var(--text-xs);color:var(--color-text-secondary);}
     /* 푸터 */
     .sl-footer{padding:var(--space-2) var(--space-3);border-top:var(--border-default);background:var(--color-bg-muted);text-align:center;font-size:10px;color:var(--color-text-tertiary);}
     /* null 강의실 */
@@ -82,6 +83,37 @@
     .sl-wait-student{display:flex;align-items:flex-start;gap:var(--space-2);padding:var(--space-2) var(--space-3);border-bottom:1px solid var(--color-border);background:var(--color-bg-muted);}
     .sl-wait-student:last-child{border-bottom:none;}
     .sl-footer-btn{width:100%;padding:var(--space-2) var(--space-3);border:none;border-top:var(--border-default);background:var(--color-bg-muted);text-align:center;font-size:10px;color:var(--color-primary);cursor:pointer;}
+    /* 학급 상세 모달 */
+    .cdm-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:1100;display:flex;align-items:center;justify-content:center;padding:24px;}
+    .cdm-box{background:var(--color-bg);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);width:100%;max-width:960px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;}
+    .cdm-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:20px 24px 16px;}
+    .cdm-header-left{display:flex;flex-direction:column;gap:8px;min-width:0;}
+    .cdm-title-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+    .cdm-title{font-size:20px;font-weight:var(--weight-semibold);color:var(--color-text-primary);white-space:nowrap;}
+    .cdm-teacher-info{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap;}
+    .cdm-teacher-chip{display:inline-flex;align-items:center;gap:4px;font-size:12px;padding:4px 10px;border-radius:var(--radius-full);background:var(--color-bg-muted);color:var(--color-text-secondary);font-weight:var(--weight-medium);white-space:nowrap;}
+    .cdm-stats{overflow-x:auto;}
+    .cdm-stats-inner{display:flex;flex-direction:row;align-items:stretch;gap:0;padding:var(--space-4);margin:0 var(--space-6) var(--space-4);border:var(--border-default);border-radius:var(--radius-md);background:var(--color-bg);}
+    .cdm-stat{display:flex;flex-direction:column;gap:4px;padding:0 24px;border-right:var(--border-default);flex-shrink:0;}
+    .cdm-stat:first-child{padding-left:0;}
+    .cdm-stat-label{font-size:11px;color:var(--color-text-secondary);white-space:nowrap;}
+    .cdm-stat-val{font-size:22px;font-weight:var(--weight-semibold);color:var(--color-text-primary);line-height:1.2;display:flex;align-items:baseline;gap:2px;}
+    .cdm-stat-sub{font-size:14px;font-weight:var(--weight-normal);color:var(--color-text-secondary);}
+    .cdm-bars-stat{flex:1;min-width:220px;display:flex;flex-direction:column;gap:12px;padding:0 0 0 24px;justify-content:center;}
+    .cdm-bar-row{display:flex;align-items:center;gap:10px;}
+    .cdm-bar-lbl{font-size:11px;color:var(--color-text-secondary);white-space:nowrap;min-width:62px;}
+    .cdm-bar-lbl.right{text-align:right;}
+    .cdm-bar-track{flex:1;height:4px;background:var(--color-bg-muted);border-radius:2px;display:flex;overflow:hidden;}
+    .cdm-table-wrap{overflow-y:auto;flex:1;padding:0 var(--space-6) var(--space-6);}
+    .cdm-table{width:100%;border-collapse:collapse;font-size:13px;}
+    .cdm-table th{position:sticky;top:0;padding:10px 16px;text-align:center;font-size:11px;font-weight:var(--weight-medium);color:var(--color-text-secondary);border-top:var(--border-default);border-bottom:var(--border-default);background:var(--color-bg-subtle);white-space:nowrap;z-index:1;}
+    .cdm-table td{padding:9px 16px;border-bottom:1px solid var(--color-border);vertical-align:middle;}
+    .cdm-table tr:last-child td{border-bottom:none;}
+    .cdm-table tr.cdm-vacant td{color:var(--color-text-tertiary);background:var(--color-bg-subtle);}
+    .cdm-g-m,.cdm-g-f{color:var(--color-text-secondary);font-size:13px;}
+    .cc-card{cursor:pointer;}
+    .cc-card:hover{box-shadow:0 0 0 2px var(--color-primary-a25,rgba(0,102,255,0.25));}
+    .cc-card.is-low:hover{box-shadow:0 0 0 2px rgba(217,119,6,0.30);}
   </style>
 </head>
 <body class="page-report-view">
@@ -304,9 +336,6 @@
             ECP Block ~ 4th Block 까지의 정규반 정보만 표시됩니다. 특강반은 표시되지 않습니다.
           </div>
           <div class="cc-legend">
-            <span class="cc-legend-item"><span class="cc-legend-dot cc-seg-strong"></span>진학 · 남</span>
-            <span class="cc-legend-item"><span class="cc-legend-dot cc-seg-light"></span>유입 · 여</span>
-            <span class="cc-legend-sep"></span>
             <span class="cc-legend-item"><span class="badge badge-success">TO n</span>여석</span>
             <span class="cc-legend-item"><span class="badge badge-neutral">마감</span>정원 충족</span>
             <span class="cc-legend-item"><span class="badge badge-warning">TO n</span>충원 주의(60% 미만)</span>
@@ -626,7 +655,7 @@
     ]}
   ];
 
-  function renderClass(c, room) {
+  function renderClass(c, room, bi, di, ri) {
     if (!c) return '<div class="cc-empty">수업 없음</div>';
     const level = c[0], enr = c[1], cap = c[2], jin = c[3], yu = c[4], m = c[5], f = c[6];
     const pct = Math.round(enr / cap * 100);
@@ -635,13 +664,16 @@
     if (enr >= cap) { badgeCls = 'badge-neutral'; badgeTxt = '마감'; }
     else if (pct < 60) { badgeCls = 'badge-warning'; badgeTxt = 'TO ' + remain; low = ' is-low'; }
     else { badgeCls = 'badge-success'; badgeTxt = 'TO ' + remain; }
-    return '<div class="cc-card' + low + '">'
+    const click = (bi !== undefined) ? ' onclick="openClassDetail(' + bi + ',' + di + ',' + ri + ')"' : '';
+    const domColor = low ? '#d97706' : 'var(--color-primary)';
+    const B = (v, dom) => dom ? '<b style="color:' + domColor + ';font-weight:600">' + v + '</b>' : v;
+    return '<div class="cc-card' + low + '"' + click + '>'
       + '<div class="cc-card-top"><span class="cc-card-title">' + level + '-' + room + '</span><span class="badge ' + badgeCls + '">' + badgeTxt + '</span></div>'
       + '<div class="cc-fill"><span class="cc-fill-count">학생 ' + enr + '/' + cap + '</span><span class="cc-fill-pct">' + pct + '%</span></div>'
-      + '<div class="cc-metric"><div class="cc-metric-head"><span>진학 ' + jin + '</span><span>유입 ' + yu + '</span></div>'
-      +   '<div class="sl-mbar"><div class="cc-seg-jin" style="flex:' + Math.max(jin,yu) + '"></div><div class="cc-seg-yu" style="flex:' + Math.min(jin,yu) + '"></div></div></div>'
-      + '<div class="cc-metric"><div class="cc-metric-head"><span>남 ' + m + '</span><span>여 ' + f + '</span></div>'
-      +   '<div class="sl-mbar"><div class="cc-seg-jin" style="flex:' + Math.max(m,f) + '"></div><div class="cc-seg-yu" style="flex:' + Math.min(m,f) + '"></div></div></div>'
+      + '<div class="cc-metric"><div class="cc-metric-head"><span>진학 ' + B(jin, jin>=yu) + '</span><span>유입 ' + B(yu, yu>=jin) + '</span></div>'
+      +   '<div class="sl-mbar"><div class="' + (jin>=yu?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + jin + '"></div><div class="' + (yu>=jin?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + yu + '"></div></div></div>'
+      + '<div class="cc-metric"><div class="cc-metric-head"><span>남 ' + B(m, m>=f) + '</span><span>여 ' + B(f, f>=m) + '</span></div>'
+      +   '<div class="sl-mbar"><div class="' + (m>=f?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + m + '"></div><div class="' + (f>=m?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + f + '"></div></div></div>'
       + '</div>';
   }
 
@@ -655,7 +687,7 @@
     const tbody = document.getElementById('ccBody');
     if (!tbody) return;
     let html = '';
-    BLOCKS.forEach(b => {
+    BLOCKS.forEach((b, bi) => {
       const days = (dayFilter && dayFilter !== 'all') ? b.days.filter(d => d.day === dayFilter) : b.days;
       if (!days.length) return;
       days.forEach((d, di) => {
@@ -673,7 +705,7 @@
           + '<div class="cc-lbl-stat">' + ds.e + '/' + ds.c + '</div>'
           + '<div class="cc-lbl-pct">' + ds.p + '%</div></td>';
         ROOMS.forEach((room, ri) => {
-          html += '<td class="cc-cell">' + renderClass(d.rooms[ri], room) + '</td>';
+          html += '<td class="cc-cell">' + renderClass(d.rooms[ri], room, bi, di, ri) + '</td>';
         });
         html += '</tr>';
       });
@@ -688,10 +720,17 @@
     const table = wrap ? wrap.querySelector('.cc-matrix') : null;
     if (!wrap || !table) return;
     table.style.zoom = '';
+    table.querySelectorAll('.sl-mbar').forEach(b => { b.style.zoom = ''; });
     const natural = table.scrollWidth;
     const avail = wrap.clientWidth;
     if (!natural || !avail) return;
-    table.style.zoom = Math.min(1, avail / natural);
+    const z = Math.min(1, avail / natural);
+    table.style.zoom = z;
+    /* 바 높이 역보정: 부모 zoom(z) × 자식 zoom(1/z) = 1 → 항상 4px 고정 렌더 */
+    if (z < 1) {
+      const inv = 1 / z;
+      table.querySelectorAll('.sl-mbar').forEach(b => { b.style.zoom = inv; });
+    }
   }
   let _fitRaf;
   window.addEventListener('load', fitMatrix);
@@ -926,26 +965,51 @@ var SL_FAM_DATA = {
   '이지훈': {rel:'형제/자매', members:[{level:'MAG1-Venus', n:'임예원', en:'Roa Lim'}]},
   '임예원': {rel:'형제/자매', members:[{level:'MAG1-Venus', n:'이지훈', en:'Aaron Lee'}]},
   '조정민': {rel:'형제/자매', members:[{level:'ECP5', n:'조서원', en:'Leo Cho'}]},
-  '한지수': {rel:'형제/자매', members:[{level:'ECP6', n:'한예린', en:'Yerin Han'}]}
+  '한지수': {rel:'형제/자매', members:[{level:'ECP6', n:'한예린', en:'Yerin Han'}]},
+  '황도현': {rel:'형제/자매', members:[{level:'MAG2', n:'황진영', en:'Jinyoung Hwang'}]}
 };
 
 /* 담당교사 데이터 — 키: 'level-roomName' */
 var SL_TEACHER_DATA = {
-  'MAG1-Earth':   [{role:'원어민교사', n:'Matthew Goss'}, {role:'원어민교사', n:'Jennifer Park'}],
-  'MAG1-Jupiter': [{role:'원어민교사', n:'Matthew Goss'}, {role:'원어민교사', n:'Michael Gaul'}],
-  'MAG1-Mars':    [{role:'원어민교사', n:'Sarah Kim'},    {role:'원어민교사', n:'Michael Gaul'}],
-  'MAG1-Mercury': [{role:'원어민교사', n:'Sarah Kim'},    {role:'원어민교사', n:'David Lee'}],
-  'MAG1-Neptune': [{role:'원어민교사', n:'Jennifer Park'},{role:'원어민교사', n:'David Lee'}],
-  'MAG1-Pluto':   [{role:'원어민교사', n:'Jennifer Park'},{role:'원어민교사', n:'Emily Cho'}],
-  'MAG1-Saturn':  [{role:'원어민교사', n:'Matthew Goss'}, {role:'원어민교사', n:'Emily Cho'}],
-  'MAG1-Uranus':  [{role:'원어민교사', n:'Michael Gaul'}, {role:'원어민교사', n:'Sarah Kim'}],
-  'MAG1-Venus':   [{role:'원어민교사', n:'David Lee'},    {role:'원어민교사', n:'Jennifer Park'}],
-  'MAG3-Earth':   [{role:'원어민교사', n:'Chris Yoon'},   {role:'원어민교사', n:'Anna Seo'}],
-  'MAG3-Jupiter': [{role:'원어민교사', n:'Chris Yoon'},   {role:'원어민교사', n:'Brian Lim'}],
-  'MAG3-Mars':    [{role:'원어민교사', n:'Anna Seo'},     {role:'원어민교사', n:'Brian Lim'}],
-  'MAG4-Earth':   [{role:'원어민교사', n:'Kevin Han'},    {role:'원어민교사', n:'Grace Oh'}],
-  'MAG4-Jupiter': [{role:'원어민교사', n:'Kevin Han'},    {role:'원어민교사', n:'Lily Jung'}],
-  'MAG4-Pluto':   [{role:'원어민교사', n:'Grace Oh'},     {role:'원어민교사', n:'Lily Jung'}]
+  /* 1st Block — MAG1 매일 */
+  'MAG1-Earth':    [{role:'원어민교사', n:'Matthew Goss'}, {role:'원어민교사', n:'Jennifer Park'}],
+  'MAG1-Jupiter':  [{role:'원어민교사', n:'Matthew Goss'}, {role:'원어민교사', n:'Michael Gaul'}],
+  'MAG1-Mars':     [{role:'원어민교사', n:'Sarah Kim'},    {role:'원어민교사', n:'Michael Gaul'}],
+  'MAG1-Mercury':  [{role:'원어민교사', n:'Sarah Kim'},    {role:'원어민교사', n:'David Lee'}],
+  'MAG1-Neptune':  [{role:'원어민교사', n:'Jennifer Park'},{role:'원어민교사', n:'David Lee'}],
+  'MAG1-Pluto':    [{role:'원어민교사', n:'Jennifer Park'},{role:'원어민교사', n:'Emily Cho'}],
+  'MAG1-Saturn':   [{role:'원어민교사', n:'Matthew Goss'}, {role:'원어민교사', n:'Emily Cho'}],
+  'MAG1-Uranus':   [{role:'원어민교사', n:'Michael Gaul'}, {role:'원어민교사', n:'Sarah Kim'}],
+  'MAG1-Venus':    [{role:'원어민교사', n:'David Lee'},    {role:'원어민교사', n:'Jennifer Park'}],
+  /* 2nd Block — MAG2 월수금 */
+  'MAG2-Earth':    [{role:'원어민교사', n:'James Park'},   {role:'원어민교사', n:'Rachel Yoon'}],
+  'MAG2-Jupiter':  [{role:'원어민교사', n:'James Park'},   {role:'원어민교사', n:'Daniel Kwon'}],
+  'MAG2-Mars':     [{role:'원어민교사', n:'Rachel Yoon'},  {role:'원어민교사', n:'Daniel Kwon'}],
+  'MAG2-Mercury':  [{role:'원어민교사', n:'Rachel Yoon'},  {role:'원어민교사', n:'Sophia Lim'}],
+  'MAG2-Neptune':  [{role:'원어민교사', n:'Daniel Kwon'},  {role:'원어민교사', n:'Sophia Lim'}],
+  'MAG2-Pluto':    [{role:'원어민교사', n:'Sophia Lim'},   {role:'원어민교사', n:'James Park'}],
+  'MAG2-Saturn':   [{role:'원어민교사', n:'James Park'},   {role:'원어민교사', n:'Sophia Lim'}],
+  'MAG2-Uranus':   [{role:'원어민교사', n:'Daniel Kwon'},  {role:'원어민교사', n:'Rachel Yoon'}],
+  'MAG2-Venus':    [{role:'원어민교사', n:'Rachel Yoon'},  {role:'원어민교사', n:'James Park'}],
+  /* 2nd Block — MAG3 화목 */
+  'MAG3-Earth':    [{role:'원어민교사', n:'Chris Yoon'},   {role:'원어민교사', n:'Anna Seo'}],
+  'MAG3-Jupiter':  [{role:'원어민교사', n:'Chris Yoon'},   {role:'원어민교사', n:'Brian Lim'}],
+  'MAG3-Mars':     [{role:'원어민교사', n:'Anna Seo'},     {role:'원어민교사', n:'Brian Lim'}],
+  'MAG3-Mercury':  [{role:'원어민교사', n:'Anna Seo'},     {role:'원어민교사', n:'Tom Choi'}],
+  'MAG3-Neptune':  [{role:'원어민교사', n:'Brian Lim'},    {role:'원어민교사', n:'Tom Choi'}],
+  'MAG3-Pluto':    [{role:'원어민교사', n:'Tom Choi'},     {role:'원어민교사', n:'Chris Yoon'}],
+  'MAG3-Saturn':   [{role:'원어민교사', n:'Chris Yoon'},   {role:'원어민교사', n:'Tom Choi'}],
+  'MAG3-Uranus':   [{role:'원어민교사', n:'Brian Lim'},    {role:'원어민교사', n:'Chris Yoon'}],
+  'MAG3-Venus':    [{role:'원어민교사', n:'Anna Seo'},     {role:'원어민교사', n:'Chris Yoon'}],
+  /* 3rd Block — MAG4 월수 */
+  'MAG4-Earth':    [{role:'원어민교사', n:'Kevin Han'},    {role:'원어민교사', n:'Grace Oh'}],
+  'MAG4-Jupiter':  [{role:'원어민교사', n:'Kevin Han'},    {role:'원어민교사', n:'Lily Jung'}],
+  'MAG4-Mars':     [{role:'원어민교사', n:'Grace Oh'},     {role:'원어민교사', n:'Lily Jung'}],
+  'MAG4-Neptune':  [{role:'원어민교사', n:'Lily Jung'},    {role:'원어민교사', n:'Sam Baek'}],
+  'MAG4-Pluto':    [{role:'원어민교사', n:'Grace Oh'},     {role:'원어민교사', n:'Lily Jung'}],
+  'MAG4-Saturn':   [{role:'원어민교사', n:'Sam Baek'},     {role:'원어민교사', n:'Kevin Han'}],
+  'MAG4-Uranus':   [{role:'원어민교사', n:'Grace Oh'},     {role:'원어민교사', n:'Sam Baek'}],
+  'MAG4-Venus':    [{role:'원어민교사', n:'Kevin Han'},    {role:'원어민교사', n:'Grace Oh'}]
 };
 
 /* ── 학생 데이터 ─────────────────────────────────────────
@@ -1083,16 +1147,18 @@ function renderSlCards() {
 
       /* 헤더 */
       html += '<div class="sl-card' + (low ? ' is-low' : '') + '">';
-      html += '<div class="sl-head">';
+      html += '<div class="sl-head" style="cursor:pointer" onclick="openClassDetail(' + _slBlockIdx + ',' + di + ',' + ri + ')">';
       html += '<div class="sl-head-row1"><span class="sl-head-name">' + level + '-' + roomName + '</span><span class="badge ' + bCls + '">' + bTxt + '</span></div>';
-      html += '<div class="sl-chip-row"><span class="sl-chip">' + level + '</span><span class="sl-chip">' + day.day + '</span><span class="sl-chip">' + roomName + '</span><button class="sl-teacher-btn" onclick="openTeacherPop(this,\'' + level + '-' + roomName + '\')">담당교사</button></div>';
+      html += '<div class="sl-chip-row"><span class="sl-chip">' + level + '</span><span class="sl-chip">' + day.day + '</span><span class="sl-chip">' + roomName + '</span><button class="sl-teacher-btn" onclick="event.stopPropagation();openTeacherPop(this,\'' + level + '-' + roomName + '\')">담당교사</button></div>';
       /* 진학/유입 + 남/여 바 */
       html += '<div class="sl-metric-wrap">';
       html += '<div class="sl-metrics">';
-      html += '<div class="sl-metric-row"><div class="sl-metric-label"><span>진학 ' + jin + '</span><span>유입 ' + yu + '</span></div>';
-      html += '<div class="sl-mbar"><div class="cc-seg-jin" style="flex:' + Math.max(jin,yu) + '"></div><div class="cc-seg-yu" style="flex:' + Math.min(jin,yu) + '"></div></div></div>';
-      html += '<div class="sl-metric-row"><div class="sl-metric-label"><span>남학생 ' + m + '</span><span>여학생 ' + f + '</span></div>';
-      html += '<div class="sl-mbar"><div class="cc-seg-jin" style="flex:' + Math.max(m,f) + '"></div><div class="cc-seg-yu" style="flex:' + Math.min(m,f) + '"></div></div></div>';
+      var slDomColor = low ? '#d97706' : 'var(--color-primary)';
+      var slB = function(v, dom) { return dom ? '<b style="color:' + slDomColor + ';font-weight:600">' + v + '</b>' : v; };
+      html += '<div class="sl-metric-row"><div class="sl-metric-label"><span>진학 ' + slB(jin, jin>=yu) + '</span><span>유입 ' + slB(yu, yu>=jin) + '</span></div>';
+      html += '<div class="sl-mbar"><div class="' + (jin>=yu?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + jin + '"></div><div class="' + (yu>=jin?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + yu + '"></div></div></div>';
+      html += '<div class="sl-metric-row"><div class="sl-metric-label"><span>남학생 ' + slB(m, m>=f) + '</span><span>여학생 ' + slB(f, f>=m) + '</span></div>';
+      html += '<div class="sl-mbar"><div class="' + (m>=f?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + m + '"></div><div class="' + (f>=m?'cc-seg-jin':'cc-seg-yu') + '" style="flex:' + f + '"></div></div></div>';
       html += '</div>';
       html += '<div class="sl-stat-box"><div class="sl-pct' + (low ? ' low' : '') + '">' + pct + '<span style="font-size:13px;font-weight:400">%</span></div>';
       html += '<div class="sl-count">학생 ' + enr + '/' + cap + '</div></div>';
@@ -1159,6 +1225,7 @@ function setSlBlock(idx) {
 function openFamPop(btn, name) {
   var data = SL_FAM_DATA[name];
   if (!data) return;
+  document.removeEventListener('click', _famPopOutside);
   var pop = document.getElementById('slFamPop');
   document.getElementById('slFamPopTitle').textContent = '가족 관계 (' + data.rel + ')';
   var html = '';
@@ -1170,24 +1237,26 @@ function openFamPop(btn, name) {
   pop.style.top  = (r.bottom + 4) + 'px';
   pop.style.left = r.left + 'px';
   pop.style.display = 'block';
-  setTimeout(function() {
-    document.addEventListener('click', _famPopOutside, {once: true});
-  }, 0);
+  setTimeout(function() { document.addEventListener('click', _famPopOutside); }, 0);
 }
 
 function _famPopOutside(e) {
   var pop = document.getElementById('slFamPop');
-  if (!pop.contains(e.target)) { pop.style.display = 'none'; }
-  else { document.addEventListener('click', _famPopOutside, {once: true}); }
+  if (!pop.contains(e.target)) {
+    pop.style.display = 'none';
+    document.removeEventListener('click', _famPopOutside);
+  }
 }
 
 function closeFamPop() {
   document.getElementById('slFamPop').style.display = 'none';
+  document.removeEventListener('click', _famPopOutside);
 }
 
 function openTeacherPop(btn, key) {
   var data = SL_TEACHER_DATA[key];
   if (!data) return;
+  document.removeEventListener('click', _teacherPopOutside);
   var pop = document.getElementById('slTeacherPop');
   document.getElementById('slTeacherPopTitle').textContent = '담당 교사 목록  ' + data.length + '명';
   var html = '';
@@ -1197,29 +1266,206 @@ function openTeacherPop(btn, key) {
   document.getElementById('slTeacherPopList').innerHTML = html;
   var r = btn.getBoundingClientRect();
   pop.style.top  = (r.bottom + 4) + 'px';
-  pop.style.left = (r.right - pop.offsetWidth || r.left) + 'px';
   pop.style.display = 'block';
-  /* 너비 확정 후 왼쪽 정렬 재계산 */
   requestAnimationFrame(function() {
-    var pw = pop.offsetWidth;
-    var left = r.right - pw;
+    var left = r.right - pop.offsetWidth;
     pop.style.left = Math.max(4, left) + 'px';
   });
-  setTimeout(function() {
-    document.addEventListener('click', _teacherPopOutside, {once: true});
-  }, 0);
+  setTimeout(function() { document.addEventListener('click', _teacherPopOutside); }, 0);
 }
 
 function _teacherPopOutside(e) {
   var pop = document.getElementById('slTeacherPop');
-  if (!pop.contains(e.target)) { pop.style.display = 'none'; }
-  else { document.addEventListener('click', _teacherPopOutside, {once: true}); }
+  if (!pop.contains(e.target)) {
+    pop.style.display = 'none';
+    document.removeEventListener('click', _teacherPopOutside);
+  }
 }
 
 function closeTeacherPop() {
   document.getElementById('slTeacherPop').style.display = 'none';
+  document.removeEventListener('click', _teacherPopOutside);
 }
+
+/* ── 학급 상세 모달 ─────────────────────────────── */
+var _cdmTeacherKey = '';
+
+function openClassDetail(bi, di, ri) {
+  var block = BLOCKS[bi];
+  var day = block.days[di];
+  var r = day.rooms[ri];
+  if (!r) return;
+  var level = r[0], enr = r[1], cap = r[2], jin = r[3], yu = r[4], m = r[5], f = r[6];
+  var pct = Math.round(enr / cap * 100);
+  var rem = cap - enr;
+  var roomName = ROOMS[ri];
+  var waitKey = bi + '-' + di + '-' + ri;
+  var waitCount = (SL_WAIT_DATA[waitKey] || []).length;
+  _cdmTeacherKey = level + '-' + roomName;
+
+  document.getElementById('cdmTitle').textContent = level + '-' + roomName;
+  document.getElementById('cdmBlockBadge').textContent = block.block;
+  document.getElementById('cdmDayBadge').textContent = day.day;
+  document.getElementById('cdmRoomBadge').textContent = '강의실: ' + roomName;
+  var teacherIcon = '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
+  var teachers = SL_TEACHER_DATA[_cdmTeacherKey] || [];
+  document.getElementById('cdmTeacherInfo').innerHTML = teachers.map(function(t) {
+    return '<span class="cdm-teacher-chip">' + teacherIcon + t.n + '</span>';
+  }).join('');
+
+  document.getElementById('cdmLevel').innerHTML = level;
+  document.getElementById('cdmEnroll').innerHTML = enr + '<span class="cdm-stat-sub">/' + cap + '</span>';
+  document.getElementById('cdmPct').innerHTML = pct + '<span class="cdm-stat-sub">%</span>';
+
+  var toEl = document.getElementById('cdmTO');
+  var toVal = enr >= cap ? 0 : rem;
+  toEl.innerHTML = '<div class="cdm-stat-val">' + toVal + '<span class="cdm-stat-sub">명</span></div>';
+
+  document.getElementById('cdmWait').innerHTML = waitCount + '<span class="cdm-stat-sub">명</span>';
+
+  var domColor = pct < 60 ? '#d97706' : 'var(--color-primary)';
+  var cdmB = function(v, isDom) {
+    return isDom ? '<b style="color:' + domColor + ';font-weight:600">' + v + '</b>' : v;
+  };
+
+  var jinEl = document.getElementById('cdmJinSeg');
+  var yuEl  = document.getElementById('cdmYuSeg');
+  jinEl.className = jin >= yu ? 'cc-seg-jin' : 'cc-seg-yu';
+  yuEl.className  = yu >= jin ? 'cc-seg-jin' : 'cc-seg-yu';
+  jinEl.style.flex = jin || (yu ? 0 : 1);
+  yuEl.style.flex  = yu;
+  document.getElementById('cdmJinLabel').innerHTML = '진학 ' + cdmB(jin, jin>=yu);
+  document.getElementById('cdmYuLabel').innerHTML  = '유입 ' + cdmB(yu, yu>=jin);
+
+  var mEl = document.getElementById('cdmMSeg');
+  var fEl = document.getElementById('cdmFSeg');
+  mEl.className = m >= f ? 'cc-seg-jin' : 'cc-seg-yu';
+  fEl.className = f >= m ? 'cc-seg-jin' : 'cc-seg-yu';
+  mEl.style.flex = m;
+  fEl.style.flex = f;
+  document.getElementById('cdmMLabel').innerHTML = '남학생 ' + cdmB(m, m>=f);
+  document.getElementById('cdmFLabel').innerHTML = '여학생 ' + cdmB(f, f>=m);
+
+  var students = (SL_DATA[bi] && SL_DATA[bi][di] && SL_DATA[bi][di][ri]) || [];
+  var html = '';
+  var showCount = Math.min(students.length, enr);
+  for (var si = 0; si < showCount; si++) {
+    var s = students[si];
+    var typeTxt = s.t === '유' ? '유입' : '진학';
+    var famHtml = s.f
+      ? '<span class="sl-fam" onclick="event.stopPropagation();openFamPop(this,\'' + s.n + '\')">가족</span>'
+      : '<span style="color:var(--color-text-tertiary)">-</span>';
+    html += '<tr>'
+      + '<td style="color:var(--color-text-secondary)">' + typeTxt + '</td>'
+      + '<td style="font-weight:var(--weight-medium)">' + s.n + '</td>'
+      + '<td style="color:var(--color-text-secondary)">' + s.en + '</td>'
+      + '<td style="color:var(--color-text-secondary)">' + s.s + '</td>'
+      + '<td style="color:var(--color-text-secondary)">' + level + '</td>'
+      + '<td><span class="' + (s.g === '남' ? 'cdm-g-m' : 'cdm-g-f') + '">' + s.g + '</span></td>'
+      + '<td>' + famHtml + '</td>'
+      + '</tr>';
+  }
+  for (var vi = showCount; vi < cap; vi++) {
+    html += '<tr class="cdm-vacant">'
+      + '<td>공석</td>'
+      + '<td colspan="6"></td>'
+      + '</tr>';
+  }
+  document.getElementById('cdmTableBody').innerHTML = html;
+
+  document.getElementById('classDetailModal').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeClassDetail() {
+  document.getElementById('classDetailModal').style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+function cdmOverlayClick(e) {
+  if (e.target === document.getElementById('classDetailModal')) closeClassDetail();
+}
+
+
 </script>
+
+<!-- 학급 상세 모달 -->
+<div id="classDetailModal" class="cdm-overlay" style="display:none" onclick="cdmOverlayClick(event)">
+  <div class="cdm-box">
+    <div class="cdm-header">
+      <div class="cdm-header-left">
+        <div class="cdm-title-row">
+          <span id="cdmTitle" class="cdm-title"></span>
+          <span id="cdmBlockBadge" class="badge badge-neutral"></span>
+          <span id="cdmDayBadge" class="badge badge-neutral"></span>
+          <span id="cdmRoomBadge" class="badge badge-neutral"></span>
+          <span id="cdmTeacherInfo" class="cdm-teacher-info"></span>
+        </div>
+      </div>
+      <button class="icon-btn" style="flex-shrink:0;" onclick="closeClassDetail()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="cdm-stats">
+      <div class="cdm-stats-inner">
+        <div class="cdm-stat">
+          <div class="cdm-stat-label">레벨</div>
+          <div class="cdm-stat-val" id="cdmLevel"></div>
+        </div>
+        <div class="cdm-stat">
+          <div class="cdm-stat-label">현재 인원</div>
+          <div class="cdm-stat-val" id="cdmEnroll"></div>
+        </div>
+        <div class="cdm-stat">
+          <div class="cdm-stat-label">충원율</div>
+          <div class="cdm-stat-val" id="cdmPct"></div>
+        </div>
+        <div class="cdm-stat">
+          <div class="cdm-stat-label">잔여 TO</div>
+          <div id="cdmTO"></div>
+        </div>
+        <div class="cdm-stat">
+          <div class="cdm-stat-label">대기</div>
+          <div class="cdm-stat-val" id="cdmWait"></div>
+        </div>
+        <div class="cdm-bars-stat">
+          <div class="cdm-bar-row">
+            <span class="cdm-bar-lbl" id="cdmJinLabel"></span>
+            <div class="cdm-bar-track">
+              <div id="cdmJinSeg" class="cc-seg-jin"></div>
+              <div id="cdmYuSeg" class="cc-seg-yu"></div>
+            </div>
+            <span class="cdm-bar-lbl right" id="cdmYuLabel"></span>
+          </div>
+          <div class="cdm-bar-row">
+            <span class="cdm-bar-lbl" id="cdmMLabel"></span>
+            <div class="cdm-bar-track">
+              <div id="cdmMSeg" class="cc-seg-jin"></div>
+              <div id="cdmFSeg" class="cc-seg-yu"></div>
+            </div>
+            <span class="cdm-bar-lbl right" id="cdmFLabel"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="cdm-table-wrap">
+      <table class="cdm-table">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>이름(한글)</th>
+            <th>이름(영어)</th>
+            <th>입학일</th>
+            <th>입학레벨</th>
+            <th>성별</th>
+            <th>가족</th>
+          </tr>
+        </thead>
+        <tbody id="cdmTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 <!-- 가족 관계 팝오버 -->
 <div id="slFamPop" class="sl-fam-pop">
