@@ -88,4 +88,36 @@ function setChartDefaults() {
   Chart.defaults.scale.ticks.backdropColor = c.backdropColor;
   Chart.defaults.datasets.bar.barPercentage = 0.45;
   Chart.defaults.datasets.bar.maxBarThickness = 32;
+
+  // 선그래프: 왼쪽에서 오른쪽으로 그려지는 애니메이션
+  Chart.overrides['line'] = Chart.overrides['line'] || {};
+  Chart.overrides['line'].animation = {
+    x: {
+      type: 'number',
+      easing: 'linear',
+      duration: 50,
+      from: NaN,
+      delay: function(ctx) {
+        if (ctx.type !== 'data' || ctx.xStarted) return 0;
+        ctx.xStarted = true;
+        return ctx.index * 50;
+      }
+    },
+    y: {
+      type: 'number',
+      easing: 'linear',
+      duration: 50,
+      from: function(ctx) {
+        if (ctx.type !== 'data') return;
+        return ctx.index === 0
+          ? ctx.chart.scales.y.getPixelForValue(ctx.parsed.y)
+          : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+      },
+      delay: function(ctx) {
+        if (ctx.type !== 'data' || ctx.yStarted) return 0;
+        ctx.yStarted = true;
+        return ctx.index * 50;
+      }
+    }
+  };
 }
