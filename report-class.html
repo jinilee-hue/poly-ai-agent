@@ -150,12 +150,12 @@
     .smry-cross-sub{display:block;font-size:10px;color:var(--color-text-tertiary);margin-top:1px;}
 
     /* ── MAP 예약/레벨별 대기 패널 ─────────────────── */
-    #view-map { margin-top: var(--space-4); border: var(--border-default); border-radius: var(--radius-lg); background: #fff; overflow: hidden; min-height: 520px; }
-    .map-wrap { display: flex; height: 100%; min-height: 520px; }
+    #view-map { margin-top: var(--space-4); border: var(--border-default); border-radius: var(--radius-lg); background: #fff; overflow: hidden; }
+    .map-wrap { display: flex; }
     .map-sidebar { width: 212px; flex-shrink: 0; border-right: var(--border-default); display: flex; flex-direction: column; background: #fff; }
     .map-sidebar-head { display: flex; align-items: center; justify-content: space-between; padding: var(--space-3) var(--space-4); border-bottom: var(--border-default); gap: var(--space-2); }
     .map-sidebar-title { font-size: 11px; font-weight: var(--weight-semibold); color: var(--color-text-secondary); line-height: 1.3; }
-    .map-sidebar-scroll { flex: 1; overflow-y: auto; }
+    .map-sidebar-scroll { overflow-y: auto; }
     .map-tbl { width: 100%; border-collapse: collapse; }
     .map-tbl thead th { font-size: 11px; font-weight: var(--weight-medium); color: var(--color-text-tertiary); padding: var(--space-2) var(--space-3); text-align: center; border-bottom: var(--border-default); background: #fff; position: sticky; top: 0; z-index: 1; }
     .map-tbl thead th:first-child { text-align: left; }
@@ -183,7 +183,7 @@
     .map-detail-tbl tbody tr:last-child td { border-bottom: none; }
     .map-gender-m { color: var(--color-primary); font-weight: var(--weight-semibold); }
     .map-gender-f { color: var(--color-text-secondary); font-weight: var(--weight-semibold); }
-    .map-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: var(--space-3); color: var(--color-text-tertiary); font-size: 13px; padding: 60px var(--space-8); text-align: center; }
+    .map-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-3); color: var(--color-text-tertiary); font-size: 13px; padding: 60px var(--space-8); text-align: center; }
     .map-empty svg { color: var(--color-border-strong); }
     .cc-action-btn.map-on { background: var(--color-text-primary) !important; color: #fff !important; border-color: transparent !important; }
     [data-theme="dark"] .map-tbl tbody tr:hover { background: rgba(255,255,255,0.03); }
