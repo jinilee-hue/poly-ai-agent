@@ -622,7 +622,7 @@
     const dark = document.documentElement.getAttribute('data-theme') === 'dark';
     const grid = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
     const tick = dark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)';
-    const colorMap = { '2024': 'rgba(168,175,186,0.85)', '2025': _cvar('--chart-2', 'rgba(0,102,255,0.50)'), '2026': _cvar('--chart-1', 'rgba(0,102,255,0.85)') };
+    const colorMap = { '2024': dark ? 'rgba(148,156,168,0.55)' : 'rgba(168,175,186,0.85)', '2025': _cvar('--chart-2', 'rgba(0,102,255,0.50)'), '2026': _cvar('--chart-1', 'rgba(0,102,255,0.85)') };
     const labelMap = { '2024': '2024년 추이', '2025': '2025년 추이', '2026': '2026년 진행중' };
     const datasets = ['2024', '2025', '2026'].filter(y => SEL.year.has(y)).map(function (y) {
       const col = colorMap[y];
@@ -712,7 +712,7 @@
     const dark = document.documentElement.getAttribute('data-theme') === 'dark';
     const grid = dark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)';
     const tick = dark ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.45)';
-    const c1 = _cvar('--chart-1', 'rgba(0,102,255,0.85)'), c2 = _cvar('--chart-2', 'rgba(0,102,255,0.50)'), c3 = 'rgba(168,175,186,0.85)';
+    const c1 = _cvar('--chart-1', 'rgba(0,102,255,0.85)'), c2 = _cvar('--chart-2', 'rgba(0,102,255,0.50)'), c3 = dark ? 'rgba(148,156,168,0.55)' : 'rgba(168,175,186,0.85)';
     const bandFill = _cvar('--color-primary-a08', 'rgba(0,102,255,0.08)');
     const vline = _cvar('--color-primary-a30', 'rgba(0,102,255,0.30)');
     const labelCol = _cvar('--color-primary', '#0066FF');
