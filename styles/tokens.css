@@ -42,6 +42,7 @@
   /* ── Brand alpha — 버튼 hover·focus 색상 (JS BRAND_TOKENS에서 오버라이드) ─ */
   --color-primary-a50: rgba(0,102,255,0.50);
 
+
   /* ── Chart — 라이트 모드: #0066FF(rgb 0,102,255) 투명도 단계 ─ */
   --chart-1: rgba(0,102,255,0.85);
   --chart-2: rgba(0,102,255,0.60);
@@ -120,6 +121,7 @@
   --color-warning-light:  rgba(217,119,6,0.18);
   --color-danger-light:   rgba(220,38,38,0.18);
   --color-info-light:     rgba(0,102,255,0.20);
+
 
   /* ── Chart — 다크 모드: 브랜드 원색(rgb 0,102,255) 투명도 단계 ──────── */
   --chart-1: rgba(0,102,255,0.85);

@@ -2927,9 +2927,15 @@
     .cc-fill-pct { font-size: var(--text-base); font-weight: var(--weight-semibold); color: var(--color-text-primary); }
     .cc-metric { display: flex; flex-direction: column; gap: 4px; }
     .cc-metric-head { display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--color-text-tertiary); }
-    .cc-bar { display: flex; height: 6px; border-radius: var(--radius-full); overflow: hidden; background: var(--color-bg-muted); }
+    .cc-bar { display: flex; height: 5px; border-radius: 2px; overflow: hidden; background: var(--color-bg); }
     .cc-seg-strong { background: var(--chart-1); }
-    .cc-seg-light { background: var(--chart-3); }
+    .cc-seg-light  { background: var(--chart-3); }
+    .cc-seg-jin  { background: var(--chart-1); }                 /* 진학/유입 dominant: 파랑→경고시 주황 */
+    .cc-seg-yu   { background: rgba(107,114,128,0.55); }         /* 진학/유입 secondary: 회색→경고시 연주황 */
+    .cc-seg-gray { background: rgba(107,114,128,0.55); }         /* 남/여 secondary: 항상 회색 */
+    .cc-card.is-low { border-color: #d97706; }
+    .cc-card.is-low .cc-seg-jin { background: rgba(217,119,6,0.85); }
+    .sl-card.is-low .cc-seg-jin { background: rgba(217,119,6,0.85); }
 
     /* 수업 없음 — 셀(행) 높이를 꽉 채워 학급 카드와 동일 높이 */
     .cc-empty {

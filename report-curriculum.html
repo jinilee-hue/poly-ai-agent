@@ -105,7 +105,7 @@
 
   <div class="view-panels" style="position:relative;">
 
-    <button class="chat-fab" id="chatFab" onclick="toggleChat()" title="AI 채팅 열기" aria-label="AI 채팅 패널 열기">
+    <button class="chat-fab visible" id="chatFab" onclick="toggleChat()" title="AI 채팅 열기" aria-label="AI 채팅 패널 열기">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
     </button>
 
@@ -308,7 +308,7 @@
     </div>
 
     <!-- 우측: AI 채팅 패널 -->
-    <div class="chat-panel" id="chatPanel">
+    <div class="chat-panel collapsed" id="chatPanel">
       <div class="chat-header">
         <div class="chat-header-left">
           <div class="chat-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
@@ -383,7 +383,7 @@
   _syncThemeBtns();
 
   /* 패널 토글 */
-  let chatOpen = true;
+  let chatOpen = false;
   function toggleChat() {
     chatOpen = !chatOpen;
     const panel = document.getElementById('chatPanel'), fab = document.getElementById('chatFab');
