@@ -1325,7 +1325,7 @@
       if (row.rsvStudents.length > 0) cards += _buildMapCard(row.rsvStudents, true,  row.grade, row.level);
       if (row.waitStudents.length > 0) cards += _buildMapCard(row.waitStudents, false, row.grade, row.level);
       if (!cards) cards = '<div class="map-section-card" style="padding:var(--space-4);color:var(--color-text-tertiary);font-size:13px;text-align:center;">예약 및 대기 학생이 없습니다</div>';
-      html += '<div class="map-grade-section"><div class="map-grade-chip">' + row.grade + '</div>' + cards + '</div>';
+      html += '<div class="map-grade-section">' + cards + '</div>';
     });
     el.innerHTML = html;
   }
