@@ -168,19 +168,22 @@
     .map-tbl tr.map-row-sel td { color: var(--color-primary); }
     .map-tbl tr.map-row-sel td:first-child { color: var(--color-primary); }
     .map-num-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; font-size: 11px; font-weight: var(--weight-semibold); background: var(--color-primary); color: #fff; }
-    .map-detail-wrap { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-    .map-detail-head { padding: var(--space-4) var(--space-5); border-bottom: var(--border-default); flex-shrink: 0; }
-    .map-detail-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text-primary); margin-bottom: var(--space-3); display: flex; align-items: center; gap: var(--space-2); }
+    .map-detail-wrap { flex: 1; overflow-y: auto; padding: var(--space-4) var(--space-5); min-width: 0; }
+    .map-grade-section { margin-bottom: var(--space-4); }
+    .map-grade-section:last-child { margin-bottom: 0; }
+    .map-grade-chip { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; background: var(--color-text-primary); color: #fff; font-size: 12px; font-weight: var(--weight-semibold); margin-bottom: var(--space-2); }
+    .map-section-card { border: var(--border-default); border-radius: var(--radius-lg); overflow: hidden; }
+    .map-detail-head { padding: var(--space-3) var(--space-4); border-bottom: var(--border-default); }
+    .map-detail-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text-primary); margin-bottom: var(--space-2); display: flex; align-items: center; gap: var(--space-2); }
     .map-gender-row { display: flex; align-items: center; gap: var(--space-3); }
     .map-gender-bar-track { flex: 1; height: 8px; background: var(--color-border); border-radius: 4px; overflow: hidden; }
     .map-gender-bar-fill { height: 100%; background: var(--color-primary); border-radius: 4px; transition: width 0.4s ease; }
     .map-gender-stat { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--color-text-secondary); white-space: nowrap; }
     .map-gender-stat strong { font-weight: var(--weight-semibold); color: var(--color-text-primary); }
     .map-gender-total { font-size: 15px; font-weight: var(--weight-bold); color: var(--color-primary); white-space: nowrap; margin-left: var(--space-1); }
-    .map-detail-body { flex: 1; overflow-y: auto; padding: var(--space-4) var(--space-5); }
     .map-detail-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
-    .map-detail-tbl thead th { font-size: 11px; font-weight: var(--weight-medium); color: var(--color-text-tertiary); padding: var(--space-2) var(--space-3); text-align: left; border-bottom: var(--border-default); }
-    .map-detail-tbl tbody td { padding: var(--space-3); border-bottom: 1px solid var(--color-border); }
+    .map-detail-tbl thead th { font-size: 11px; font-weight: var(--weight-medium); color: var(--color-text-tertiary); padding: var(--space-2) var(--space-4); text-align: left; border-bottom: var(--border-default); }
+    .map-detail-tbl tbody td { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-border); }
     .map-detail-tbl tbody tr:last-child td { border-bottom: none; }
     .map-gender-m { color: var(--color-primary); font-weight: var(--weight-semibold); }
     .map-gender-f { color: var(--color-text-secondary); font-weight: var(--weight-semibold); }
@@ -1193,24 +1196,26 @@
 
   /* ── MAP 예약/레벨별 대기 ───────────────────────── */
   var _mapOpen = false;
-  var _mapSelGrade = null;
+  var _mapSelGrades = [];
   var _mapLastView = 'grid';
 
   var MAP_DATA = [
-    { grade: '5세',   rsv: 0, level: '-',    wait: 0, students: [] },
-    { grade: '6세',   rsv: 0, level: '-',    wait: 0, students: [] },
-    { grade: '7세',   rsv: 0, level: '-',    wait: 0, students: [] },
-    { grade: '1학년', rsv: 0, level: '-',    wait: 0, students: [] },
-    { grade: '2학년', rsv: 0, level: '-',    wait: 0, students: [] },
-    { grade: '3학년', rsv: 1, level: '-',    wait: 0, students: [
-      { name: '박다원 (Dawon Park)', gender: '남', contact: '010-6279-7954', date: '2026-06-09 14:40' }
-    ]},
-    { grade: '4학년', rsv: 0, level: 'MAG4', wait: 1, students: [] },
-    { grade: '5학년', rsv: 0, level: '-',    wait: 0, students: [] },
-    { grade: '6학년', rsv: 0, level: '-',    wait: 0, students: [] },
-    { grade: '7학년', rsv: 0, level: '-',    wait: 0, students: [] },
-    { grade: '8학년', rsv: 0, level: '-',    wait: 0, students: [] },
-    { grade: '9학년', rsv: 0, level: '-',    wait: 0, students: [] },
+    { grade: '5세',   rsv: 0, level: '-',    wait: 0, rsvStudents: [], waitStudents: [] },
+    { grade: '6세',   rsv: 0, level: '-',    wait: 0, rsvStudents: [], waitStudents: [] },
+    { grade: '7세',   rsv: 0, level: '-',    wait: 0, rsvStudents: [], waitStudents: [] },
+    { grade: '1학년', rsv: 0, level: '-',    wait: 0, rsvStudents: [], waitStudents: [] },
+    { grade: '2학년', rsv: 0, level: '-',    wait: 0, rsvStudents: [], waitStudents: [] },
+    { grade: '3학년', rsv: 1, level: '-',    wait: 0,
+      rsvStudents: [{ name: '박다원 (Dawon Park)', gender: '남', contact: '010-6279-7954', date: '2026-06-09 14:40' }],
+      waitStudents: [] },
+    { grade: '4학년', rsv: 0, level: 'MAG4', wait: 1,
+      rsvStudents: [],
+      waitStudents: [{ name: '최윤우 (Zio Choi)', gender: '남', contact: '010-2355-6163' }] },
+    { grade: '5학년', rsv: 0, level: '-',    wait: 0, rsvStudents: [], waitStudents: [] },
+    { grade: '6학년', rsv: 0, level: '-',    wait: 0, rsvStudents: [], waitStudents: [] },
+    { grade: '7학년', rsv: 0, level: '-',    wait: 0, rsvStudents: [], waitStudents: [] },
+    { grade: '8학년', rsv: 0, level: '-',    wait: 0, rsvStudents: [], waitStudents: [] },
+    { grade: '9학년', rsv: 0, level: '-',    wait: 0, rsvStudents: [], waitStudents: [] },
   ];
 
   function toggleMapPanel() {
@@ -1230,7 +1235,7 @@
       document.getElementById('view-summary').style.display = 'none';
       panel.style.display = 'block';
       _renderMapTable();
-      _renderMapDetail(_mapSelGrade ? MAP_DATA.find(function(d) { return d.grade === _mapSelGrade; }) : null);
+      _renderMapDetail();
     } else {
       panel.style.display = 'none';
       var tabs = document.querySelectorAll('.cc-tab');
@@ -1250,8 +1255,8 @@
           ? '<span class="map-num-badge">' + n + '</span>'
           : '<span style="color:var(--color-border-strong)">0</span>';
       }
-      var active = d.grade === _mapSelGrade ? ' map-row-sel' : '';
-      return '<tr class="' + active + '" onclick="selectMapGrade(\'' + d.grade + '\')">'
+      var sel = _mapSelGrades.indexOf(d.grade) > -1 ? ' map-row-sel' : '';
+      return '<tr class="' + sel + '" onclick="selectMapGrade(\'' + d.grade + '\')">'
         + '<td>' + d.grade + '</td>'
         + '<td>' + numCell(d.rsv) + '</td>'
         + '<td style="color:var(--color-text-tertiary)">' + d.level + '</td>'
@@ -1261,41 +1266,39 @@
   }
 
   function selectMapGrade(grade) {
-    _mapSelGrade = grade;
+    var idx = _mapSelGrades.indexOf(grade);
+    if (idx === -1) _mapSelGrades.push(grade);
+    else _mapSelGrades.splice(idx, 1);
     _renderMapTable();
-    _renderMapDetail(MAP_DATA.find(function(d) { return d.grade === grade; }));
+    _renderMapDetail();
   }
 
-  function _renderMapDetail(row) {
-    var el = document.getElementById('mapDetailWrap');
-    if (!row || row.students.length === 0) {
-      var msg = !row
-        ? '연령 / 학년을 선택하세요'
-        : '예약 및 대기 학생이 없습니다';
-      el.innerHTML = '<div class="map-empty">'
-        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:40px;height:40px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
-        + '<span>' + msg + '</span>'
-        + '</div>';
-      return;
-    }
-    var males   = row.students.filter(function(s) { return s.gender === '남'; }).length;
-    var females = row.students.filter(function(s) { return s.gender === '여'; }).length;
-    var total   = row.students.length;
+  function _buildMapCard(students, isRsv, grade, level) {
+    var males   = students.filter(function(s) { return s.gender === '남'; }).length;
+    var females = students.filter(function(s) { return s.gender === '여'; }).length;
+    var total   = students.length;
     var malePct = total > 0 ? Math.round(males / total * 100) : 0;
-    var rows = row.students.map(function(s, i) {
+    var iconRsv = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;color:var(--color-primary)"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+    var iconWait = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;color:var(--color-primary)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>';
+    var title = isRsv
+      ? grade + ' 입학상담(MAP) 예약'
+      : grade + ' <span style="color:var(--color-primary);font-weight:700">' + level + '</span> 대기생';
+    var thead = isRsv
+      ? '<th>No.</th><th>학생 이름</th><th>성별</th><th>학부모 연락처</th><th>예약 일시</th>'
+      : '<th>No.</th><th>학생 이름</th><th>성별</th><th>학부모 연락처</th>';
+    var rows = students.map(function(s, i) {
+      var dateTd = isRsv ? '<td style="color:var(--color-text-secondary)">' + (s.date || '-') + '</td>' : '';
       return '<tr>'
-        + '<td style="color:var(--color-text-tertiary);width:40px">' + (i + 1) + '</td>'
+        + '<td style="color:var(--color-text-tertiary);width:36px">' + (i + 1) + '</td>'
         + '<td><strong>' + s.name + '</strong></td>'
         + '<td><span class="map-gender-' + (s.gender === '남' ? 'm' : 'f') + '">' + s.gender + '</span></td>'
         + '<td style="color:var(--color-text-secondary)">' + s.contact + '</td>'
-        + '<td style="color:var(--color-text-secondary)">' + s.date + '</td>'
+        + dateTd
         + '</tr>';
     }).join('');
-    el.innerHTML = '<div class="map-detail-head">'
-      + '<div class="map-detail-title">'
-      + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;color:var(--color-primary)"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
-      + row.grade + ' 입학상담(MAP) 예약'
-      + '</div>'
+    return '<div class="map-section-card">'
+      + '<div class="map-detail-head">'
+      + '<div class="map-detail-title">' + (isRsv ? iconRsv : iconWait) + title + '</div>'
       + '<div class="map-gender-row">'
       + '<span class="map-gender-stat"><span style="color:var(--color-primary)">남</span>&nbsp;<strong>' + males + '</strong></span>'
       + '<div class="map-gender-bar-track"><div class="map-gender-bar-fill" style="width:' + malePct + '%"></div></div>'
@@ -1303,17 +1306,33 @@
       + '<span class="map-gender-total">' + total + '명</span>'
       + '</div>'
       + '</div>'
-      + '<div class="map-detail-body">'
-      + '<table class="map-detail-tbl">'
-      + '<thead><tr><th>No.</th><th>학생 이름</th><th>성별</th><th>학부모 연락처</th><th>예약 일시</th></tr></thead>'
-      + '<tbody>' + rows + '</tbody>'
-      + '</table>'
+      + '<table class="map-detail-tbl"><thead><tr>' + thead + '</tr></thead><tbody>' + rows + '</tbody></table>'
       + '</div>';
+  }
+
+  function _renderMapDetail() {
+    var el = document.getElementById('mapDetailWrap');
+    if (_mapSelGrades.length === 0) {
+      el.innerHTML = '<div class="map-empty">'
+        + '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:40px;height:40px"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'
+        + '<span>연령 / 학년을 선택하세요</span></div>';
+      return;
+    }
+    var html = '';
+    MAP_DATA.forEach(function(row) {
+      if (_mapSelGrades.indexOf(row.grade) === -1) return;
+      var cards = '';
+      if (row.rsvStudents.length > 0) cards += _buildMapCard(row.rsvStudents, true,  row.grade, row.level);
+      if (row.waitStudents.length > 0) cards += _buildMapCard(row.waitStudents, false, row.grade, row.level);
+      if (!cards) cards = '<div class="map-section-card" style="padding:var(--space-4);color:var(--color-text-tertiary);font-size:13px;text-align:center;">예약 및 대기 학생이 없습니다</div>';
+      html += '<div class="map-grade-section"><div class="map-grade-chip">' + row.grade + '</div>' + cards + '</div>';
+    });
+    el.innerHTML = html;
   }
 
   function refreshMapView() {
     _renderMapTable();
-    _renderMapDetail(_mapSelGrade ? MAP_DATA.find(function(d) { return d.grade === _mapSelGrade; }) : null);
+    _renderMapDetail();
   }
 
   /* 인쇄 */
