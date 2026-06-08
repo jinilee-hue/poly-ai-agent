@@ -130,8 +130,7 @@
     .smry-kpi-val.neutral{color:var(--color-text-primary);}
     .smry-two-col{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-bottom:var(--space-4);}
     .smry-section{display:flex;flex-direction:column;gap:var(--space-3);}
-    .smry-section-head{display:flex;align-items:center;gap:var(--space-2);font-size:var(--text-sm);font-weight:var(--weight-semibold);color:var(--color-text-primary);padding-bottom:var(--space-2);}
-    .smry-section-head::before{content:'';display:inline-block;width:3px;height:16px;background:var(--color-primary);border-radius:2px;flex-shrink:0;}
+    .smry-section-head{font-size:var(--text-sm);font-weight:var(--weight-semibold);color:var(--color-text-primary);padding-bottom:var(--space-2);}
     .smry-card{background:var(--color-bg);border:var(--border-default);border-radius:var(--radius-lg);padding:var(--space-4);}
     .smry-card-title{font-size:var(--text-xs);font-weight:var(--weight-semibold);color:var(--color-text-secondary);margin-bottom:var(--space-3);}
     .smry-chart-wrap{position:relative;height:200px;}
@@ -142,10 +141,11 @@
     .smry-cross-table td{padding:10px;text-align:center;border-bottom:var(--border-default);}
     .smry-cross-table td:first-child{text-align:left;font-weight:var(--weight-medium);color:var(--color-text-secondary);background:var(--color-bg-subtle);}
     .smry-cross-table tr:last-child td{border-bottom:none;}
-    .smry-cell-hi{background:var(--color-primary-light);color:var(--color-primary);font-weight:var(--weight-semibold);border-radius:var(--radius-sm);}
-    .smry-cell-md{background:var(--color-primary-a08,rgba(0,102,255,0.08));color:var(--color-text-primary);}
+    .smry-cell-hi{color:var(--color-primary);font-weight:var(--weight-semibold);}
+    .smry-cell-md{color:var(--color-text-primary);}
     .smry-cell-lo{color:var(--color-text-secondary);}
     .smry-cell-none{color:var(--color-text-tertiary);}
+    .smry-cell-tot{background:var(--color-primary-light);}
     .smry-cross-val{display:block;font-size:13px;}
     .smry-cross-sub{display:block;font-size:10px;color:var(--color-text-tertiary);margin-top:1px;}
   </style>
@@ -321,7 +321,7 @@
         </div>
 
         <!-- 요약 KPI (한 줄: 좌측 타이틀 / 우측 수치) -->
-        <div class="cc-kpi-grid">
+        <div class="cc-kpi-grid" id="ccKpiGrid">
           <div class="cc-kpi-card">
             <div class="cc-kpi-left">
               <div class="cc-kpi-icon">
@@ -414,78 +414,96 @@
         <div id="view-summary" style="display:none;">
 
           <!-- KPI 4종 -->
-          <div class="smry-kpi-grid">
-            <div class="smry-kpi-card">
-              <div class="smry-kpi-label">충원률</div>
-              <div class="smry-kpi-val" id="smryFillPct">—</div>
-              <div class="smry-kpi-sub" id="smryFillDet">—</div>
-            </div>
-            <div class="smry-kpi-card">
-              <div class="smry-kpi-label">잔여 TO</div>
-              <div class="smry-kpi-val neutral" id="smryTO">—</div>
-              <div class="smry-kpi-sub" id="smryTODet">—</div>
-            </div>
-            <div class="smry-kpi-card">
-              <div class="smry-kpi-label">강의실 가동률</div>
-              <div class="smry-kpi-val" id="smryUtilPct">—</div>
-              <div class="smry-kpi-sub" id="smryUtilDet">—</div>
-            </div>
-            <div class="smry-kpi-card">
-              <div class="smry-kpi-label">학급 · 강의실</div>
-              <div style="display:flex;align-items:baseline;gap:6px;">
-                <div class="smry-kpi-val neutral" id="smryClassCnt">—</div>
-                <div style="font-size:14px;color:var(--color-text-tertiary);">/ <span id="smryRoomCnt">—</span> 강의실</div>
+          <div class="cc-kpi-grid" style="margin-bottom:var(--space-4);">
+            <div class="cc-kpi-card">
+              <div class="cc-kpi-left">
+                <div class="cc-kpi-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <span class="cc-kpi-title">충원률</span>
               </div>
-              <div class="smry-kpi-sub" id="smryBlockDet">—</div>
+              <div class="cc-kpi-value"><span id="smryFillPct">—</span></div>
+            </div>
+            <div class="cc-kpi-card">
+              <div class="cc-kpi-left">
+                <div class="cc-kpi-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <span class="cc-kpi-title">잔여 TO</span>
+              </div>
+              <div class="cc-kpi-value"><span id="smryTO">—</span><span class="cc-kpi-unit" id="smryTODet"></span></div>
+            </div>
+            <div class="cc-kpi-card">
+              <div class="cc-kpi-left">
+                <div class="cc-kpi-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M14 12h.01"/></svg>
+                </div>
+                <span class="cc-kpi-title">강의실 가동률</span>
+              </div>
+              <div class="cc-kpi-value"><span id="smryUtilPct">—</span></div>
+            </div>
+            <div class="cc-kpi-card">
+              <div class="cc-kpi-left">
+                <div class="cc-kpi-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                </div>
+                <span class="cc-kpi-title">학급 · 강의실</span>
+              </div>
+              <div class="cc-kpi-value"><span id="smryClassCnt">—</span><span class="cc-kpi-unit">개 · </span><span id="smryRoomCnt">—</span><span class="cc-kpi-unit">실</span></div>
             </div>
           </div>
 
-          <!-- 2컬럼: 충원률 | 가동률 -->
-          <div class="smry-two-col">
+          <!-- 충원률·TO + 강의실 가동률 — 각 독립 카드 -->
+          <div class="smry-two-col" style="margin-bottom:var(--space-4);">
 
             <!-- 좌: 충원률·TO -->
-            <div class="smry-section">
+            <div class="smry-card smry-section">
               <div class="smry-section-head">충원률 · TO</div>
-              <div class="smry-card">
-                <div class="smry-card-title">교시별 충원률</div>
-                <div class="smry-chart-wrap"><canvas id="smryBlockFillChart"></canvas></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-bottom:var(--space-4);">
+                <div>
+                  <div class="smry-card-title">교시별 충원률</div>
+                  <div class="smry-chart-wrap"><canvas id="smryBlockFillChart"></canvas></div>
+                </div>
+                <div>
+                  <div class="smry-card-title">요일별 충원률</div>
+                  <div class="smry-chart-wrap"><canvas id="smryDayFillChart"></canvas></div>
+                </div>
               </div>
-              <div class="smry-card">
-                <div class="smry-card-title">요일별 충원률</div>
-                <div class="smry-chart-wrap"><canvas id="smryDayFillChart"></canvas></div>
-              </div>
-              <div class="smry-card">
+              <div>
                 <div class="smry-card-title">강의실별 충원률</div>
-                <div class="smry-hbar-wrap"><canvas id="smryRoomFillChart"></canvas></div>
+                <div class="smry-chart-wrap"><canvas id="smryRoomFillChart"></canvas></div>
               </div>
             </div>
 
             <!-- 우: 강의실 가동률 -->
-            <div class="smry-section">
+            <div class="smry-card smry-section">
               <div class="smry-section-head">강의실 가동률</div>
-              <div class="smry-card">
-                <div class="smry-card-title">교시별 가동률</div>
-                <div class="smry-chart-wrap"><canvas id="smryBlockUtilChart"></canvas></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-bottom:var(--space-4);">
+                <div>
+                  <div class="smry-card-title">교시별 가동률</div>
+                  <div class="smry-chart-wrap"><canvas id="smryBlockUtilChart"></canvas></div>
+                </div>
+                <div>
+                  <div class="smry-card-title">요일별 가동률</div>
+                  <div class="smry-chart-wrap"><canvas id="smryDayUtilChart"></canvas></div>
+                </div>
               </div>
-              <div class="smry-card">
-                <div class="smry-card-title">요일별 가동률</div>
-                <div class="smry-chart-wrap"><canvas id="smryDayUtilChart"></canvas></div>
-              </div>
-              <div class="smry-card">
+              <div>
                 <div class="smry-card-title">강의실별 가동률</div>
-                <div class="smry-hbar-wrap"><canvas id="smryRoomUtilChart"></canvas></div>
+                <div class="smry-chart-wrap"><canvas id="smryRoomUtilChart"></canvas></div>
               </div>
             </div>
+
           </div>
 
-          <!-- 교차표 2종 -->
+          <!-- 교차표 2종 (별도 영역) -->
           <div class="smry-two-col">
             <div class="smry-card">
-              <div class="smry-card-title">교시 × 요일 충원률</div>
+              <div class="smry-section-head">교시 × 요일 충원률</div>
               <table class="smry-cross-table" id="smryCrossFillTable"></table>
             </div>
             <div class="smry-card">
-              <div class="smry-card-title">교시 × 요일 가동률</div>
+              <div class="smry-section-head">교시 × 요일 가동률</div>
               <table class="smry-cross-table" id="smryCrossUtilTable"></table>
             </div>
           </div>
@@ -909,6 +927,7 @@
     document.getElementById('view-grid').style.display    = view === 'grid'    ? '' : 'none';
     document.getElementById('view-list').style.display    = view === 'list'    ? '' : 'none';
     document.getElementById('view-summary').style.display = view === 'summary' ? '' : 'none';
+    document.getElementById('ccKpiGrid').style.display    = view === 'grid'    ? '' : 'none';
     if (view === 'grid') fitMatrix();
     if (view === 'list') { _slBlockIdx = 0; _slDayIdx = 0; buildStudentList(); }
     if (view === 'summary') buildSummaryCharts();
@@ -925,15 +944,16 @@
     var cs = getComputedStyle(document.documentElement);
     var c1 = cs.getPropertyValue('--chart-1').trim() || 'rgba(0,102,255,0.85)';
     var c2 = cs.getPropertyValue('--chart-2').trim() || 'rgba(0,102,255,0.45)';
-    var c3 = cs.getPropertyValue('--chart-3').trim() || 'rgba(0,102,255,0.20)';
+    var cWarn = cs.getPropertyValue('--color-warning').trim() || '#D97706';
     var textColor = cs.getPropertyValue('--color-text-secondary').trim() || '#6B7280';
-    var gridColor = cs.getPropertyValue('--color-border').trim() || '#E5E7EB';
+    var gridColor = 'rgba(0,0,0,0.06)';
 
-    function barColor(pct) { return pct >= 80 ? c1 : pct >= 60 ? c2 : c3; }
+    function barColor(pct) { return pct >= 80 ? c1 : pct >= 60 ? c2 : cWarn; }
     function fmt1(v) { return v.toFixed(1) + '%'; }
 
     var DAY_EXPAND = { '매일':['월','화','수','목','금'], '월수금':['월','수','금'], '화목':['화','목'], '월수':['월','수'], '화목금':['화','목','금'] };
     var WEEKDAYS = ['월','화','수','목','금'];
+    var WEEKDAY_LABELS = ['Mon','Tue','Wed','Thu','Fri'];
 
     /* ── 교시별 ── */
     var bFill = [], bUtil = [];
@@ -978,15 +998,12 @@
     BLOCKS.forEach(function(b) { b.days.forEach(function(d) { d.rooms.forEach(function(r){ totalTot++; if(r){totalE+=r[1];totalC+=r[2];totalOcc++;} }); }); });
     var fillPct = totalC ? (totalE/totalC*100).toFixed(1) : 0;
     var utilPct = totalTot ? (totalOcc/totalTot*100).toFixed(1) : 0;
-    document.getElementById('smryFillPct').textContent  = fillPct + '%';
-    document.getElementById('smryFillDet').textContent  = totalE + ' / ' + totalC + '명';
-    document.getElementById('smryTO').textContent       = totalC - totalE;
-    document.getElementById('smryTODet').textContent    = '정원 ' + totalC + '명';
-    document.getElementById('smryUtilPct').textContent  = utilPct + '%';
-    document.getElementById('smryUtilDet').textContent  = totalOcc + ' / ' + totalTot + ' 슬롯';
+    document.getElementById('smryFillPct').textContent = fillPct + '%';
+    document.getElementById('smryTO').textContent      = totalC - totalE;
+    document.getElementById('smryTODet').textContent   = '/' + totalC + '명';
+    document.getElementById('smryUtilPct').textContent = utilPct + '%';
     document.getElementById('smryClassCnt').textContent = totalOcc;
     document.getElementById('smryRoomCnt').textContent  = ROOMS.length;
-    document.getElementById('smryBlockDet').textContent = BLOCKS.length + '개 교시 운영';
 
     /* ── 차트 공통 옵션 ── */
     function barOpts(isHoriz) {
@@ -999,30 +1016,30 @@
           datalabels: { display: false }
         },
         scales: {
-          x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } }, max: isHoriz ? 100 : undefined },
-          y: { grid: { color: isHoriz ? 'transparent' : gridColor }, ticks: { color: textColor, font: { size: 11 } }, max: isHoriz ? undefined : 100 }
+          x: { grid: { color: isHoriz ? gridColor : 'transparent' }, ticks: { color: textColor, font: { size: 11 }, stepSize: isHoriz ? 25 : undefined }, max: isHoriz ? 100 : undefined },
+          y: { grid: { color: isHoriz ? 'transparent' : gridColor }, ticks: { color: textColor, font: { size: 11 }, stepSize: isHoriz ? undefined : 25 }, max: isHoriz ? undefined : 100 }
         }
       };
     }
 
     function makeBarDs(data, labels) {
-      return { labels: labels, datasets: [{ data: data, backgroundColor: data.map(barColor), barPercentage: 0.55, maxBarThickness: 40, borderRadius: 3 }] };
+      return { labels: labels, datasets: [{ data: data, backgroundColor: data.map(barColor), barPercentage: 0.55, maxBarThickness: 20, borderRadius: 3 }] };
     }
 
     var bLabels = BLOCKS.map(function(b){ return b.block; });
 
     _smryCharts.blockFill = new Chart(document.getElementById('smryBlockFillChart'), { type:'bar', data: makeBarDs(bFill, bLabels), options: barOpts(false) });
     _smryCharts.blockUtil = new Chart(document.getElementById('smryBlockUtilChart'), { type:'bar', data: makeBarDs(bUtil, bLabels), options: barOpts(false) });
-    _smryCharts.dayFill   = new Chart(document.getElementById('smryDayFillChart'),   { type:'bar', data: makeBarDs(dayFill, WEEKDAYS), options: barOpts(false) });
-    _smryCharts.dayUtil   = new Chart(document.getElementById('smryDayUtilChart'),   { type:'bar', data: makeBarDs(dayUtil, WEEKDAYS), options: barOpts(false) });
+    _smryCharts.dayFill   = new Chart(document.getElementById('smryDayFillChart'),   { type:'bar', data: makeBarDs(dayFill, WEEKDAY_LABELS), options: barOpts(false) });
+    _smryCharts.dayUtil   = new Chart(document.getElementById('smryDayUtilChart'),   { type:'bar', data: makeBarDs(dayUtil, WEEKDAY_LABELS), options: barOpts(false) });
 
     var fillRoomLabels = fillIdx.map(function(i){ return ROOMS[i]; });
     var fillRoomData   = fillIdx.map(function(i){ return rFill[i]; });
     var utilRoomLabels = utilIdx.map(function(i){ return ROOMS[i]; });
     var utilRoomData   = utilIdx.map(function(i){ return rUtil[i]; });
 
-    _smryCharts.roomFill = new Chart(document.getElementById('smryRoomFillChart'), { type:'bar', data: makeBarDs(fillRoomData, fillRoomLabels), options: barOpts(true) });
-    _smryCharts.roomUtil = new Chart(document.getElementById('smryRoomUtilChart'), { type:'bar', data: makeBarDs(utilRoomData, utilRoomLabels), options: barOpts(true) });
+    _smryCharts.roomFill = new Chart(document.getElementById('smryRoomFillChart'), { type:'bar', data: makeBarDs(fillRoomData, fillRoomLabels), options: barOpts(false) });
+    _smryCharts.roomUtil = new Chart(document.getElementById('smryRoomUtilChart'), { type:'bar', data: makeBarDs(utilRoomData, utilRoomLabels), options: barOpts(false) });
 
     /* ── 교차표 ── */
     function cellClass(v) {
@@ -1033,7 +1050,7 @@
     }
 
     function buildCrossTable(tableId, getter) {
-      var head = '<thead><tr><th>교시</th>' + WEEKDAYS.map(function(wd){ return '<th>'+wd+'</th>'; }).join('') + '<th>합계</th></tr></thead>';
+      var head = '<thead><tr><th>교시</th>' + WEEKDAYS.map(function(wd, i){ return '<th>'+WEEKDAY_LABELS[i]+'</th>'; }).join('') + '<th>합계</th></tr></thead>';
       var body = '<tbody>';
       var colE = {}, colC = {}, colOcc = {}, colTot = {};
       WEEKDAYS.forEach(function(wd){ colE[wd]=0; colC[wd]=0; colOcc[wd]=0; colTot[wd]=0; });
@@ -1056,7 +1073,7 @@
         });
         var rowPct = rowC ? rowE/rowC*100 : (rowTot ? rowOcc/rowTot*100 : 0);
         var rowSub = rowC ? rowE+'/'+rowC : rowOcc+'/'+rowTot;
-        body += '<td class="'+cellClass(rowPct)+'"><span class="smry-cross-val">'+rowPct.toFixed(1)+'%</span><span class="smry-cross-sub">'+rowSub+'</span></td>';
+        body += '<td class="'+cellClass(rowPct)+' smry-cell-tot"><span class="smry-cross-val">'+rowPct.toFixed(1)+'%</span><span class="smry-cross-sub">'+rowSub+'</span></td>';
         body += '</tr>';
         totE+=rowE; totC+=rowC; totOcc+=rowOcc; totTot+=rowTot;
       });
@@ -1067,11 +1084,11 @@
         if (!colTot[wd]) { body += '<td class="smry-cell-none">—</td>'; return; }
         var v = colC[wd] ? colE[wd]/colC[wd]*100 : (colTot[wd] ? colOcc[wd]/colTot[wd]*100 : 0);
         var sub = colC[wd] ? colE[wd]+'/'+colC[wd] : colOcc[wd]+'/'+colTot[wd];
-        body += '<td class="'+cellClass(v)+'"><span class="smry-cross-val">'+v.toFixed(1)+'%</span><span class="smry-cross-sub">'+sub+'</span></td>';
+        body += '<td class="'+cellClass(v)+' smry-cell-tot"><span class="smry-cross-val">'+v.toFixed(1)+'%</span><span class="smry-cross-sub">'+sub+'</span></td>';
       });
       var totPct = totC ? totE/totC*100 : (totTot ? totOcc/totTot*100 : 0);
       var totSub = totC ? totE+'/'+totC : totOcc+'/'+totTot;
-      body += '<td class="'+cellClass(totPct)+' smry-cell-hi"><span class="smry-cross-val">'+totPct.toFixed(1)+'%</span><span class="smry-cross-sub">'+totSub+'</span></td>';
+      body += '<td class="'+cellClass(totPct)+' smry-cell-tot"><span class="smry-cross-val">'+totPct.toFixed(1)+'%</span><span class="smry-cross-sub">'+totSub+'</span></td>';
       body += '</tr></tbody>';
       document.getElementById(tableId).innerHTML = head + body;
     }
