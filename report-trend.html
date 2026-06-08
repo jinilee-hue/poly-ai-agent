@@ -383,7 +383,7 @@
   .trend-filters { display:flex; align-items:center; gap:var(--space-2); flex-wrap:wrap; }
   .trend-legend { justify-content:center; width:100%; margin-top:var(--space-4); }
 </style>
-
+<script src="js/utils.js"></script>
 <script>
   /* 테마 */
   (function () { const t = localStorage.getItem('epTheme'); if (t) document.documentElement.setAttribute('data-theme', t); })();
@@ -623,7 +623,6 @@
     disableMobile: true,
   });
 </script>
-<script src="js/utils.js"></script>
 <script src="js/layout.js"></script>
 <script>
   (function () {
