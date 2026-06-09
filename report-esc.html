@@ -1138,6 +1138,8 @@
       defaultDate: '2026.05.31',
       allowInput: true,
       disableMobile: true,
+      onReady: function(_, __, fp) { initFlatpickrSelects(fp); },
+      onMonthChange: function(_, __, fp) { syncFlatpickrMonthLabel(fp); },
     });
   }
 

@@ -532,14 +532,16 @@ function _syncTheme() {
 </script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+<script src="js/layout.js"></script>
 <script>
   var chatStartFp = flatpickr('#chatStartDate', {
     locale: 'ko',
     dateFormat: 'Y.m.d',
     allowInput: true,
     disableMobile: true,
+    onReady: function(_, __, fp) { initFlatpickrSelects(fp); },
+    onMonthChange: function(_, __, fp) { syncFlatpickrMonthLabel(fp); },
     onChange: function (sel) {
-      // 시작일 이후로만 종료일 선택 가능하도록 제한
       chatEndFp.set('minDate', sel[0] || null);
     },
   });
@@ -548,8 +550,9 @@ function _syncTheme() {
     dateFormat: 'Y.m.d',
     allowInput: true,
     disableMobile: true,
+    onReady: function(_, __, fp) { initFlatpickrSelects(fp); },
+    onMonthChange: function(_, __, fp) { syncFlatpickrMonthLabel(fp); },
     onChange: function (sel) {
-      // 종료일 이전으로만 시작일 선택 가능하도록 제한
       chatStartFp.set('maxDate', sel[0] || null);
     },
   });

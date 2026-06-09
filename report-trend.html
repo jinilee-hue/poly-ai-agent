@@ -613,17 +613,18 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+<script src="js/layout.js"></script>
 <script>
-  /* 조회 기준일 달력 — Flatpickr (ko). 기본적으로 body에 append되어 overflow 컨테이너에 가리지 않음 */
   flatpickr('#trendDateWrap', {
     wrap: true,
     locale: 'ko',
     dateFormat: 'Y.m.d',
     defaultDate: '2026.06.01',
     disableMobile: true,
+    onReady: function(_, __, fp) { initFlatpickrSelects(fp); },
+    onMonthChange: function(_, __, fp) { syncFlatpickrMonthLabel(fp); },
   });
 </script>
-<script src="js/layout.js"></script>
 <script>
   (function () {
     document.querySelectorAll('.poly-history-item').forEach(function (item) {
