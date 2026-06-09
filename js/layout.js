@@ -202,21 +202,21 @@ function _csWrapSelect(sel) {
   sel.style.display = 'none';
   wrap.appendChild(sel);
 
-  /* 가장 긴 옵션 텍스트 기준으로 트리거·드롭다운 너비 설정 */
-  var _sizer = document.createElement('span');
-  _sizer.setAttribute('aria-hidden', 'true');
-  var _tCS = window.getComputedStyle(trigger);
-  _sizer.style.cssText = 'position:fixed;left:-9999px;top:-9999px;visibility:hidden;white-space:nowrap;font-size:'
-    + _tCS.fontSize + ';font-family:' + _tCS.fontFamily + ';';
-  document.body.appendChild(_sizer);
-  var _maxTW = 0;
-  options.forEach(function(opt) { _sizer.textContent = opt.text; if (_sizer.offsetWidth > _maxTW) _maxTW = _sizer.offsetWidth; });
-  document.body.removeChild(_sizer);
-  // trigger: padding-left 12 + padding-right 34(chevron) + border 2 = 48px 오버헤드
-  var _trigW = Math.max(_maxTW + 48, 110);
-  trigger.style.width = _trigW + 'px';
-  // dropdown: 트리거 너비 이상으로 최소 너비 보장 (white-space:nowrap으로 한 줄 유지)
-  dropdown.style.minWidth = _trigW + 'px';
+  /* 가장 긴 옵션 기준 너비 설정
+     CSS width:max-content → dropdown.offsetWidth = 실제 최대 콘텐츠 너비
+     trigger overhead(48) = padding 12+34 + border 2, dropdown overhead(30) = option-pad 28 + border 2
+     → trigger = dropdown.offsetWidth + 18 */
+  var _calcDropdownWidth = function() {
+    dropdown.style.minWidth = '';          // 인라인 min-width 초기화 → CSS max-content 적용
+    var dw = dropdown.offsetWidth;
+    var tw = Math.max(dw + 18, 110);
+    trigger.style.width = tw + 'px';
+    dropdown.style.minWidth = tw + 'px';  // 트리거와 동일 너비 보장
+  };
+  _calcDropdownWidth();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(_calcDropdownWidth);  // 폰트 로드 완료 후 재측정
+  }
 
   function positionDropdown() {
     var rect = trigger.getBoundingClientRect();
