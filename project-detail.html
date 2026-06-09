@@ -142,8 +142,23 @@
                 <button class="ds-picker-item-dl" title="다운로드" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
               </label>
               <label class="ds-picker-item">
+                <input type="checkbox" value="region">
+                <span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감 추이 분석 (권역별)</span>
+                <button class="ds-picker-item-dl" title="다운로드" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+              </label>
+              <label class="ds-picker-item">
                 <input type="checkbox" value="3year">
                 <span class="ds-picker-item-label">학생 분석 &gt; 3개년 학생 수 월간 추이</span>
+                <button class="ds-picker-item-dl" title="다운로드" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+              </label>
+              <label class="ds-picker-item">
+                <input type="checkbox" value="level-h1">
+                <span class="ds-picker-item-label">학생 분석 &gt; 2025년 상반기 레벨변동 현황</span>
+                <button class="ds-picker-item-dl" title="다운로드" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+              </label>
+              <label class="ds-picker-item">
+                <input type="checkbox" value="level-h2">
+                <span class="ds-picker-item-label">학생 분석 &gt; 2025년 하반기 레벨변동 현황</span>
                 <button class="ds-picker-item-dl" title="다운로드" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
               </label>
             </div>
@@ -169,16 +184,16 @@
           </div>
         </div>
 
-        <!-- 탭 + 채팅 목록 -->
+        <!-- 탭 + 채팅/리포트 목록 -->
         <div class="pd-section-header">
-          <div class="pd-section-title">최근 채팅</div>
+          <div class="pd-section-title" id="pd-tab-title">최근 채팅</div>
           <div class="period-tabs" role="group">
-            <button class="period-tab active">채팅</button>
-            <button class="period-tab">리포트</button>
+            <button class="period-tab active" data-tab="chat">채팅</button>
+            <button class="period-tab" data-tab="report">리포트</button>
           </div>
         </div>
 
-        <div class="pd-chat-list">
+        <div class="pd-chat-list" id="pd-tab-chat">
           <a href="chat.html" class="pd-chat-item">
             <div class="pd-chat-item-icon">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
@@ -209,6 +224,62 @@
             </div>
             <div class="pd-chat-item-date">어제</div>
           </a>
+        </div>
+
+        <div id="pd-tab-report" style="display:none;">
+          <div class="reports-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="report-card">
+              <div class="rc-inner">
+                <div class="rc-front">
+                  <div class="rc-preview"><img src="images/1.png" alt="PI 학생 분석 리포트"></div>
+                  <div class="rc-body">
+                    <div class="rc-badges"><span class="badge badge-poly">POLY</span><span class="badge badge-neutral">PI</span></div>
+                    <div class="rc-title">PI 학생 분석 리포트</div>
+                    <div class="rc-date">기준일 2026-05-15</div>
+                  </div>
+                </div>
+                <div class="rc-back">
+                  <div class="rc-back-title">PI 학생 분석 리포트</div>
+                  <div class="rc-back-desc">PI 기준 전국 캠퍼스 학생 수를 권역·캠퍼스별로 분석하고 전년 대비 증감 추이를 추적합니다.</div>
+                  <a href="report-view.html" class="cl-item-action cl-item-action-open" title="바로가기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+                </div>
+              </div>
+            </div>
+            <div class="report-card">
+              <div class="rc-inner">
+                <div class="rc-front">
+                  <div class="rc-preview"><img src="images/2.png" alt="교육과정별 3개년 학생 수 분석"></div>
+                  <div class="rc-body">
+                    <div class="rc-badges"><span class="badge badge-poly">POLY</span></div>
+                    <div class="rc-title">교육과정별 3개년 학생 수 분석</div>
+                    <div class="rc-date">기준일 2026-05-01</div>
+                  </div>
+                </div>
+                <div class="rc-back">
+                  <div class="rc-back-title">교육과정별 3개년 학생 수 분석</div>
+                  <div class="rc-back-desc">PI·ESC·FLEX 등 교육과정별 최근 3개년 학생 수 변화 추이를 비교 분석합니다.</div>
+                  <a href="report-curriculum.html" class="cl-item-action cl-item-action-open" title="바로가기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+                </div>
+              </div>
+            </div>
+            <div class="report-card">
+              <div class="rc-inner">
+                <div class="rc-front">
+                  <div class="rc-preview"><img src="images/3.png" alt="학급 편성 대시보드"></div>
+                  <div class="rc-body">
+                    <div class="rc-badges"><span class="badge badge-neutral">전체</span></div>
+                    <div class="rc-title">학급 편성 대시보드</div>
+                    <div class="rc-date">기준일 2026-05-15</div>
+                  </div>
+                </div>
+                <div class="rc-back">
+                  <div class="rc-back-title">학급 편성 대시보드</div>
+                  <div class="rc-back-desc">캠퍼스별 학급 편성 현황과 가동률을 한눈에 파악하고 최적 편성을 지원합니다.</div>
+                  <a href="report-class.html" class="cl-item-action cl-item-action-open" title="바로가기"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
 
@@ -377,6 +448,10 @@
     btn.addEventListener('click', function () {
       this.closest('.period-tabs').querySelectorAll('.period-tab').forEach(b => b.classList.remove('active'));
       this.classList.add('active');
+      var tab = this.dataset.tab;
+      document.getElementById('pd-tab-chat').style.display = tab === 'chat' ? '' : 'none';
+      document.getElementById('pd-tab-report').style.display = tab === 'report' ? '' : 'none';
+      document.getElementById('pd-tab-title').textContent = tab === 'chat' ? '최근 채팅' : '최근 리포트';
     });
   });
 

@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2025년 상반기 레벨변동 현황 | PI 학생 분석 리포트</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/common.css">
+  <link rel="stylesheet" href="styles/pages.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <style>
+    #levelTable thead th { text-align: center; border-right: 1px solid var(--color-border); }
+    #levelTable thead th:last-child { border-right: none; }
+    #levelTable tbody td { border-right: 1px solid var(--color-border); }
+    #levelTable tbody td:last-child { border-right: none; }
+    #levelTable tbody tr.section-top td { border-top: 1px solid var(--color-border-strong); }
+  </style>
+</head>
+<body class="page-report-view">
+
+<aside class="poly-sidebar">
+  <div class="poly-sidebar-logo">
+    <a href="home.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+      <img src="https://www.polyinspiration.com/img/main/logo.png" alt="POLY" class="poly-sidebar-brand">
+      <span class="poly-sidebar-tagline">AI 경영 분석 플랫폼</span>
+    </a>
+  </div>
+  <div class="lnb-brand-switch">
+    <button class="lnb-brand-btn" data-brand="poly">POLY</button>
+    <button class="lnb-brand-btn" data-brand="canb">CANB</button>
+    <button class="lnb-brand-btn" data-brand="all">전체</button>
+  </div>
+  <a href="home.html" class="poly-new-chat">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    새 채팅
+  </a>
+  <div class="poly-nav-section">
+    <a href="chat-list.html" class="poly-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      채팅
+    </a>
+    <div class="poly-nav-group">
+      <div class="poly-nav-item-row">
+        <a href="projects.html" class="poly-nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          프로젝트
+        </a>
+        <button class="poly-nav-chevron" onclick="toggleSubNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+      <div class="poly-nav-sub">
+        <a href="project-detail.html" class="poly-nav-sub-item">목동 학생 감소 원인 분석</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">2026 상반기 재학생 추이 보고서</a>
+      </div>
+    </div>
+    <div class="poly-nav-group open">
+      <div class="poly-nav-item-row">
+        <a href="reports.html" class="poly-nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          리포트
+        </a>
+        <button class="poly-nav-chevron" onclick="toggleSubNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+      <div class="poly-nav-sub">
+        <a href="report-view.html" class="poly-nav-sub-item active">PI 학생 분석 리포트</a>
+        <a href="report-curriculum.html" class="poly-nav-sub-item">교육과정별 3개년 학생 수 분석</a>
+        <a href="report-class.html" class="poly-nav-sub-item">학급 편성 대시보드</a>
+      </div>
+    </div>
+  </div>
+  <div class="poly-history-section">
+    <div class="poly-nav-label">최근 채팅</div>
+    <div class="poly-history-item" style="color:var(--color-primary);font-weight:var(--weight-medium);">2025 상반기 레벨변동 현황</div>
+    <div class="poly-history-item">3개년 학생 수 월간 추이</div>
+  </div>
+  <div class="poly-sidebar-footer">
+    <div class="poly-user-avatar">이진</div>
+    <div><div class="poly-user-name">이진희</div><div class="poly-user-role">관리자</div></div>
+    <a href="login.html" class="icon-btn" style="margin-left:auto;text-decoration:none;" title="나가기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </a>
+  </div>
+</aside>
+
+<div class="view-shell" id="viewShell">
+  <header class="view-topbar">
+    <div class="view-topbar-left">
+      <a href="reports.html" class="icon-btn" style="text-decoration:none;flex-shrink:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </a>
+      <span class="view-topbar-title">PI 학생 분석 리포트</span>
+    </div>
+    <div class="view-topbar-right">
+      <button id="theme-toggle-2" class="icon-btn" title="다크 모드">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="view-panels" style="position:relative;">
+    <button class="chat-fab visible" id="chatFab" onclick="toggleChat()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </button>
+
+    <div class="data-panel" id="dataPanel">
+      <div class="data-scroll">
+
+        <div class="view-selector-inner">
+          <div class="view-dropdown-wrap">
+            <div class="view-selector-dropdown" onclick="toggleViewDropdown()" id="viewDropdown">
+              <span class="view-selector-label">학생 분석 &gt; 2025년 상반기 레벨변동 현황</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;color:var(--color-text-tertiary);transition:transform 0.2s" id="viewDropdownChevron"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="view-dropdown-menu" id="viewDropdownMenu">
+              <div class="view-dropdown-group-label">학생 분석</div>
+              <button class="view-dropdown-item" onclick="goToView('report-view.html')">학생 분석 &gt; 전년 대비 증감 추이 분석 (캠퍼스별)</button>
+              <button class="view-dropdown-item" onclick="goToView('student-ecp.html')">학생 분석 &gt; 전년 대비 증감 추이 분석 (ECP)</button>
+              <button class="view-dropdown-item" onclick="goToView('student-ecp-ex.html')">학생 분석 &gt; 전년 대비 증감추이 (ECP 레벨 외)</button>
+              <button class="view-dropdown-item" onclick="goToView('student-course.html')">학생 분석 &gt; 전년 대비 증감 추이 분석 (과정별)</button>
+              <button class="view-dropdown-item" onclick="goToView('student-region.html')">학생 분석 &gt; 전년 대비 증감 추이 분석 (권역별)</button>
+              <button class="view-dropdown-item" onclick="goToView('student-trend.html')">학생 분석 &gt; 3개년 학생 수 월간 추이</button>
+              <div class="view-dropdown-group-label" style="margin-top:var(--space-1);">레벨 변동</div>
+              <button class="view-dropdown-item active" onclick="goToView('')">학생 분석 &gt; 2025년 상반기 레벨변동 현황</button>
+              <button class="view-dropdown-item" onclick="goToView('student-level-h2.html')">학생 분석 &gt; 2025년 하반기 레벨변동 현황</button>
+            </div>
+          </div>
+          <div class="view-selector-right">
+            <span class="view-count-badge">상반기(1학기) 기준: 2025-02-15 → 03-15 · 268행</span>
+            <button class="btn btn-secondary" style="height:44px;border-radius:var(--radius-lg);" onclick="downloadExcel()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Excel
+            </button>
+          </div>
+        </div>
+
+        <div class="data-table-card">
+          <div class="data-table-wrap">
+            <table class="data-table" id="levelTable">
+              <thead>
+                <tr>
+                  <th style="min-width:90px;">기준일</th>
+                  <th style="min-width:90px;">비교일</th>
+                  <th style="min-width:60px;">과정명</th>
+                  <th style="min-width:90px;">이전 레벨명</th>
+                  <th style="min-width:90px;">이후 레벨명</th>
+                  <th style="min-width:70px;">학생 수</th>
+                  <th style="min-width:110px;">이전 레벨 기준 비율</th>
+                </tr>
+              </thead>
+              <tbody id="levelTbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="chat-panel collapsed" id="chatPanel">
+      <div class="chat-header">
+        <div class="chat-header-left">
+          <div class="chat-header-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+          <div class="chat-header-title">대화</div>
+        </div>
+        <button class="chat-close-btn" onclick="toggleChat()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg ai"><div class="msg-bubble">2025년 상반기 레벨변동 데이터입니다. 궁금한 점을 질문해 주세요.</div><span class="msg-time">15:12</span></div>
+      </div>
+      <div class="chat-input-wrap">
+        <div class="chat-input-box">
+          <textarea class="chat-input" id="chatInput" placeholder="질문하세요..." rows="1" onkeydown="handleKey(event)"></textarea>
+          <button class="chat-send-btn" onclick="sendMsg()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script>
+// [course, prevLevel, nextLevel, count, pct, 'S'=section-top]
+var DATA = [
+  // ── ECP ──
+  ['ECP','ECP5','ECP5',11,'0.82%'],
+  ['ECP','ECP5','ECP6',1247,'92.44%'],
+  ['ECP','ECP5','ECP6m',11,'0.82%'],
+  ['ECP','ECP5','MAG Pro-K',9,'0.67%'],
+  ['ECP','ECP5','WITHDRAWAL',71,'5.26%'],
+  {s:1,c:1349},
+  ['ECP','ECP6','ECP6',1,'0.05%'],
+  ['ECP','ECP6','ECP7',1829,'95.56%'],
+  ['ECP','ECP6','ECP7m',1,'0.05%'],
+  ['ECP','ECP6','ECP7i',1,'0.05%'],
+  ['ECP','ECP6','GT1',2,'0.10%'],
+  ['ECP','ECP6','MAG K',10,'0.52%'],
+  ['ECP','ECP6','WITHDRAWAL',70,'3.66%'],
+  {s:1,c:1914},
+  ['ECP','ECP6m','ECP6m',18,'6.32%'],
+  ['ECP','ECP6m','ECP7',13,'4.56%'],
+  ['ECP','ECP6m','ECP7m',241,'84.56%'],
+  ['ECP','ECP6m','ECP7i',1,'0.35%'],
+  ['ECP','ECP6m','WITHDRAWAL',12,'4.21%'],
+  {s:1,c:285},
+  ['ECP','ECP7','ECP7',1,'0.05%'],
+  ['ECP','ECP7','GT1',3,'0.14%'],
+  ['ECP','ECP7','GTi',1,'0.05%'],
+  ['ECP','ECP7','MAG1',529,'24.27%'],
+  ['ECP','ECP7','MGT1',15,'0.69%'],
+  ['ECP','ECP7','MGT2',2,'0.09%'],
+  ['ECP','ECP7','MIL1 Prep',2,'0.09%'],
+  ['ECP','ECP7','S1',1208,'55.41%'],
+  ['ECP','ECP7','S2',1,'0.05%'],
+  ['ECP','ECP7','WITHDRAWAL',418,'19.17%'],
+  {s:1,c:2180},
+  ['ECP','ECP7i','ECP7m',8,'1.66%'],
+  ['ECP','ECP7i','ECP7i',25,'5.19%'],
+  ['ECP','ECP7i','GT1',257,'53.32%'],
+  ['ECP','ECP7i','GTi',4,'0.83%'],
+  ['ECP','ECP7i','MAG1',1,'0.21%'],
+  ['ECP','ECP7i','MGT1',121,'25.10%'],
+  ['ECP','ECP7i','S1',19,'3.94%'],
+  ['ECP','ECP7i','SSP0',1,'0.21%'],
+  ['ECP','ECP7i','WITHDRAWAL',46,'9.54%'],
+  {s:1,c:482},
+  ['ECP','ECP7m','ECP7m',2,'3.23%'],
+  ['ECP','ECP7m','MGT1',42,'67.74%'],
+  ['ECP','ECP7m','S1',15,'24.19%'],
+  ['ECP','ECP7m','WITHDRAWAL',3,'4.84%'],
+  {s:1,c:62},
+  ['ECP','MAG K','MAG1',2,'13.33%'],
+  ['ECP','MAG K','WITHDRAWAL',13,'86.67%'],
+  {s:1,c:15},
+  ['ECP','MAG Pro','MAG Pro-K',10,'100.00%'],
+  {s:1,c:10},
+  ['ECP','MAG Pro-K','MAG K',17,'80.95%'],
+  ['ECP','MAG Pro-K','WITHDRAWAL',4,'19.05%'],
+  {s:1,c:21},
+  // ── ELE ──
+  ['ELE','GT1','GT1',2,'0.14%','S'],
+  ['ELE','GT1','GT2',1086,'78.24%'],
+  ['ELE','GT1','GT3',32,'2.31%'],
+  ['ELE','GT1','MGT2',156,'11.24%'],
+  ['ELE','GT1','S2',12,'0.86%'],
+  ['ELE','GT1','WITHDRAWAL',100,'7.20%'],
+  {s:1,c:1388},
+  ['ELE','GT2','GT3',770,'75.20%'],
+  ['ELE','GT2','GT4',5,'0.49%'],
+  ['ELE','GT2','Honors 1',5,'0.49%'],
+  ['ELE','GT2','MGT3',96,'9.38%'],
+  ['ELE','GT2','S3',4,'0.39%'],
+  ['ELE','GT2','WITHDRAWAL',144,'14.00%'],
+  {s:1,c:1024},
+  ['ELE','GT3','GT4',214,'38.70%'],
+  ['ELE','GT3','Honors 1',178,'32.19%'],
+  ['ELE','GT3','Honors 2',37,'6.69%'],
+  ['ELE','GT3','Honors 3',5,'0.90%'],
+  ['ELE','GT3','MGT4',19,'3.44%'],
+  ['ELE','GT3','WITHDRAWAL',100,'18.08%'],
+  {s:1,c:553},
+  ['ELE','GT4','Honors 2',61,'55.96%'],
+  ['ELE','GT4','Honors 3',24,'22.02%'],
+  ['ELE','GT4','Leaders 1',1,'0.92%'],
+  ['ELE','GT4','WITHDRAWAL',23,'21.10%'],
+  {s:1,c:109},
+  ['ELE','GTi','GT1',203,'65.06%'],
+  ['ELE','GTi','GT2',76,'24.36%'],
+  ['ELE','GTi','GTi',5,'1.60%'],
+  ['ELE','GTi','WITHDRAWAL',28,'8.97%'],
+  {s:1,c:312},
+  ['ELE','MAG1','MAG2',659,'93.48%'],
+  ['ELE','MAG1','S3',4,'0.57%'],
+  ['ELE','MAG1','WITHDRAWAL',42,'5.96%'],
+  {s:1,c:705},
+  ['ELE','MAG2','MAG3',610,'88.79%'],
+  ['ELE','MAG2','S3',2,'0.29%'],
+  ['ELE','MAG2','WITHDRAWAL',75,'10.92%'],
+  {s:1,c:687},
+  ['ELE','MAG3','Honors 2',1,'0.16%'],
+  ['ELE','MAG3','Honors 3',233,'36.52%'],
+  ['ELE','MAG3','MAG4',327,'51.25%'],
+  ['ELE','MAG3','WITHDRAWAL',77,'12.07%'],
+  {s:1,c:638},
+  ['ELE','MAG4','Leaders 1',258,'86.87%'],
+  ['ELE','MAG4','WITHDRAWAL',39,'13.13%'],
+  {s:1,c:297},
+  ['ELE','MGT1','GT2',3,'0.45%'],
+  ['ELE','MGT1','MAG2',4,'0.59%'],
+  ['ELE','MGT1','MGT1',1,'0.15%'],
+  ['ELE','MGT1','MGT2',496,'73.70%'],
+  ['ELE','MGT1','S1',1,'0.15%'],
+  ['ELE','MGT1','S2',121,'17.98%'],
+  ['ELE','MGT1','WITHDRAWAL',47,'6.98%'],
+  {s:1,c:673},
+  ['ELE','MGT2','MAG3',8,'1.46%'],
+  ['ELE','MGT2','MGT3',355,'64.60%'],
+  ['ELE','MGT2','S3',124,'22.59%'],
+  ['ELE','MGT2','WITHDRAWAL',62,'11.29%'],
+  {s:1,c:549},
+  ['ELE','MGT3','GT4',2,'0.63%'],
+  ['ELE','MGT3','Honors 2',109,'34.49%'],
+  ['ELE','MGT3','Honors 3',13,'4.11%'],
+  ['ELE','MGT3','MAG4',1,'0.32%'],
+  ['ELE','MGT3','MGT3',1,'0.32%'],
+  ['ELE','MGT3','MGT4',116,'36.71%'],
+  ['ELE','MGT3','S4',16,'5.06%'],
+  ['ELE','MGT3','WITHDRAWAL',58,'18.35%'],
+  {s:1,c:316},
+  ['ELE','MGT4','Honors 2',2,'1.65%'],
+  ['ELE','MGT4','Honors 3',67,'55.37%'],
+  ['ELE','MGT4','Leaders 1',29,'23.97%'],
+  ['ELE','MGT4','WITHDRAWAL',23,'19.01%'],
+  {s:1,c:121},
+  ['ELE','MIL1 Adv','MIL1 Adv',3,'75.00%'],
+  ['ELE','MIL1 Adv','MIL1 On',1,'25.00%'],
+  {s:1,c:4},
+  ['ELE','MIL1 On','MIL1 On',4,'100.00%'],
+  {s:1,c:4},
+  ['ELE','MIL1 Prep','MIL1 Prep',6,'100.00%'],
+  {s:1,c:6},
+  ['ELE','MIL2 Adv','MIL2 Adv',4,'100.00%'],
+  {s:1,c:4},
+  ['ELE','MIL2 On','MIL2 On',16,'94.12%'],
+  ['ELE','MIL2 On','WITHDRAWAL',1,'5.88%'],
+  {s:1,c:17},
+  ['ELE','MIL3 Adv','MIL3 Adv',9,'100.00%'],
+  {s:1,c:9},
+  ['ELE','MIL3 On','MIL3 On',16,'100.00%'],
+  {s:1,c:16},
+  ['ELE','MIL3 Prep','MIL3 Prep',1,'50.00%'],
+  ['ELE','MIL3 Prep','WITHDRAWAL',1,'50.00%'],
+  {s:1,c:2},
+  ['ELE','MIL4 Adv','MIL4 Adv',7,'100.00%'],
+  {s:1,c:7},
+  ['ELE','MIL4 On','MIL4 On',18,'100.00%'],
+  {s:1,c:18},
+  ['ELE','MIL4 Prep','MIL4 On',1,'8.33%'],
+  ['ELE','MIL4 Prep','MIL4 Prep',11,'91.67%'],
+  {s:1,c:12},
+  ['ELE','MIL5 Adv','MIL5 Adv',5,'100.00%'],
+  {s:1,c:5},
+  ['ELE','MIL5 On','MIL5 On',17,'100.00%'],
+  {s:1,c:17},
+  ['ELE','MIL6 On','MIL6 On',2,'66.67%'],
+  ['ELE','MIL6 On','WITHDRAWAL',1,'33.33%'],
+  {s:1,c:3},
+  ['ELE','R4','Honors 2',1,'3.85%'],
+  ['ELE','R4','Honors 3',13,'50.00%'],
+  ['ELE','R4','Leaders 1',6,'23.08%'],
+  ['ELE','R4','WITHDRAWAL',6,'23.08%'],
+  {s:1,c:26},
+  ['ELE','S1','MAG2',165,'14.55%'],
+  ['ELE','S1','MGT2',2,'0.18%'],
+  ['ELE','S1','S1',1,'0.09%'],
+  ['ELE','S1','S2',861,'75.93%'],
+  ['ELE','S1','WITHDRAWAL',100,'8.82%'],
+  {s:1,c:1134},
+  ['ELE','S2','GT3',1,'0.13%'],
+  ['ELE','S2','MAG3',99,'13.03%'],
+  ['ELE','S2','MGT3',3,'0.39%'],
+  ['ELE','S2','S3',566,'74.47%'],
+  ['ELE','S2','WITHDRAWAL',91,'11.97%'],
+  {s:1,c:760},
+  ['ELE','S3','Honors 1',3,'0.66%'],
+  ['ELE','S3','Honors 2',140,'30.91%'],
+  ['ELE','S3','Honors 3',58,'12.80%'],
+  ['ELE','S3','MAG4',15,'3.31%'],
+  ['ELE','S3','MGT4',1,'0.22%'],
+  ['ELE','S3','S4',145,'32.01%'],
+  ['ELE','S3','WITHDRAWAL',91,'20.09%'],
+  {s:1,c:453},
+  ['ELE','SSPA','ECP7i',1,'3.23%'],
+  ['ELE','SSPA','GT1',1,'3.23%'],
+  ['ELE','SSPA','GTi',14,'45.16%'],
+  ['ELE','SSPA','SSPA',4,'12.90%'],
+  ['ELE','SSPA','SSPB',7,'22.58%'],
+  ['ELE','SSPA','WITHDRAWAL',4,'12.90%'],
+  {s:1,c:31},
+  ['ELE','SSPB','ECP7',1,'0.79%'],
+  ['ELE','SSPB','GT1',22,'17.32%'],
+  ['ELE','SSPB','GTi',87,'68.50%'],
+  ['ELE','SSPB','WITHDRAWAL',17,'13.39%'],
+  {s:1,c:127},
+  ['ELE','SSPC','GT1',20,'17.70%'],
+  ['ELE','SSPC','GT2',2,'1.77%'],
+  ['ELE','SSPC','GTi',74,'65.49%'],
+  ['ELE','SSPC','MGT1',2,'1.77%'],
+  ['ELE','SSPC','SSPD',4,'3.54%'],
+  ['ELE','SSPC','WITHDRAWAL',11,'9.73%'],
+  {s:1,c:113},
+  ['ELE','SSPD','GT1',8,'47.06%'],
+  ['ELE','SSPD','GT2',3,'17.65%'],
+  ['ELE','SSPD','GTi',5,'29.41%'],
+  ['ELE','SSPD','WITHDRAWAL',1,'5.88%'],
+  {s:1,c:17},
+  // ── GRAD ──
+  ['GRAD','Elites 3','WITHDRAWAL',30,'100.00%','S'],
+  {s:1,c:30},
+  ['GRAD','Honors 1','Honors 1',7,'4.35%'],
+  ['GRAD','Honors 1','Honors 2',98,'60.87%'],
+  ['GRAD','Honors 1','Honors 3',20,'12.42%'],
+  ['GRAD','Honors 1','Leaders 1',3,'1.86%'],
+  ['GRAD','Honors 1','WITHDRAWAL',33,'20.50%'],
+  {s:1,c:161},
+  ['GRAD','Honors 2','Honors 2',2,'0.63%'],
+  ['GRAD','Honors 2','Honors 3',218,'68.99%'],
+  ['GRAD','Honors 2','Leaders 1',38,'12.03%'],
+  ['GRAD','Honors 2','WITHDRAWAL',58,'18.35%'],
+  {s:1,c:316},
+  ['GRAD','Honors 3','Honors 3',4,'0.89%'],
+  ['GRAD','Honors 3','Leaders 1',346,'77.06%'],
+  ['GRAD','Honors 3','Leaders 2',25,'5.57%'],
+  ['GRAD','Honors 3','MAG4',1,'0.22%'],
+  ['GRAD','Honors 3','Masters 1',8,'1.78%'],
+  ['GRAD','Honors 3','Masters 2',1,'0.22%'],
+  ['GRAD','Honors 3','WITHDRAWAL',64,'14.25%'],
+  {s:1,c:449},
+  ['GRAD','Leaders 1','Leaders 2',416,'76.47%'],
+  ['GRAD','Leaders 1','Leaders 3',11,'2.02%'],
+  ['GRAD','Leaders 1','Masters 1',7,'1.29%'],
+  ['GRAD','Leaders 1','Masters 2',19,'3.49%'],
+  ['GRAD','Leaders 1','Masters 3',5,'0.92%'],
+  ['GRAD','Leaders 1','WITHDRAWAL',86,'15.81%'],
+  {s:1,c:544},
+  ['GRAD','Leaders 2','Leaders 3',166,'62.41%'],
+  ['GRAD','Leaders 2','Masters 1',4,'1.50%'],
+  ['GRAD','Leaders 2','Masters 2',18,'6.77%'],
+  ['GRAD','Leaders 2','Masters 3',19,'7.14%'],
+  ['GRAD','Leaders 2','WITHDRAWAL',59,'22.18%'],
+  {s:1,c:266},
+  ['GRAD','Leaders 3','Masters 2',1,'0.88%'],
+  ['GRAD','Leaders 3','Masters 3',84,'73.68%'],
+  ['GRAD','Leaders 3','WITHDRAWAL',29,'25.44%'],
+  {s:1,c:114},
+  ['GRAD','Masters 1','Elites 1',13,'43.33%'],
+  ['GRAD','Masters 1','Elites 3',1,'3.33%'],
+  ['GRAD','Masters 1','Honors 1',7,'23.33%'],
+  ['GRAD','Masters 1','Honors 2',5,'16.67%'],
+  ['GRAD','Masters 1','WITHDRAWAL',4,'13.33%'],
+  {s:1,c:30},
+  ['GRAD','Masters 2','Elites 2',5,'10.42%'],
+  ['GRAD','Masters 2','Elites 3',6,'12.50%'],
+  ['GRAD','Masters 2','Honors 1',7,'14.58%'],
+  ['GRAD','Masters 2','Honors 2',10,'20.83%'],
+  ['GRAD','Masters 2','Honors 3',15,'31.25%'],
+  ['GRAD','Masters 2','Leaders 1',3,'6.25%'],
+  ['GRAD','Masters 2','WITHDRAWAL',2,'4.17%'],
+  {s:1,c:48},
+  ['GRAD','Masters 3','Elites 1',2,'1.79%'],
+  ['GRAD','Masters 3','Elites 3',78,'69.64%'],
+  ['GRAD','Masters 3','Honors 3',14,'12.50%'],
+  ['GRAD','Masters 3','Leaders 1',12,'10.71%'],
+  ['GRAD','Masters 3','WITHDRAWAL',6,'5.36%'],
+  {s:1,c:112},
+  ['GRAD','PAS D(2)','Honors 2',12,'85.71%'],
+  ['GRAD','PAS D(2)','Honors 3',1,'7.14%'],
+  ['GRAD','PAS D(2)','WITHDRAWAL',1,'7.14%'],
+  {s:1,c:14},
+  ['GRAD','PAS F(2)','Honors 3',9,'64.29%'],
+  ['GRAD','PAS F(2)','Leaders 1',4,'28.57%'],
+  ['GRAD','PAS F(2)','WITHDRAWAL',1,'7.14%'],
+  {s:1,c:14},
+  ['GRAD','PAS G(2)','Leaders 1',9,'90.00%'],
+  ['GRAD','PAS G(2)','WITHDRAWAL',1,'10.00%'],
+  {s:1,c:10},
+  ['GRAD','PAS IB','Honors 1',4,'100.00%'],
+  {s:1,c:4},
+  ['GRAD','PAS RO','Honors 3',3,'100.00%'],
+  {s:1,c:3},
+  // 전체 합계
+  {t:1,c:18590}
+];
+
+function renderTable() {
+  var tbody = document.getElementById('levelTbody');
+  var html = '';
+  var d1 = '2025-02-15', d2 = '2025-03-15';
+  DATA.forEach(function(r) {
+    if (r.t) {
+      html += '<tr class="grand-total"><td>-</td><td>-</td><td>-</td><td>전체 합계</td><td>전체 합계</td><td>' + r.c.toLocaleString('ko-KR') + '</td><td>100.00%</td></tr>';
+    } else if (r.s) {
+      html += '<tr class="subtotal"><td>-</td><td>-</td><td>-</td><td>소계</td><td>소계</td><td>' + r.c.toLocaleString('ko-KR') + '</td><td>100.00%</td></tr>';
+    } else {
+      var cls = r[5] === 'S' ? ' class="section-top"' : '';
+      html += '<tr' + cls + '><td>' + d1 + '</td><td>' + d2 + '</td><td>' + r[0] + '</td><td>' + r[1] + '</td><td>' + r[2] + '</td><td>' + r[3].toLocaleString('ko-KR') + '</td><td>' + r[4] + '</td></tr>';
+    }
+  });
+  tbody.innerHTML = html;
+}
+
+function toggleViewDropdown() {
+  var menu = document.getElementById('viewDropdownMenu');
+  var chevron = document.getElementById('viewDropdownChevron');
+  menu.classList.toggle('open');
+  chevron.style.transform = menu.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+function goToView(url) {
+  document.getElementById('viewDropdownMenu').classList.remove('open');
+  document.getElementById('viewDropdownChevron').style.transform = '';
+  if (url) location.href = url;
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#viewDropdown') && !e.target.closest('#viewDropdownMenu')) {
+    var m = document.getElementById('viewDropdownMenu');
+    if (m) { m.classList.remove('open'); document.getElementById('viewDropdownChevron').style.transform = ''; }
+  }
+});
+
+function downloadExcel() {
+  var headers = ['기준일','비교일','과정명','이전 레벨명','이후 레벨명','학생 수','이전 레벨 기준 비율'];
+  var rows = [];
+  var d1 = '2025-02-15', d2 = '2025-03-15';
+  DATA.forEach(function(r) {
+    if (r.t) rows.push(['-','-','-','전체 합계','전체 합계',r.c,'100.00%']);
+    else if (r.s) rows.push(['-','-','-','소계','소계',r.c,'100.00%']);
+    else rows.push([d1,d2,r[0],r[1],r[2],r[3],r[4]]);
+  });
+  var ws = XLSX.utils.aoa_to_sheet([headers].concat(rows));
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, '상반기레벨변동');
+  XLSX.writeFile(wb, '2025_상반기_레벨변동현황.xlsx');
+}
+
+function toggleChat() {
+  var p = document.getElementById('chatPanel'), f = document.getElementById('chatFab');
+  p.classList.toggle('collapsed');
+  if (f) f.classList.toggle('visible', p.classList.contains('collapsed'));
+}
+function sendMsg(text) {
+  var input = document.getElementById('chatInput');
+  var msg = text || input.value.trim();
+  if (!msg) return;
+  var msgs = document.getElementById('chatMessages');
+  msgs.innerHTML += '<div class="msg user"><div class="msg-bubble">' + msg + '</div></div>';
+  if (!text) input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+}
+function handleKey(e) { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } }
+function toggleSubNav(btn) { btn.closest('.poly-nav-group').classList.toggle('open'); }
+
+(function() {
+  var btn = document.getElementById('theme-toggle-2');
+  if (btn) btn.addEventListener('click', function() {
+    var d = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', d ? '' : 'dark');
+    localStorage.setItem('epTheme', d ? '' : 'dark');
+  });
+  if (localStorage.getItem('epTheme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+})();
+
+renderTable();
+</script>
+</body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>전년 대비 증감 추이 분석 (과정별) | PI 학생 분석 리포트</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/common.css">
+  <link rel="stylesheet" href="styles/pages.css">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <style>
+    /* 식별 열 구분선 */
+    #courseTable thead th:first-child,
+    #courseTable thead th:nth-child(2) { border-right: 1px solid var(--color-border); }
+    /* 모든 td 세로 구분선 */
+    #courseTable tbody td { border-right: 1px solid var(--color-border); }
+    #courseTable tbody td:last-child { border-right: none; }
+    /* 섹션 경계 */
+    #courseTable tbody tr.section-top td { border-top: 1px solid var(--color-border-strong); }
+  </style>
+</head>
+<body class="page-report-view">
+
+<!-- 사이드바 -->
+<aside class="poly-sidebar">
+  <div class="poly-sidebar-logo">
+    <a href="home.html" style="display:flex;align-items:center;gap:8px;text-decoration:none;">
+      <img src="https://www.polyinspiration.com/img/main/logo.png" alt="POLY" class="poly-sidebar-brand">
+      <span class="poly-sidebar-tagline">AI 경영 분석 플랫폼</span>
+    </a>
+  </div>
+  <div class="lnb-brand-switch">
+    <button class="lnb-brand-btn" data-brand="poly">POLY</button>
+    <button class="lnb-brand-btn" data-brand="canb">CANB</button>
+    <button class="lnb-brand-btn" data-brand="all">전체</button>
+  </div>
+  <a href="home.html" class="poly-new-chat">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    새 채팅
+  </a>
+  <div class="poly-nav-section">
+    <a href="chat-list.html" class="poly-nav-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      채팅
+    </a>
+    <div class="poly-nav-group">
+      <div class="poly-nav-item-row">
+        <a href="projects.html" class="poly-nav-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          프로젝트
+        </a>
+        <button class="poly-nav-chevron" onclick="toggleSubNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+      <div class="poly-nav-sub">
+        <a href="project-detail.html" class="poly-nav-sub-item">목동 학생 감소 원인 분석</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">2026 상반기 재학생 추이 보고서</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">TEST</a>
+        <a href="project-detail.html" class="poly-nav-sub-item">CANB 캠퍼스 학급 편성 최적화</a>
+      </div>
+    </div>
+    <div class="poly-nav-group open">
+      <div class="poly-nav-item-row">
+        <a href="reports.html" class="poly-nav-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          리포트
+        </a>
+        <button class="poly-nav-chevron" onclick="toggleSubNav(this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></button>
+      </div>
+      <div class="poly-nav-sub">
+        <a href="report-view.html" class="poly-nav-sub-item active">PI 학생 분석 리포트</a>
+        <a href="report-curriculum.html" class="poly-nav-sub-item">교육과정별 3개년 학생 수 분석</a>
+        <a href="report-class.html" class="poly-nav-sub-item">학급 편성 대시보드</a>
+        <a href="report-esc.html" class="poly-nav-sub-item">ESC 학생 현황</a>
+        <a href="report-trend.html" class="poly-nav-sub-item">재학생 추이 분석</a>
+      </div>
+    </div>
+  </div>
+  <div class="poly-history-section">
+    <div class="poly-nav-label">최근 채팅</div>
+    <div class="poly-history-item" style="color:var(--color-primary);font-weight:var(--weight-medium);">과정별 전년 대비 증감 추이 분석</div>
+    <div class="poly-history-item">ECP 레벨 외 증감 추이 분석</div>
+    <div class="poly-history-item">목동 캠퍼스 학생수 감소 원인</div>
+  </div>
+  <div class="poly-sidebar-footer">
+    <div class="poly-user-avatar">이진</div>
+    <div>
+      <div class="poly-user-name">이진희</div>
+      <div class="poly-user-role">관리자</div>
+    </div>
+    <a href="login.html" class="icon-btn" style="margin-left:auto;text-decoration:none;" title="나가기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </a>
+  </div>
+</aside>
+
+<!-- 뷰 셸 -->
+<div class="view-shell" id="viewShell">
+
+  <header class="view-topbar">
+    <div class="view-topbar-left">
+      <a href="reports.html" class="icon-btn" style="text-decoration:none;flex-shrink:0;" title="리포트 목록">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </a>
+      <span class="view-topbar-title">PI 학생 분석 리포트</span>
+    </div>
+    <div class="view-topbar-right">
+      <button id="theme-toggle-2" class="icon-btn" title="다크 모드">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="view-panels" style="position:relative;">
+
+    <button class="chat-fab visible" id="chatFab" onclick="toggleChat()" title="AI 채팅 열기" aria-label="AI 채팅 패널 열기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </button>
+
+    <div class="data-panel" id="dataPanel">
+
+      <img class="print-watermark" src="https://www.polyinspiration.com/img/main/logo.png" alt="" aria-hidden="true">
+
+      <div class="print-title-block">
+        <div class="print-title-main">PI 학생 분석 리포트</div>
+        <div class="print-title-sub" id="printSubTitle">전년 대비 증감 추이 분석 (과정별)</div>
+        <div class="print-title-meta" id="printMeta">기준일 2026-05-15 · 12행</div>
+      </div>
+
+      <div class="data-scroll">
+
+        <div class="view-selector-inner">
+          <div class="view-dropdown-wrap">
+            <div class="view-selector-dropdown" onclick="toggleViewDropdown()" id="viewDropdown">
+              <span class="view-selector-label" id="viewSelectorLabel">학생 분석 &gt; 전년 대비 증감 추이 분석 (과정별)</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;color:var(--color-text-tertiary);transition:transform 0.2s" id="viewDropdownChevron"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="view-dropdown-menu" id="viewDropdownMenu">
+              <div class="view-dropdown-group-label">학생 분석</div>
+              <button class="view-dropdown-item" onclick="goToView('report-view.html')">학생 분석 &gt; 전년 대비 증감 추이 분석 (캠퍼스별)</button>
+              <button class="view-dropdown-item" onclick="goToView('student-ecp.html')">학생 분석 &gt; 전년 대비 증감 추이 분석 (ECP)</button>
+              <button class="view-dropdown-item" onclick="goToView('student-ecp-ex.html')">학생 분석 &gt; 전년 대비 증감추이 (ECP 레벨 외)</button>
+              <button class="view-dropdown-item active" onclick="goToView('')">학생 분석 &gt; 전년 대비 증감 추이 분석 (과정별)</button>
+              <button class="view-dropdown-item" onclick="goToView('student-region.html')">학생 분석 &gt; 전년 대비 증감 추이 분석 (권역별)</button>
+              <button class="view-dropdown-item" onclick="goToView('student-trend.html')">학생 분석 &gt; 3개년 학생 수 월간 추이</button>
+              <div class="view-dropdown-group-label" style="margin-top:var(--space-1);">레벨 변동</div>
+              <button class="view-dropdown-item" onclick="goToView('student-level-h1.html')">학생 분석 &gt; 2025년 상반기 레벨변동 현황</button>
+              <button class="view-dropdown-item" onclick="goToView('student-level-h2.html')">학생 분석 &gt; 2025년 하반기 레벨변동 현황</button>
+            </div>
+          </div>
+          <div class="view-selector-right">
+            <span class="view-count-badge" id="viewCountBadge">기준일 2026-05-15 · 12행</span>
+            <button class="btn btn-secondary" style="height:44px;border-radius:var(--radius-lg);" onclick="downloadExcel()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Excel
+            </button>
+          </div>
+        </div>
+
+        <div class="data-table-card">
+          <div class="data-table-wrap">
+            <table class="data-table" id="courseTable">
+              <thead>
+                <tr class="group-header">
+                  <th rowspan="2" style="min-width:64px;">운영구분</th>
+                  <th rowspan="2" style="min-width:72px;">과정명</th>
+                  <th colspan="4" style="text-align:center;border-left:1px solid var(--color-border);">전년</th>
+                  <th colspan="4" style="text-align:center;border-left:1px solid var(--color-border);">금년</th>
+                  <th colspan="2" style="text-align:center;border-left:1px solid var(--color-border);">전년→금년 월별</th>
+                  <th colspan="2" style="text-align:center;border-left:1px solid var(--color-border);">전월 연간</th>
+                  <th colspan="2" style="text-align:center;border-left:1px solid var(--color-border);">당월 연간</th>
+                </tr>
+                <tr class="sub-header">
+                  <th class="group-border">전월<br><small>(A)</small></th>
+                  <th class="group-border">당월<br><small>(B)</small></th>
+                  <th class="group-border">월별 증감<br><small>(B-A)</small></th>
+                  <th class="group-border">월별 증감율<br><small>(B/A)</small></th>
+                  <th class="group-border">전월<br><small>(E)</small></th>
+                  <th class="group-border">당월<br><small>(F)</small></th>
+                  <th class="group-border">월별 증감<br><small>(F-E)</small></th>
+                  <th class="group-border">월별 증감율<br><small>(F/E)</small></th>
+                  <th class="group-border">증감 차<br><small>(G-C)</small></th>
+                  <th class="group-border">증감율 차<br><small>(H-D)</small></th>
+                  <th class="group-border">증감<br><small>(E-A)</small></th>
+                  <th class="group-border">증감율<br><small>(E/A)</small></th>
+                  <th class="group-border">증감<br><small>(F-B)</small></th>
+                  <th class="group-border">증감율<br><small>(F/B)</small></th>
+                </tr>
+              </thead>
+              <tbody id="courseTbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /data-scroll -->
+    </div><!-- /data-panel -->
+
+    <!-- 우측: AI 채팅 패널 -->
+    <div class="chat-panel collapsed" id="chatPanel">
+      <div class="chat-header">
+        <div class="chat-header-left">
+          <div class="chat-header-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="chat-header-title">대화</div>
+        </div>
+        <button class="chat-close-btn" onclick="toggleChat()" title="닫기">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="chat-intro" id="chatIntro">
+        <div class="chat-intro-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+        </div>
+        <div>
+          <div class="chat-intro-title">Poly AI</div>
+          <div class="chat-intro-desc">과정별 전년 대비 증감 데이터를<br>기반으로 인사이트를 제공합니다</div>
+        </div>
+        <button class="chat-insight-btn" onclick="sendMsg('과정별 증감 데이터를 분석하여 인사이트를 제공해줘')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          분석하여 인사이트 얻기
+        </button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg ai">
+          <div class="msg-bubble">
+            안녕하세요! 과정별 전년 대비 증감 추이 데이터입니다.<br>
+            궁금한 점을 질문해 주세요.
+          </div>
+          <span class="msg-time">15:29</span>
+          <div class="msg-followups">
+            <button class="followup-chip" onclick="sendMsg('직영과 분원의 증감 차이를 분석해줘')">직영·분원 비교</button>
+            <button class="followup-chip" onclick="sendMsg('ECP 과정 연간 증감 현황은?')">ECP 연간 증감</button>
+            <button class="followup-chip" onclick="sendMsg('GRAD 과정 증감 추이는?')">GRAD 추이</button>
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-wrap" id="chatInputWrap">
+        <div class="chat-input-box">
+          <textarea class="chat-input" id="chatInput" placeholder="데이터에 대해 질문하세요..." rows="1" onkeydown="handleKey(event)"></textarea>
+          <button class="chat-send-btn" onclick="sendMsg()" title="전송">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+    </div><!-- /chat-panel -->
+
+  </div><!-- /view-panels -->
+</div><!-- /view-shell -->
+
+<script src="js/utils.js"></script>
+<script src="js/layout.js"></script>
+<script>
+/* ── 데이터 ── */
+var DATA = [
+  { op:'직영', course:'ECP',
+    A:1975,  B:1981,  BA:6,    BAr:0.30,
+    E:1847,  F:1846,  FE:-1,   FEr:-0.10,
+    GC:-7,   HD:-0.4,
+    EA:-128, EAr:-6.50, FB:-135, FBr:-6.80 },
+
+  { op:'직영', course:'ELE',
+    A:5337,  B:5291,  BA:-46,  BAr:-0.90,
+    E:5116,  F:5019,  FE:-97,  FEr:-1.90,
+    GC:-51,  HD:-1.0,
+    EA:-221, EAr:-4.10, FB:-272, FBr:-5.10 },
+
+  { op:'직영', course:'GRAD',
+    A:2219,  B:2167,  BA:-52,  BAr:-2.30,
+    E:2291,  F:2257,  FE:-34,  FEr:-1.50,
+    GC:18,   HD:0.8,
+    EA:72,   EAr:3.20, FB:90,   FBr:4.20 },
+
+  { op:'직영', course:'직영 소계', sub:true,
+    A:9531,  B:9439,  BA:-92,  BAr:-1.00,
+    E:9254,  F:9122,  FE:-132, FEr:-1.40,
+    GC:-40,  HD:-0.4,
+    EA:-277, EAr:-2.90, FB:-317, FBr:-3.40 },
+
+  { op:'분원', course:'ECP', section:true,
+    A:3976,  B:3954,  BA:-22,  BAr:-0.60,
+    E:3631,  F:3649,  FE:18,   FEr:0.50,
+    GC:40,   HD:1.1,
+    EA:-345, EAr:-8.70, FB:-305, FBr:-7.70 },
+
+  { op:'분원', course:'ELE',
+    A:7811,  B:7649,  BA:-162, BAr:-2.10,
+    E:7630,  F:7520,  FE:-110, FEr:-1.40,
+    GC:52,   HD:0.7,
+    EA:-181, EAr:-2.30, FB:-129, FBr:-1.70 },
+
+  { op:'분원', course:'GRAD',
+    A:1211,  B:1174,  BA:-37,  BAr:-3.10,
+    E:1267,  F:1234,  FE:-33,  FEr:-2.60,
+    GC:4,    HD:0.5,
+    EA:56,   EAr:4.60, FB:60,   FBr:5.10 },
+
+  { op:'분원', course:'분원 소계', sub:true,
+    A:12998, B:12777, BA:-221, BAr:-1.70,
+    E:12528, F:12403, FE:-125, FEr:-1.00,
+    GC:96,   HD:0.7,
+    EA:-470, EAr:-3.60, FB:-374, FBr:-2.90 },
+
+  { op:'전체', course:'ECP', section:true,
+    A:5951,  B:5935,  BA:-16,  BAr:-0.30,
+    E:5478,  F:5495,  FE:17,   FEr:0.30,
+    GC:33,   HD:0.6,
+    EA:-473, EAr:-7.90, FB:-440, FBr:-7.40 },
+
+  { op:'전체', course:'ELE',
+    A:13148, B:12940, BA:-208, BAr:-1.60,
+    E:12746, F:12539, FE:-207, FEr:-1.60,
+    GC:1,    HD:0.0,
+    EA:-402, EAr:-3.10, FB:-401, FBr:-3.10 },
+
+  { op:'전체', course:'GRAD',
+    A:3430,  B:3341,  BA:-89,  BAr:-2.60,
+    E:3558,  F:3491,  FE:-67,  FEr:-1.90,
+    GC:22,   HD:0.7,
+    EA:128,  EAr:3.70, FB:150,  FBr:4.50 },
+
+  { op:'전체', course:'전체 합계', total:true,
+    A:22529, B:22216, BA:-313, BAr:-1.40,
+    E:21782, F:21525, FE:-257, FEr:-1.20,
+    GC:56,   HD:0.2,
+    EA:-747, EAr:-3.30, FB:-691, FBr:-3.10 }
+];
+
+/* ── 렌더링 ── */
+function numCls(v) { return v > 0 ? 'num-pos' : ''; }
+function fmtN(v)   { return v.toLocaleString('ko-KR'); }
+function fmtR(v)   { return (v > 0 ? '+' : '') + v.toFixed(2) + '%'; }
+function fmtRp(v)  { return (v > 0 ? '+' : '') + v.toFixed(1) + '%p'; }
+
+function numTd(v, fmt) {
+  var c = numCls(v);
+  return '<td' + (c ? ' class="' + c + '"' : '') + '>' + (fmt ? fmt(v) : fmtN(v)) + '</td>';
+}
+
+function renderTable() {
+  var tbody = document.getElementById('courseTbody');
+  var html = '';
+  DATA.forEach(function(r) {
+    var cls = r.total ? 'grand-total' : r.sub ? 'subtotal' : '';
+    var sectionCls = r.section ? ' section-top' : '';
+    html += '<tr' + (cls || sectionCls ? ' class="' + (cls + sectionCls).trim() + '"' : '') + '>';
+    html += '<td>' + r.op + '</td>';
+    html += '<td>' + r.course + '</td>';
+    html += '<td>' + fmtN(r.A) + '</td>';
+    html += '<td>' + fmtN(r.B) + '</td>';
+    html += numTd(r.BA);
+    html += numTd(r.BAr, fmtR);
+    html += '<td>' + fmtN(r.E) + '</td>';
+    html += '<td>' + fmtN(r.F) + '</td>';
+    html += numTd(r.FE);
+    html += numTd(r.FEr, fmtR);
+    html += numTd(r.GC);
+    html += numTd(r.HD, fmtRp);
+    html += numTd(r.EA);
+    html += numTd(r.EAr, fmtR);
+    html += numTd(r.FB);
+    html += numTd(r.FBr, fmtR);
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+}
+
+/* ── 뷰 드롭다운 ── */
+function toggleViewDropdown() {
+  var menu = document.getElementById('viewDropdownMenu');
+  var chevron = document.getElementById('viewDropdownChevron');
+  menu.classList.toggle('open');
+  chevron.style.transform = menu.classList.contains('open') ? 'rotate(180deg)' : '';
+}
+function goToView(url) {
+  document.getElementById('viewDropdownMenu').classList.remove('open');
+  document.getElementById('viewDropdownChevron').style.transform = '';
+  if (url) location.href = url;
+}
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#viewDropdown') && !e.target.closest('#viewDropdownMenu')) {
+    var menu = document.getElementById('viewDropdownMenu');
+    if (menu) {
+      menu.classList.remove('open');
+      document.getElementById('viewDropdownChevron').style.transform = '';
+    }
+  }
+});
+
+/* ── Excel 내보내기 ── */
+function downloadExcel() {
+  var headers = ['운영구분','과정명',
+    '전년전월(A)','전년당월(B)','전년월별증감(B-A)','전년월별증감률(B/A)',
+    '금년전월(E)','금년당월(F)','금년월별증감(F-E)','금년월별증감률(F/E)',
+    '전년→금년증감차(G-C)','전년→금년증감률차(H-D)',
+    '전월연간증감(E-A)','전월연간증감률(E/A)',
+    '당월연간증감(F-B)','당월연간증감률(F/B)'];
+  var rows = DATA.map(function(r) {
+    return [r.op, r.course,
+      r.A, r.B, r.BA, r.BAr, r.E, r.F, r.FE, r.FEr,
+      r.GC, r.HD, r.EA, r.EAr, r.FB, r.FBr];
+  });
+  var ws = XLSX.utils.aoa_to_sheet([headers].concat(rows));
+  var wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, '과정별 증감분석');
+  XLSX.writeFile(wb, '전년대비증감추이_과정별_2026-05.xlsx');
+}
+
+/* ── 채팅 패널 ── */
+function toggleChat() {
+  var panel = document.getElementById('chatPanel');
+  var fab = document.getElementById('chatFab');
+  panel.classList.toggle('collapsed');
+  if (fab) fab.classList.toggle('visible', panel.classList.contains('collapsed'));
+}
+function sendMsg(text) {
+  var input = document.getElementById('chatInput');
+  var msg = text || input.value.trim();
+  if (!msg) return;
+  var msgs = document.getElementById('chatMessages');
+  msgs.innerHTML += '<div class="msg user"><div class="msg-bubble">' + msg + '</div></div>';
+  if (!text) input.value = '';
+  msgs.scrollTop = msgs.scrollHeight;
+}
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
+}
+
+/* ── LNB 서브 메뉴 토글 ── */
+function toggleSubNav(btn) {
+  btn.closest('.poly-nav-group').classList.toggle('open');
+}
+
+/* ── 테마 토글 ── */
+(function() {
+  var btn = document.getElementById('theme-toggle-2');
+  if (!btn) return;
+  btn.addEventListener('click', function() {
+    var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
+    localStorage.setItem('epTheme', isDark ? '' : 'dark');
+  });
+  var saved = localStorage.getItem('epTheme');
+  if (saved === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+})();
+
+renderTable();
+</script>
+</body>
+</html>

@@ -131,18 +131,20 @@
         <div class="view-selector-inner">
           <div class="view-dropdown-wrap">
             <div class="view-selector-dropdown" onclick="toggleViewDropdown()" id="viewDropdown">
-              <span class="view-selector-label" id="viewSelectorLabel">전년 대비 증감 추이 분석 (캠퍼스별)</span>
+              <span class="view-selector-label" id="viewSelectorLabel">학생 분석 &gt; 전년 대비 증감 추이 분석 (캠퍼스별)</span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;color:var(--color-text-tertiary);transition:transform 0.2s" id="viewDropdownChevron"><polyline points="6 9 12 15 18 9"/></svg>
             </div>
             <div class="view-dropdown-menu" id="viewDropdownMenu">
               <div class="view-dropdown-group-label">학생 분석</div>
-              <button class="view-dropdown-item active" onclick="selectView(this,'전년 대비 증감 추이 분석 (캠퍼스별)')">전년 대비 증감 추이 분석 (캠퍼스별)</button>
-              <button class="view-dropdown-item" onclick="selectView(this,'재학생 월별 추이')">재학생 월별 추이</button>
-              <button class="view-dropdown-item" onclick="selectView(this,'신규 등록 현황')">신규 등록 현황</button>
-              <button class="view-dropdown-item" onclick="selectView(this,'이탈 현황 분석')">이탈 현황 분석</button>
-              <div class="view-dropdown-group-label" style="margin-top:var(--space-1);">기간 비교</div>
-              <button class="view-dropdown-item" onclick="selectView(this,'전년 동기 비교 (권역별)')">전년 동기 비교 (권역별)</button>
-              <button class="view-dropdown-item" onclick="selectView(this,'3개년 추이')">3개년 추이</button>
+              <button class="view-dropdown-item active" onclick="selectView(this,'학생 분석 &gt; 전년 대비 증감 추이 분석 (캠퍼스별)')">학생 분석 &gt; 전년 대비 증감 추이 분석 (캠퍼스별)</button>
+              <button class="view-dropdown-item" onclick="location.href='student-ecp.html'">학생 분석 &gt; 전년 대비 증감 추이 분석 (ECP)</button>
+              <button class="view-dropdown-item" onclick="location.href='student-ecp-ex.html'">학생 분석 &gt; 전년 대비 증감추이 (ECP 레벨 외)</button>
+              <button class="view-dropdown-item" onclick="location.href='student-course.html'">학생 분석 &gt; 전년 대비 증감 추이 분석 (과정별)</button>
+              <button class="view-dropdown-item" onclick="location.href='student-region.html'">학생 분석 &gt; 전년 대비 증감 추이 분석 (권역별)</button>
+              <button class="view-dropdown-item" onclick="location.href='student-trend.html'">학생 분석 &gt; 3개년 학생 수 월간 추이</button>
+              <div class="view-dropdown-group-label" style="margin-top:var(--space-1);">레벨 변동</div>
+              <button class="view-dropdown-item" onclick="location.href='student-level-h1.html'">학생 분석 &gt; 2025년 상반기 레벨변동 현황</button>
+              <button class="view-dropdown-item" onclick="location.href='student-level-h2.html'">학생 분석 &gt; 2025년 하반기 레벨변동 현황</button>
             </div>
           </div>
           <div class="view-selector-right">
