@@ -381,6 +381,8 @@ function initFlatpickrSelects(fp) {
   currentMonthDiv.dataset.csYearInit = '1';
 
   var curY = fp.currentYear;
+  var yrPageBase = curY; /* 현재 표시 중인 년도 범위의 중심 */
+
   var yrTrigger = document.createElement('button');
   yrTrigger.type = 'button';
   yrTrigger.className = 'cs-trigger cs-year-trigger';
@@ -392,18 +394,56 @@ function initFlatpickrSelects(fp) {
   currentMonthDiv._csLabel = yrLabel;
   yrTrigger.appendChild(yrLabel);
 
-  var years = [];
-  for (var y = curY - 10; y <= curY + 10; y++) years.push({ text: String(y), value: y, selected: y === curY });
+  function _yrItems(base) {
+    var items = [];
+    for (var y = base - 10; y <= base + 10; y++) items.push({ text: String(y), value: y, selected: y === fp.currentYear });
+    return items;
+  }
 
-  var yrCtrl = _fpCalDropdown(cal, yrTrigger, years, function(val) {
+  var yrCtrl = _fpCalDropdown(cal, yrTrigger, _yrItems(yrPageBase), function(val) {
     yrLabel.textContent = val;
     fp.jumpToDate(new Date(val, fp.currentMonth, 1));
   });
   currentMonthDiv._csDropdown = yrCtrl.dropdown;
 
+  /* 년도 범위 재렌더링 — < > 화살표로 이동 시 호출 */
+  function _refreshYrList(newBase) {
+    yrPageBase = newBase;
+    var ul = yrCtrl.dropdown.querySelector('ul');
+    if (!ul) return;
+    ul.innerHTML = '';
+    _yrItems(newBase).forEach(function(item) {
+      var li = document.createElement('li');
+      li.className = 'cs-option' + (item.selected ? ' selected' : '');
+      li.textContent = item.text;
+      li.setAttribute('role', 'option');
+      li.setAttribute('aria-selected', String(item.selected));
+      li.addEventListener('click', function(e) {
+        e.stopPropagation();
+        ul.querySelectorAll('.cs-option').forEach(function(o) { o.classList.remove('selected'); });
+        li.classList.add('selected');
+        yrCtrl.close();
+        yrLabel.textContent = item.value;
+        fp.jumpToDate(new Date(item.value, fp.currentMonth, 1));
+      });
+      ul.appendChild(li);
+    });
+  }
+
+  /* 달력 prev/next 화살표 — 년도 드롭다운 열려있을 때 범위 이동(4년씩), 닫혀있으면 정상 동작 */
+  var prevArr = cal.querySelector('.flatpickr-prev-month');
+  var nextArr = cal.querySelector('.flatpickr-next-month');
+  function _yrNav(e) {
+    if (!yrCtrl.dropdown.classList.contains('open')) return;
+    e.stopImmediatePropagation();
+    e.preventDefault();
+    _refreshYrList(yrPageBase + (e.currentTarget === prevArr ? -4 : 4));
+  }
+  if (prevArr) prevArr.addEventListener('click', _yrNav, true);
+  if (nextArr) nextArr.addEventListener('click', _yrNav, true);
+
   /* 캘린더 내 모든 numInputWrapper(Range 2번째 포함) 숨김 */
   cal.querySelectorAll('.numInputWrapper').forEach(function(nw) { nw.style.display = 'none'; });
-  /* 처리되지 않은 나머지 월 select도 숨김 */
   cal.querySelectorAll('.flatpickr-monthDropdown-months').forEach(function(sel) { sel.style.display = 'none'; });
   currentMonthDiv.appendChild(yrTrigger);
   syncFlatpickrMonthLabel(fp);
