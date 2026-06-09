@@ -411,16 +411,16 @@
     <div style="padding:0 var(--space-6) var(--space-6);display:flex;flex-direction:column;gap:var(--space-4);">
       <div>
         <label style="display:block;font-size:var(--text-sm);font-weight:var(--weight-medium);color:var(--color-text-secondary);margin-bottom:var(--space-2);">프로젝트 이름</label>
-        <input type="text" placeholder="예: 2026 하반기 경영 분석" style="width:100%;padding:10px var(--space-4);border:var(--border-default);border-radius:var(--radius-md);font-size:var(--text-sm);font-family:var(--font-sans);color:var(--color-text-primary);background:var(--color-bg);outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--color-border)'">
+        <input type="text" placeholder="예: 2026 하반기 경영 분석" style="width:100%;height:44px;padding:0 var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--text-sm);font-family:var(--font-sans);color:var(--color-text-primary);background:var(--color-bg);outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--color-border)'">
       </div>
       <div style="position:relative;">
         <label style="display:block;font-size:var(--text-sm);font-weight:var(--weight-medium);color:var(--color-text-secondary);margin-bottom:var(--space-2);">데이터 소스</label>
-        <div id="np-ms-trigger" onclick="toggleNpMs(event)" style="display:flex;align-items:center;justify-content:space-between;padding:10px var(--space-4);border:var(--border-default);border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--color-text-tertiary);background:var(--color-bg);cursor:pointer;user-select:none;">
+        <div id="np-ms-trigger" onclick="toggleNpMs(event)" style="display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 var(--space-4);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--color-text-tertiary);background:var(--color-bg);cursor:pointer;user-select:none;box-sizing:border-box;">
           <span id="np-ms-label">선택하세요</span>
           <svg id="np-ms-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
         <div id="np-ms-menu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--color-bg);border:var(--border-default);border-radius:var(--radius-md);box-shadow:var(--shadow-md);z-index:300;overflow:hidden;">
-          <div style="max-height:114px;overflow-y:auto;">
+          <div style="max-height:114px;overflow-y:scroll;">
             <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감 추이 분석 (캠퍼스별)</span></label>
             <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감 추이 분석 (ECP)</span></label>
             <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감추이 (ECP 레벨 외)</span></label>
@@ -487,7 +487,7 @@
     var open = menu.style.display === 'none';
     menu.style.display = open ? 'block' : 'none';
     chevron.style.transform = open ? 'rotate(180deg)' : '';
-    document.getElementById('np-ms-trigger').style.borderColor = open ? 'var(--color-primary)' : '';
+    document.getElementById('np-ms-trigger').style.borderColor = open ? 'var(--color-primary)' : 'var(--color-border)';
   }
   function updateNpMs() {
     var checked = document.querySelectorAll('#np-ms-menu input:checked');
@@ -498,7 +498,7 @@
   document.addEventListener('click', function(e) {
     if (!e.target.closest('#np-ms-trigger') && !e.target.closest('#np-ms-menu')) {
       var menu = document.getElementById('np-ms-menu');
-      if (menu) { menu.style.display = 'none'; document.getElementById('np-ms-chevron').style.transform = ''; document.getElementById('np-ms-trigger').style.borderColor = ''; }
+      if (menu) { menu.style.display = 'none'; document.getElementById('np-ms-chevron').style.transform = ''; document.getElementById('np-ms-trigger').style.borderColor = 'var(--color-border)'; }
     }
   });
 
