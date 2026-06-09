@@ -415,13 +415,41 @@
       </div>
       <div>
         <label style="display:block;font-size:var(--text-sm);font-weight:var(--weight-medium);color:var(--color-text-secondary);margin-bottom:var(--space-2);">데이터 소스</label>
-        <select class="filter-select" style="width:100%;">
-          <option>POLY 전체</option>
-          <option>POLY – PI 사업부</option>
-          <option>POLY – ESC 사업부</option>
-          <option>CANB</option>
-          <option>전체 (POLY + CANB)</option>
-        </select>
+        <div style="border:var(--border-default);border-radius:var(--radius-md);max-height:208px;overflow-y:auto;" id="np-ds-box">
+          <label class="ds-picker-item">
+            <input type="checkbox" onchange="updateNpCount()">
+            <span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감 추이 분석 (캠퍼스별)</span>
+          </label>
+          <label class="ds-picker-item">
+            <input type="checkbox" onchange="updateNpCount()">
+            <span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감 추이 분석 (ECP)</span>
+          </label>
+          <label class="ds-picker-item">
+            <input type="checkbox" onchange="updateNpCount()">
+            <span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감추이 (ECP 레벨 외)</span>
+          </label>
+          <label class="ds-picker-item">
+            <input type="checkbox" onchange="updateNpCount()">
+            <span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감 추이 분석 (과정별)</span>
+          </label>
+          <label class="ds-picker-item">
+            <input type="checkbox" onchange="updateNpCount()">
+            <span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감 추이 분석 (권역별)</span>
+          </label>
+          <label class="ds-picker-item">
+            <input type="checkbox" onchange="updateNpCount()">
+            <span class="ds-picker-item-label">학생 분석 &gt; 3개년 학생 수 월간 추이</span>
+          </label>
+          <label class="ds-picker-item">
+            <input type="checkbox" onchange="updateNpCount()">
+            <span class="ds-picker-item-label">학생 분석 &gt; 2025년 상반기 레벨변동 현황</span>
+          </label>
+          <label class="ds-picker-item">
+            <input type="checkbox" onchange="updateNpCount()">
+            <span class="ds-picker-item-label">학생 분석 &gt; 2025년 하반기 레벨변동 현황</span>
+          </label>
+        </div>
+        <div style="font-size:var(--text-xs);color:var(--color-text-tertiary);margin-top:var(--space-1);" id="np-ds-count">0개 선택</div>
       </div>
       <div>
         <label style="display:block;font-size:var(--text-sm);font-weight:var(--weight-medium);color:var(--color-text-secondary);margin-bottom:var(--space-2);">설명 (선택)</label>
@@ -468,6 +496,11 @@
     document.getElementById('del-modal-desc').textContent =
       '"' + name + '"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.';
     document.getElementById('deleteModal').classList.add('open');
+  }
+
+  function updateNpCount() {
+    var n = document.querySelectorAll('#np-ds-box input:checked').length;
+    document.getElementById('np-ds-count').textContent = n + '개 선택';
   }
 
   function closeDeleteModal() {
