@@ -8,10 +8,10 @@
   <link rel="stylesheet" href="styles/common.css">
   <link rel="stylesheet" href="styles/pages.css">
   <style>
-    #np-ms-scroll::-webkit-scrollbar { width: 6px; }
-    #np-ms-scroll::-webkit-scrollbar-track { background: transparent; }
-    #np-ms-scroll::-webkit-scrollbar-thumb { background: var(--color-border-strong); border-radius: 3px; }
-    #np-ms-scroll::-webkit-scrollbar-button { height: 0; width: 0; }
+    #np-ms-scroll::-webkit-scrollbar { display: none; }
+    #np-sb-thumb { position:absolute; right:3px; width:4px; background:var(--color-border-strong); border-radius:4px; cursor:grab; opacity:0; transition:opacity 0.15s; }
+    #np-sb-thumb:active { cursor:grabbing; }
+    #np-ms-fade { pointer-events:none; position:absolute; bottom:0; left:0; right:0; height:28px; background:linear-gradient(transparent, var(--color-bg)); border-radius:0 0 var(--radius-md) var(--radius-md); transition:opacity 0.15s; }
   </style>
 </head>
 <body class="page-projects">
@@ -327,12 +327,11 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </div>
         <div style="flex:1;min-width:0;">
-          <div class="convo-item-title">목동 캠퍼스 학생수 감소 원인 분석</div>
+          <div class="convo-item-title" style="display:flex;align-items:center;gap:6px;">목동 캠퍼스 학생수 감소 원인 분석<span class="badge badge-poly">POLY</span></div>
           <div class="convo-item-preview">목동 3개 캠퍼스 합산 -127명 감소 (전년 대비 -7.2%). 목동 본원이 -94명으로...</div>
         </div>
         <div class="convo-item-right">
           <span class="convo-item-date">30분 전</span>
-          <span class="badge badge-poly">POLY</span>
         </div>
         <div class="cl-item-actions">
           <button class="cl-item-action cl-item-action-open" title="열기" aria-label="열기" onclick="event.preventDefault();event.stopPropagation();window.location.href='chat.html'">
@@ -348,12 +347,11 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </div>
         <div style="flex:1;min-width:0;">
-          <div class="convo-item-title">오늘 재원생 수 현황</div>
+          <div class="convo-item-title" style="display:flex;align-items:center;gap:6px;">오늘 재원생 수 현황<span class="badge badge-neutral">전체</span></div>
           <div class="convo-item-preview">2026년 5월 27일 기준 POLY 전체 재원생 수는 12,847명입니다. 전월 대비 -255명...</div>
         </div>
         <div class="convo-item-right">
           <span class="convo-item-date">2시간 전</span>
-          <span class="badge badge-neutral">전체</span>
         </div>
         <div class="cl-item-actions">
           <button class="cl-item-action cl-item-action-open" title="열기" aria-label="열기" onclick="event.preventDefault();event.stopPropagation();window.location.href='chat.html'">
@@ -369,12 +367,11 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         </div>
         <div style="flex:1;min-width:0;">
-          <div class="convo-item-title">전년 대비 캠퍼스별 증감 비교</div>
+          <div class="convo-item-title" style="display:flex;align-items:center;gap:6px;">전년 대비 캠퍼스별 증감 비교<span class="badge badge-poly">POLY</span></div>
           <div class="convo-item-preview">서울권 직영 8개 캠퍼스 평균 감소율은 -2.1%이며, 광명이 유일하게 증가...</div>
         </div>
         <div class="convo-item-right">
           <span class="convo-item-date">어제</span>
-          <span class="badge badge-poly">POLY</span>
         </div>
         <div class="cl-item-actions">
           <button class="cl-item-action cl-item-action-open" title="열기" aria-label="열기" onclick="event.preventDefault();event.stopPropagation();window.location.href='chat.html'">
@@ -426,7 +423,7 @@
           <svg id="np-ms-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
         <div id="np-ms-menu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--color-bg);border:var(--border-default);border-radius:var(--radius-md);box-shadow:var(--shadow-md);z-index:300;overflow:hidden;">
-          <div id="np-ms-scroll" style="max-height:114px;overflow-y:scroll;scrollbar-width:thin;scrollbar-color:var(--color-border-strong) transparent;">
+          <div id="np-ms-scroll" style="max-height:114px;overflow-y:scroll;scrollbar-width:none;-ms-overflow-style:none;">
             <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감 추이 분석 (캠퍼스별)</span></label>
             <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감 추이 분석 (ECP)</span></label>
             <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감추이 (ECP 레벨 외)</span></label>
@@ -436,6 +433,8 @@
             <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 2025년 상반기 레벨변동 현황</span></label>
             <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 2025년 하반기 레벨변동 현황</span></label>
           </div>
+          <div id="np-sb-thumb"></div>
+          <div id="np-ms-fade"></div>
         </div>
       </div>
       <div>
@@ -485,7 +484,23 @@
     document.getElementById('deleteModal').classList.add('open');
   }
 
-  /* 데이터 소스 멀티셀렉트 */
+  /* 데이터 소스 멀티셀렉트 — 커스텀 스크롤바 */
+  function _updateNpSb() {
+    var sc = document.getElementById('np-ms-scroll');
+    var thumb = document.getElementById('np-sb-thumb');
+    var fade = document.getElementById('np-ms-fade');
+    if (!sc || !thumb) return;
+    var ratio = sc.clientHeight / sc.scrollHeight;
+    if (ratio >= 1) { thumb.style.opacity = '0'; if (fade) fade.style.opacity = '0'; return; }
+    var trackH = sc.clientHeight - 6;
+    var thumbH = Math.max(24, Math.round(trackH * ratio));
+    var maxScroll = sc.scrollHeight - sc.clientHeight;
+    var thumbTop = 3 + Math.round((sc.scrollTop / maxScroll) * (trackH - thumbH));
+    thumb.style.height = thumbH + 'px';
+    thumb.style.top = thumbTop + 'px';
+    thumb.style.opacity = '1';
+    if (fade) fade.style.opacity = (sc.scrollTop + sc.clientHeight >= sc.scrollHeight - 2) ? '0' : '1';
+  }
   function toggleNpMs(e) {
     e.stopPropagation();
     var menu = document.getElementById('np-ms-menu');
@@ -494,7 +509,30 @@
     menu.style.display = open ? 'block' : 'none';
     chevron.style.transform = open ? 'rotate(180deg)' : '';
     document.getElementById('np-ms-trigger').style.borderColor = open ? 'var(--color-primary)' : 'var(--color-border)';
+    if (open) { setTimeout(_updateNpSb, 0); }
   }
+  document.getElementById('np-ms-scroll').addEventListener('scroll', _updateNpSb);
+  /* thumb 드래그 */
+  (function() {
+    var drag = null;
+    document.getElementById('np-sb-thumb').addEventListener('mousedown', function(e) {
+      var sc = document.getElementById('np-ms-scroll');
+      drag = { startY: e.clientY, startScroll: sc.scrollTop };
+      document.body.style.userSelect = 'none';
+      e.preventDefault();
+      e.stopPropagation();
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!drag) return;
+      var sc = document.getElementById('np-ms-scroll');
+      var thumb = document.getElementById('np-sb-thumb');
+      var trackH = sc.clientHeight - 6;
+      var thumbH = parseInt(thumb.style.height) || 24;
+      var dy = e.clientY - drag.startY;
+      sc.scrollTop = drag.startScroll + (dy / (trackH - thumbH)) * (sc.scrollHeight - sc.clientHeight);
+    });
+    document.addEventListener('mouseup', function() { drag = null; document.body.style.userSelect = ''; });
+  })();
   function updateNpMs() {
     var checked = document.querySelectorAll('#np-ms-menu input:checked');
     var label = document.getElementById('np-ms-label');
