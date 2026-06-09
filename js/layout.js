@@ -207,11 +207,11 @@ function _csWrapSelect(sel) {
      trigger overhead(48) = padding 12+34 + border 2, dropdown overhead(30) = option-pad 28 + border 2
      → trigger = dropdown.offsetWidth + 18 */
   var _calcDropdownWidth = function() {
-    dropdown.style.minWidth = '';          // 인라인 min-width 초기화 → CSS max-content 적용
+    dropdown.style.width = 'max-content';  // max-content 로 실제 최대 너비 측정
     var dw = dropdown.offsetWidth;
     var tw = Math.max(dw + 18, 110);
     trigger.style.width = tw + 'px';
-    dropdown.style.minWidth = tw + 'px';  // 트리거와 동일 너비 보장
+    dropdown.style.width = tw + 'px';     // 고정 너비 — min-width 모호성 제거
   };
   _calcDropdownWidth();
   if (document.fonts && document.fonts.ready) {

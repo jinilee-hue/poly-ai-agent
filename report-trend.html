@@ -627,7 +627,8 @@
       var rect = fp.element.getBoundingClientRect();
       var cal = fp.calendarContainer;
       cal.style.position = 'fixed';
-      cal.style.top = (rect.bottom + 4) + 'px';
+      cal.style.marginTop = '0';
+      cal.style.top = (rect.bottom + 6) + 'px';  // 커스텀 셀렉트 드롭다운과 갭 통일(6px)
       cal.style.left = rect.left + 'px';
     },
   });
