@@ -207,11 +207,15 @@ function _csWrapSelect(sel) {
      trigger overhead(48) = padding 12+34 + border 2, dropdown overhead(30) = option-pad 28 + border 2
      → trigger = dropdown.offsetWidth + 18 */
   var _calcDropdownWidth = function() {
-    dropdown.style.width = 'max-content';  // max-content 로 실제 최대 너비 측정
+    /* position:fixed + overflow:hidden 조합에서 브라우저가 max-content 너비를 잘못 계산하는 버그
+       → 측정 중에만 overflow:visible 로 전환해 정확한 intrinsic 너비를 얻고, 고정 px 후 복원 */
+    dropdown.style.overflow = 'visible';
+    dropdown.style.width = 'max-content';
     var dw = dropdown.offsetWidth;
     var tw = Math.max(dw + 18, 110);
     trigger.style.width = tw + 'px';
-    dropdown.style.width = tw + 'px';     // 고정 너비 — min-width 모호성 제거
+    dropdown.style.width = tw + 'px';
+    dropdown.style.overflow = '';          // CSS overflow:hidden 복원 (고정 너비엔 무해)
   };
   _calcDropdownWidth();
   if (document.fonts && document.fonts.ready) {
