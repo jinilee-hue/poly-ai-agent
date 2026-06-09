@@ -512,22 +512,22 @@ select.filter-select:focus { border-color: var(--color-primary); box-shadow: 0 0
 .flatpickr-calendar.arrowBottom::before,
 .flatpickr-calendar.arrowBottom::after { display: none !important; }
 
-/* 월 헤더에만 여백 추가 */
-.flatpickr-months { padding: 8px 6px 4px !important; }
-.flatpickr-months .flatpickr-month { background: transparent !important; color: var(--color-text-primary) !important; height: 34px; }
+/* 월 헤더 — flex 중앙 정렬로 화살표를 월/년도 텍스트 옆에 배치 */
+.flatpickr-months { padding: 6px 6px 4px !important; display: flex !important; justify-content: center !important; align-items: center !important; gap: 2px !important; }
+.flatpickr-months .flatpickr-month { background: transparent !important; color: var(--color-text-primary) !important; height: 34px; flex: none !important; display: flex !important; align-items: center !important; }
 /* Range 2번째 빈 month 컨테이너 숨김 */
 .flatpickr-months .flatpickr-month:empty { display: none !important; }
 .flatpickr-months .flatpickr-month + .flatpickr-month { display: none !important; }
-.flatpickr-current-month { font-size: var(--text-sm) !important; font-weight: var(--weight-semibold); color: var(--color-text-primary) !important; }
+.flatpickr-current-month { font-size: var(--text-sm) !important; font-weight: var(--weight-semibold); color: var(--color-text-primary) !important; position: static !important; width: auto !important; left: auto !important; top: auto !important; padding: 0 !important; height: auto !important; display: flex !important; align-items: center !important; gap: 4px !important; }
 .flatpickr-current-month .flatpickr-monthDropdown-months { background: transparent !important; color: var(--color-text-primary) !important; font-weight: var(--weight-semibold); border: none; }
 .flatpickr-current-month input.cur-year { color: var(--color-text-primary) !important; font-weight: var(--weight-semibold); }
 
 .flatpickr-months .flatpickr-prev-month,
-.flatpickr-months .flatpickr-next-month { color: var(--color-text-secondary) !important; fill: var(--color-text-secondary) !important; padding: 8px !important; top: 0 !important; }
+.flatpickr-months .flatpickr-next-month { position: static !important; top: auto !important; display: flex !important; align-items: center !important; justify-content: center !important; color: var(--color-text-secondary) !important; fill: var(--color-text-secondary) !important; padding: 0 !important; width: 22px !important; height: 22px !important; border: var(--border-default) !important; border-radius: var(--radius-sm) !important; flex-shrink: 0 !important; }
 .flatpickr-months .flatpickr-prev-month:hover,
-.flatpickr-months .flatpickr-next-month:hover { color: var(--color-primary) !important; fill: var(--color-primary) !important; }
+.flatpickr-months .flatpickr-next-month:hover { color: var(--color-primary) !important; fill: var(--color-primary) !important; border-color: var(--color-primary-a50) !important; }
 .flatpickr-months .flatpickr-prev-month svg,
-.flatpickr-months .flatpickr-next-month svg { fill: inherit !important; }
+.flatpickr-months .flatpickr-next-month svg { fill: inherit !important; stroke: currentColor !important; stroke-width: 1.5 !important; width: 12px !important; height: 12px !important; }
 
 /* 요일 헤더·날짜 영역 좌우 여백 */
 .flatpickr-innerContainer { padding: 0 7px 4px !important; }
@@ -572,6 +572,9 @@ span.flatpickr-weekday { background: transparent !important; color: var(--color-
 .flatpickr-day.disabled, .flatpickr-day.disabled:hover { color: var(--color-text-tertiary) !important; background: transparent !important; border-color: transparent !important; }
 .flatpickr-day.prevMonthDay { color: var(--color-border-strong) !important; }
 .flatpickr-day.nextMonthDay { display: none !important; }
+.flatpickr-day.selected.prevMonthDay,
+.flatpickr-day.startRange.prevMonthDay,
+.flatpickr-day.endRange.prevMonthDay { color: #fff !important; }
 .flatpickr-calendar.inline { box-shadow: none !important; border: var(--border-default) !important; border-radius: var(--radius-md) !important; }
 
 /* Flatpickr month/year custom trigger — plain text buttons */

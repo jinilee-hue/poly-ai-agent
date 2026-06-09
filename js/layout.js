@@ -202,12 +202,21 @@ function _csWrapSelect(sel) {
   sel.style.display = 'none';
   wrap.appendChild(sel);
 
-  /* 초기화 시 드롭다운 자연 너비 측정 → 트리거·드롭다운 너비 고정 */
-  var naturalW = dropdown.offsetWidth;
-  if (naturalW > 80) {
-    trigger.style.width = naturalW + 'px';
-    dropdown.style.width = naturalW + 'px';
-  }
+  /* 가장 긴 옵션 텍스트 기준으로 트리거·드롭다운 너비 설정 */
+  var _sizer = document.createElement('span');
+  _sizer.setAttribute('aria-hidden', 'true');
+  var _tCS = window.getComputedStyle(trigger);
+  _sizer.style.cssText = 'position:fixed;left:-9999px;top:-9999px;visibility:hidden;white-space:nowrap;font-size:'
+    + _tCS.fontSize + ';font-family:' + _tCS.fontFamily + ';';
+  document.body.appendChild(_sizer);
+  var _maxTW = 0;
+  options.forEach(function(opt) { _sizer.textContent = opt.text; if (_sizer.offsetWidth > _maxTW) _maxTW = _sizer.offsetWidth; });
+  document.body.removeChild(_sizer);
+  // trigger: padding-left 12 + padding-right 34(chevron) + border 2 = 48px 오버헤드
+  var _trigW = Math.max(_maxTW + 48, 110);
+  trigger.style.width = _trigW + 'px';
+  // dropdown: 트리거 너비 이상으로 최소 너비 보장 (white-space:nowrap으로 한 줄 유지)
+  dropdown.style.minWidth = _trigW + 'px';
 
   function positionDropdown() {
     var rect = trigger.getBoundingClientRect();
@@ -347,7 +356,7 @@ function initFlatpickrSelects(fp) {
   if (monthSel && !monthSel.dataset.csInit) {
     monthSel.dataset.csInit = '1';
     var moOptions = Array.from(monthSel.options);
-    var moIdx = monthSel.selectedIndex;
+    var moIdx = fp.currentMonth;
 
     var moTrigger = document.createElement('button');
     moTrigger.type = 'button';
@@ -402,7 +411,7 @@ function initFlatpickrSelects(fp) {
   yrTrigger.setAttribute('aria-expanded', 'false');
   var yrLabel = document.createElement('span');
   yrLabel.className = 'cs-label';
-  yrLabel.textContent = curY;
+  yrLabel.textContent = curY + '년';
   currentMonthDiv._csLabel = yrLabel;
   yrTrigger.appendChild(yrLabel);
 
@@ -413,7 +422,7 @@ function initFlatpickrSelects(fp) {
   }
 
   var yrCtrl = _fpCalDropdown(cal, yrTrigger, _yrItems(yrPageBase), function(val) {
-    yrLabel.textContent = val;
+    yrLabel.textContent = val + '년';
     fp.jumpToDate(new Date(val, fp.currentMonth, 1));
   });
   currentMonthDiv._csDropdown = yrCtrl.dropdown;
@@ -435,7 +444,7 @@ function initFlatpickrSelects(fp) {
         ul.querySelectorAll('.cs-option').forEach(function(o) { o.classList.remove('selected'); });
         li.classList.add('selected');
         yrCtrl.close();
-        yrLabel.textContent = item.value;
+        yrLabel.textContent = item.value + '년';
         fp.jumpToDate(new Date(item.value, fp.currentMonth, 1));
       });
       ul.appendChild(li);
@@ -454,6 +463,19 @@ function initFlatpickrSelects(fp) {
   if (prevArr) prevArr.addEventListener('click', _yrNav, true);
   if (nextArr) nextArr.addEventListener('click', _yrNav, true);
 
+  /* 년도 드롭다운 열릴 때 — 월 드롭다운이 닫히면서 숨겨진 화살표 복원 + 범위 재중앙 */
+  yrTrigger.addEventListener('click', function() {
+    var pv = cal.querySelector('.flatpickr-prev-month');
+    var nx = cal.querySelector('.flatpickr-next-month');
+    if (pv) pv.style.visibility = '';
+    if (nx) nx.style.visibility = '';
+    if (!yrCtrl.dropdown.classList.contains('open')) return;
+    if (yrPageBase !== fp.currentYear) {
+      yrPageBase = fp.currentYear;
+      _refreshYrList(yrPageBase);
+    }
+  });
+
   /* 캘린더 내 모든 numInputWrapper(Range 2번째 포함) 숨김 */
   cal.querySelectorAll('.numInputWrapper').forEach(function(nw) { nw.style.display = 'none'; });
   cal.querySelectorAll('.flatpickr-monthDropdown-months').forEach(function(sel) { sel.style.display = 'none'; });
@@ -466,7 +488,7 @@ function syncFlatpickrMonthLabel(fp) {
   /* 월 */
   var monthSel = cal.querySelector('.flatpickr-monthDropdown-months');
   if (monthSel && monthSel._csLabel) {
-    var idx = monthSel.selectedIndex;
+    var idx = fp.currentMonth;
     monthSel._csLabel.textContent = monthSel.options[idx] ? monthSel.options[idx].text : '';
     if (monthSel._csDropdown) {
       monthSel._csDropdown.querySelectorAll('.cs-option').forEach(function(o, i) {
@@ -478,7 +500,7 @@ function syncFlatpickrMonthLabel(fp) {
   /* 연도 */
   var currentMonthDiv = cal.querySelector('.flatpickr-current-month');
   if (currentMonthDiv && currentMonthDiv._csLabel) {
-    currentMonthDiv._csLabel.textContent = fp.currentYear;
+    currentMonthDiv._csLabel.textContent = fp.currentYear + '년';
     if (currentMonthDiv._csDropdown) {
       currentMonthDiv._csDropdown.querySelectorAll('.cs-option').forEach(function(o) {
         var match = parseInt(o.textContent) === fp.currentYear;
@@ -486,6 +508,20 @@ function syncFlatpickrMonthLabel(fp) {
       });
     }
   }
+}
+
+/* Flatpickr 달력을 .date-box 바로 아래에 정렬 — 커스텀 셀렉트 드롭다운과 위치 통일 */
+function fpPositionBelowBox(fp) {
+  setTimeout(function() {
+    var box = fp.input.closest ? fp.input.closest('.date-box') : fp.input.parentElement;
+    if (!box) return;
+    var rect = box.getBoundingClientRect();
+    var sY = window.pageYOffset || document.documentElement.scrollTop;
+    var sX = window.pageXOffset || document.documentElement.scrollLeft;
+    var cal = fp.calendarContainer;
+    cal.style.top  = (rect.bottom + sY + 4) + 'px';
+    cal.style.left = (rect.left  + sX) + 'px';
+  }, 0);
 }
 
 /* OverlayScrollbars 초기화 */

@@ -621,7 +621,7 @@
     dateFormat: 'Y.m.d',
     defaultDate: '2026.06.01',
     disableMobile: true,
-    onReady: function(_, __, fp) { initFlatpickrSelects(fp); },
+    onReady: function(_, __, fp) { fp.positionElement = fp.element; initFlatpickrSelects(fp); },
     onMonthChange: function(_, __, fp) { syncFlatpickrMonthLabel(fp); },
   });
 </script>

@@ -2710,6 +2710,7 @@
       color: var(--color-text-secondary);
     }
     .esc-toolbar-label svg { width: 14px; height: 14px; color: var(--color-text-tertiary); }
+    .esc-toolbar-label .btn svg { color: inherit; }
     /* 기준일 날짜 선택은 리포트 목록과 동일한 .date-box 컴포넌트 사용 (common/pages 전역 정의) */
 
     /* 주요 지표 KPI 카드 */
