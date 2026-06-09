@@ -641,9 +641,9 @@
       display: flex; align-items: center; justify-content: center;
       border: none;
       background: transparent; color: var(--color-text-tertiary);
-      cursor: pointer; transition: color 0.15s, background 0.15s;
+      cursor: pointer; transition: color 0.15s;
     }
-    .date-cal-btn:hover { color: var(--color-primary); background: var(--color-primary-light); }
+    .date-cal-btn:hover { color: var(--color-primary); }
     .date-cal-btn svg { width: 15px; height: 15px; }
     /* 시작일 ~ 종료일 구분자 */
     .date-range-sep {
@@ -1287,9 +1287,9 @@
       display: flex; align-items: center; justify-content: center;
       border: none;
       background: transparent; color: var(--color-text-tertiary);
-      cursor: pointer; transition: color 0.15s, background 0.15s;
+      cursor: pointer; transition: color 0.15s;
     }
-    .date-cal-btn:hover { color: var(--color-primary); background: var(--color-primary-light); }
+    .date-cal-btn:hover { color: var(--color-primary); }
     .date-cal-btn svg { width: 15px; height: 15px; }
     .search-submit-btn {
       height: 44px;
