@@ -370,6 +370,17 @@ function initFlatpickrSelects(fp) {
     );
     monthSel._csDropdown = moCtrl.dropdown;
 
+    /* 월 드롭다운 열리면 < > 숨김, 닫히면 복원 */
+    function _syncMoArrows() {
+      var open = moCtrl.dropdown.classList.contains('open');
+      var pv = cal.querySelector('.flatpickr-prev-month');
+      var nx = cal.querySelector('.flatpickr-next-month');
+      if (pv) pv.style.visibility = open ? 'hidden' : '';
+      if (nx) nx.style.visibility = open ? 'hidden' : '';
+    }
+    moTrigger.addEventListener('click', _syncMoArrows);
+    document.addEventListener('click', _syncMoArrows);
+
     monthSel.parentNode.insertBefore(moTrigger, monthSel);
     monthSel.style.display = 'none';
   }
