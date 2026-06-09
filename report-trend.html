@@ -621,8 +621,15 @@
     dateFormat: 'Y.m.d',
     defaultDate: '2026.06.01',
     disableMobile: true,
-    onReady: function(_, __, fp) { fp.positionElement = fp.element; initFlatpickrSelects(fp); },
+    onReady: function(_, __, fp) { initFlatpickrSelects(fp); },
     onMonthChange: function(_, __, fp) { syncFlatpickrMonthLabel(fp); },
+    onOpen: function(_, __, fp) {
+      var rect = fp.element.getBoundingClientRect();
+      var cal = fp.calendarContainer;
+      cal.style.position = 'fixed';
+      cal.style.top = (rect.bottom + 4) + 'px';
+      cal.style.left = rect.left + 'px';
+    },
   });
 </script>
 <script>
