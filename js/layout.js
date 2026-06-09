@@ -305,6 +305,7 @@ function _fpCalDropdown(cal, triggerEl, items, onSelect) {
 
   function open() {
     cal.querySelectorAll('.fp-cal-dropdown.open').forEach(function(d) { d.classList.remove('open'); });
+    cal.querySelectorAll('.cs-trigger.open, .cs-year-trigger.open').forEach(function(t) { t.classList.remove('open'); t.setAttribute('aria-expanded', 'false'); });
     var headerH = (cal.querySelector('.flatpickr-months') || {}).offsetHeight || 54;
     dropdown.style.top = headerH + 'px';
     dropdown.classList.add('open');

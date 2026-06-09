@@ -608,9 +608,9 @@ span.flatpickr-weekday { background: transparent !important; color: var(--color-
   cursor: pointer !important;
 }
 .flatpickr-current-month .cs-trigger:hover,
-.flatpickr-current-month .cs-year-trigger:hover { background: rgba(0,0,0,0.06) !important; box-shadow: none !important; }
+.flatpickr-current-month .cs-year-trigger:hover { background: transparent !important; box-shadow: none !important; }
 .flatpickr-current-month .cs-trigger.open,
-.flatpickr-current-month .cs-year-trigger.open { background: rgba(0,0,0,0.09) !important; box-shadow: none !important; }
+.flatpickr-current-month .cs-year-trigger.open { background: transparent !important; box-shadow: none !important; }
 .flatpickr-current-month .cs-chevron { display: none !important; }
 /* 달력 내부 드롭다운 — 절대 위치, 전체 폭, 스크롤 */
 .flatpickr-calendar { overflow: visible !important; }
