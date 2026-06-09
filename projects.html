@@ -413,18 +413,24 @@
         <label style="display:block;font-size:var(--text-sm);font-weight:var(--weight-medium);color:var(--color-text-secondary);margin-bottom:var(--space-2);">프로젝트 이름</label>
         <input type="text" placeholder="예: 2026 하반기 경영 분석" style="width:100%;padding:10px var(--space-4);border:var(--border-default);border-radius:var(--radius-md);font-size:var(--text-sm);font-family:var(--font-sans);color:var(--color-text-primary);background:var(--color-bg);outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--color-border)'">
       </div>
-      <div>
-        <label style="display:block;font-size:var(--text-sm);font-weight:var(--weight-medium);color:var(--color-text-secondary);margin-bottom:var(--space-2);">데이터 소스 <span style="font-weight:var(--weight-normal);color:var(--color-text-tertiary);">(Ctrl+클릭으로 다중 선택)</span></label>
-        <select class="filter-select" multiple size="4" style="width:100%;height:auto;padding:0;">
-          <option>학생 분석 &gt; 전년 대비 증감 추이 분석 (캠퍼스별)</option>
-          <option>학생 분석 &gt; 전년 대비 증감 추이 분석 (ECP)</option>
-          <option>학생 분석 &gt; 전년 대비 증감추이 (ECP 레벨 외)</option>
-          <option>학생 분석 &gt; 전년 대비 증감 추이 분석 (과정별)</option>
-          <option>학생 분석 &gt; 전년 대비 증감 추이 분석 (권역별)</option>
-          <option>학생 분석 &gt; 3개년 학생 수 월간 추이</option>
-          <option>학생 분석 &gt; 2025년 상반기 레벨변동 현황</option>
-          <option>학생 분석 &gt; 2025년 하반기 레벨변동 현황</option>
-        </select>
+      <div style="position:relative;">
+        <label style="display:block;font-size:var(--text-sm);font-weight:var(--weight-medium);color:var(--color-text-secondary);margin-bottom:var(--space-2);">데이터 소스</label>
+        <div id="np-ms-trigger" onclick="toggleNpMs(event)" style="display:flex;align-items:center;justify-content:space-between;padding:10px var(--space-4);border:var(--border-default);border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--color-text-tertiary);background:var(--color-bg);cursor:pointer;user-select:none;">
+          <span id="np-ms-label">선택하세요</span>
+          <svg id="np-ms-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div id="np-ms-menu" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--color-bg);border:var(--border-default);border-radius:var(--radius-md);box-shadow:var(--shadow-md);z-index:300;overflow:hidden;">
+          <div style="max-height:220px;overflow-y:auto;">
+            <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감 추이 분석 (캠퍼스별)</span></label>
+            <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감 추이 분석 (ECP)</span></label>
+            <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감추이 (ECP 레벨 외)</span></label>
+            <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감 추이 분석 (과정별)</span></label>
+            <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 전년 대비 증감 추이 분석 (권역별)</span></label>
+            <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 3개년 학생 수 월간 추이</span></label>
+            <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 2025년 상반기 레벨변동 현황</span></label>
+            <label class="ds-picker-item"><input type="checkbox" onchange="updateNpMs()"><span class="ds-picker-item-label">학생 분석 &gt; 2025년 하반기 레벨변동 현황</span></label>
+          </div>
+        </div>
       </div>
       <div>
         <label style="display:block;font-size:var(--text-sm);font-weight:var(--weight-medium);color:var(--color-text-secondary);margin-bottom:var(--space-2);">설명 (선택)</label>
@@ -472,6 +478,29 @@
       '"' + name + '"을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.';
     document.getElementById('deleteModal').classList.add('open');
   }
+
+  /* 데이터 소스 멀티셀렉트 */
+  function toggleNpMs(e) {
+    e.stopPropagation();
+    var menu = document.getElementById('np-ms-menu');
+    var chevron = document.getElementById('np-ms-chevron');
+    var open = menu.style.display === 'none';
+    menu.style.display = open ? 'block' : 'none';
+    chevron.style.transform = open ? 'rotate(180deg)' : '';
+    document.getElementById('np-ms-trigger').style.borderColor = open ? 'var(--color-primary)' : '';
+  }
+  function updateNpMs() {
+    var checked = document.querySelectorAll('#np-ms-menu input:checked');
+    var label = document.getElementById('np-ms-label');
+    label.style.color = checked.length ? 'var(--color-text-primary)' : '';
+    label.textContent = checked.length ? checked.length + '개 선택됨' : '선택하세요';
+  }
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#np-ms-trigger') && !e.target.closest('#np-ms-menu')) {
+      var menu = document.getElementById('np-ms-menu');
+      if (menu) { menu.style.display = 'none'; document.getElementById('np-ms-chevron').style.transform = ''; document.getElementById('np-ms-trigger').style.borderColor = ''; }
+    }
+  });
 
   function closeDeleteModal() {
     document.getElementById('deleteModal').classList.remove('open');
