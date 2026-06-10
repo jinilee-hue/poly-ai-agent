@@ -373,6 +373,7 @@
   }
   .trend-date-box svg { width:16px; height:16px; color:var(--color-text-tertiary); flex-shrink:0; cursor:pointer; }
   .trend-date-box:hover { border-color:var(--color-primary); }
+  .trend-date-box.open { border-color:var(--color-primary); box-shadow:0 0 0 3px var(--color-primary-a08); }
   .trend-date-input { width:80px; border:none; background:transparent; color:inherit; font:inherit; outline:none; padding:0; cursor:pointer; }
   /* 6개 KPI 한 줄 배치 (좁아지면 자동 줄바꿈) */
   .trend-kpi-grid { grid-template-columns:repeat(auto-fit, minmax(190px, 1fr)); }
@@ -624,12 +625,15 @@
     onReady: function(_, __, fp) { initFlatpickrSelects(fp); },
     onMonthChange: function(_, __, fp) { syncFlatpickrMonthLabel(fp); },
     onOpen: function(_, __, fp) {
-      var rect = fp.element.getBoundingClientRect();
-      var cal = fp.calendarContainer;
-      cal.style.position = 'fixed';
-      cal.style.marginTop = '0';
-      cal.style.top = (rect.bottom + 6) + 'px';  // 커스텀 셀렉트 드롭다운과 갭 통일(6px)
-      cal.style.left = rect.left + 'px';
+      var box       = document.getElementById('trendDateWrap');
+      box.classList.add('open');
+      var boxRect   = box.getBoundingClientRect();
+      var inputRect = fp.input.getBoundingClientRect();
+      fp.calendarContainer.style.marginTop  = (boxRect.bottom - inputRect.bottom + 1) + 'px';
+      fp.calendarContainer.style.marginLeft = (boxRect.left   - inputRect.left) + 'px';
+    },
+    onClose: function() {
+      document.getElementById('trendDateWrap').classList.remove('open');
     },
   });
 </script>

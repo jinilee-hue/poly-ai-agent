@@ -541,7 +541,7 @@ function _syncTheme() {
     disableMobile: true,
     onReady: function(_, __, fp) { initFlatpickrSelects(fp); },
     onMonthChange: function(_, __, fp) { syncFlatpickrMonthLabel(fp); },
-    onOpen: function(_, __, fp) { fp.calendarContainer.style.marginTop = '4px'; },
+    onOpen: function(_, __, fp) { fp.calendarContainer.style.marginTop = '1px'; },
     onChange: function (sel) {
       chatEndFp.set('minDate', sel[0] || null);
     },
@@ -553,7 +553,7 @@ function _syncTheme() {
     disableMobile: true,
     onReady: function(_, __, fp) { initFlatpickrSelects(fp); },
     onMonthChange: function(_, __, fp) { syncFlatpickrMonthLabel(fp); },
-    onOpen: function(_, __, fp) { fp.calendarContainer.style.marginTop = '4px'; },
+    onOpen: function(_, __, fp) { fp.calendarContainer.style.marginTop = '1px'; },
     onChange: function (sel) {
       chatStartFp.set('maxDate', sel[0] || null);
     },

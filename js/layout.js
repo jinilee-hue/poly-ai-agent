@@ -537,9 +537,38 @@ function fpPositionBelowBox(fp) {
   }, 0);
 }
 
+/* .cond-wrap 트리거 너비를 가장 긴 옵션 기준으로 고정 */
+function initCondWraps() {
+  document.querySelectorAll('.cond-wrap').forEach(function(wrap) {
+    var trigger = wrap.querySelector('.cond-trigger');
+    var items = wrap.querySelectorAll('.cond-item');
+    if (!trigger || !items.length) return;
+
+    var probe = document.createElement('span');
+    probe.setAttribute('aria-hidden', 'true');
+    probe.style.cssText = 'position:fixed;top:0;left:-9999px;visibility:hidden;' +
+      'white-space:nowrap;padding:0 16px;font-size:var(--text-sm);font-family:var(--font-sans);font-weight:500;';
+    document.body.appendChild(probe);
+    var maxW = 0;
+    items.forEach(function(item) {
+      probe.textContent = item.textContent.trim();
+      if (probe.offsetWidth > maxW) maxW = probe.offsetWidth;
+    });
+    document.body.removeChild(probe);
+
+    // probe 좌우 패딩 32px(16px×2) 포함, trigger overhead 47px → trigW = maxW + 15
+    var trigW = Math.max(maxW + 15, 90);
+    trigger.style.width = trigW + 'px';
+  });
+}
+
 /* OverlayScrollbars 초기화 */
 document.addEventListener('DOMContentLoaded', function () {
   initCustomSelects();
+  initCondWraps();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(initCondWraps);
+  }
 
   if (typeof OverlayScrollbarsGlobal === 'undefined') return;
   var OS = OverlayScrollbarsGlobal.OverlayScrollbars;
