@@ -1985,12 +1985,13 @@
     /* ── 우측 카드 ──────────────────────────── */
     .pd-info-card {
       background: var(--color-bg); border: var(--border-default);
-      border-radius: var(--radius-lg); overflow: hidden;
+      border-radius: var(--radius-lg);
     }
     .pd-info-card-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: var(--space-4) var(--space-5);
       border-bottom: var(--border-default);
+      position: relative;
     }
     .pd-info-card-title { font-size: var(--text-sm); font-weight: var(--weight-semibold); color: var(--color-text-primary); }
     .pd-info-card-edit { background: none; border: none; cursor: pointer; color: var(--color-primary); padding: 2px; display: flex; align-items: center; }
@@ -2008,6 +2009,53 @@
     .pd-source-item-icon svg { width: 13px; height: 13px; }
     .pd-source-item-name { font-size: var(--text-xs); font-weight: var(--weight-medium); color: var(--color-text-primary); }
     .pd-source-item-type { font-size: 11px; color: var(--color-text-tertiary); }
+
+    /* 지침 인라인 편집 */
+    .pd-guide-textarea {
+      width: 100%; min-height: 60px; resize: none;
+      font-size: var(--text-sm); line-height: 1.6; color: var(--color-text-secondary);
+      border: none; outline: none; box-shadow: none;
+      padding: 0; background: transparent;
+      font-family: var(--font-sans); box-sizing: border-box;
+    }
+    .pd-guide-actions { display: flex; gap: var(--space-2); justify-content: flex-end; margin-top: var(--space-2); }
+    .pd-guide-save {
+      font-size: var(--text-xs); font-weight: var(--weight-medium);
+      padding: 4px 12px; border-radius: var(--radius-md);
+      border: none; cursor: pointer;
+      background: var(--color-primary); color: #fff;
+    }
+    .pd-guide-save:hover { background: var(--color-primary-dark); }
+    .pd-guide-cancel {
+      font-size: var(--text-xs); font-weight: var(--weight-medium);
+      padding: 4px 12px; border-radius: var(--radius-md); cursor: pointer;
+      background: none; border: var(--border-default); color: var(--color-text-secondary);
+    }
+    .pd-guide-cancel:hover { background: var(--color-bg-subtle); }
+
+    /* 데이터 소스 인라인 피커 */
+    .pd-ds-inline { margin-top: var(--space-1); padding-top: var(--space-1); }
+    .pd-ds-inline-item {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: 5px 0; cursor: pointer; user-select: none;
+    }
+    .pd-ds-inline-item:hover { opacity: 0.8; }
+    .pd-ds-inline-item input { accent-color: var(--color-primary); width: 13px; height: 13px; flex-shrink: 0; cursor: pointer; }
+    .pd-ds-inline-item-text { font-size: var(--text-xs); color: var(--color-text-secondary); line-height: 1.4; }
+    .pd-info-card-edit.open { color: var(--color-text-tertiary); transform: rotate(45deg); }
+
+    /* 데이터 소스 항목 삭제 버튼 */
+    .pd-source-item { position: relative; }
+    .pd-source-del {
+      display: none; position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      width: 20px; height: 20px; border: none; background: none; cursor: pointer;
+      color: var(--color-text-tertiary); padding: 0; border-radius: var(--radius-sm);
+      align-items: center; justify-content: center;
+    }
+    .pd-source-del svg { width: 12px; height: 12px; }
+    .pd-source-del:hover { color: var(--color-text-primary); background: var(--color-bg-muted); }
+    .pd-source-item:hover .pd-source-del { display: flex; }
+    .pd-source-item:hover .pd-source-item-name { padding-right: 24px; }
 
 
 /* ── report-view.css ─────────────────────────────────── */
