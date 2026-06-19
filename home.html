@@ -8,6 +8,12 @@
   <link rel="stylesheet" href="styles/common.css">
   <link rel="stylesheet" href="styles/pages.css">
   <style>
+    /* 입력창이 화면 세로 중앙에 오도록 — 마스코트 높이(~240px) 보정 */
+    body.page-home .poly-page {
+      justify-content: flex-start;
+      padding-top: max(var(--space-8), calc(50vh - 290px));
+    }
+
     .poly-mascot-wrap {
       display:flex;
       flex-direction:column;
