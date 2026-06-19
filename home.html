@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -7,6 +7,27 @@
   <link rel="stylesheet" href="styles/tokens.css">
   <link rel="stylesheet" href="styles/common.css">
   <link rel="stylesheet" href="styles/pages.css">
+  <style>
+    .poly-mascot-wrap {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      margin-bottom:12px;
+    }
+    .poly-mascot {
+      width:130px; height:120px;
+      background-repeat:no-repeat;
+      background-size:780px 719px;
+      image-rendering:auto;
+    }
+    .poly-mascot-shadow {
+      width:80px; height:10px;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.18) 0%, transparent 70%);
+      margin-top:-4px;
+      border-radius:50%;
+      filter: blur(2px);
+    }
+  </style>
 </head>
 <body class="page-home">
 
@@ -96,6 +117,10 @@
   <main class="poly-page">
     <!-- 인사 -->
     <div class="poly-greeting">
+      <div class="poly-mascot-wrap">
+        <div id="poly-mascot" class="poly-mascot"></div>
+        <div class="poly-mascot-shadow"></div>
+      </div>
       <h1 class="poly-greeting-title">어떤 분석을 <span>도와드릴까요?</span></h1>
       <p class="poly-greeting-sub">질문을 입력하거나, 아래 리포트를 바로 열어보세요.</p>
     </div>
@@ -408,6 +433,22 @@
       _pickerBtn.classList.remove('open');
     }
   });
+
+  /* ── 마스코트 스프라이트 애니메이션 ── */
+  (function () {
+    const el = document.getElementById('poly-mascot');
+    if (!el) return;
+    const COLS = 6, TOTAL = 36;
+    const FW = 130, FH = 120;
+    el.style.backgroundImage = 'url(images/talk-c.png)';
+    let frame = 0;
+    setInterval(function () {
+      const col = frame % COLS;
+      const row = Math.floor(frame / COLS);
+      el.style.backgroundPosition = '-' + (col * FW) + 'px -' + (row * FH) + 'px';
+      frame = (frame + 1) % TOTAL;
+    }, 100);
+  })();
 </script>
 <script>
   /* LNB 최근 채팅 — hover 시 x 삭제 버튼 주입 */
