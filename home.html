@@ -455,19 +455,22 @@
       frame = (frame + 1) % TOTAL;
     }, 100);
 
-    /* 마우스 트래킹 */
+    /* 마우스 트래킹 — 캐릭터 위치 기준 */
     document.addEventListener('mousemove', function (e) {
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      const dx = (e.clientX - cx) / cx;        // -1 ~ 1
-      const dy = (e.clientY - cy) / cy;        // -1 ~ 1
-      const rotY = dx * 28;                    // 좌우 최대 ±28deg
-      const rotX = -dy * 10;                   // 상하 최대 ±10deg
-      el.style.transform = 'rotateY(' + rotY + 'deg) rotateX(' + rotX + 'deg)';
+      const rect = el.getBoundingClientRect();
+      const mx = rect.left + rect.width / 2;
+      const my = rect.top  + rect.height / 2;
+      // 캐릭터 중심 기준 정규화 (-1 ~ 1, 500px 반경)
+      const nx = Math.max(-1, Math.min(1, (e.clientX - mx) / 500));
+      const ny = Math.max(-1, Math.min(1, (e.clientY - my) / 400));
+      const tiltZ = nx * 18;          // 좌우 기울기 ±18deg (가장 눈에 띔)
+      const rotY  = nx * 30;          // 3D 몸통 회전 ±30deg
+      const rotX  = -ny * 10;         // 상하 고개 ±10deg
+      el.style.transform =
+        'perspective(500px) rotateY(' + rotY + 'deg) rotateZ(' + tiltZ + 'deg) rotateX(' + rotX + 'deg)';
       if (shadow) {
-        const shiftX = dx * 10;
-        const scaleX = 1 - Math.abs(dx) * 0.25;
-        shadow.style.transform = 'translateX(' + shiftX + 'px) scaleX(' + scaleX + ')';
+        shadow.style.transform =
+          'translateX(' + (nx * 12) + 'px) scaleX(' + (1 - Math.abs(nx) * 0.3) + ')';
       }
     });
 
