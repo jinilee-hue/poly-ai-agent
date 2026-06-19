@@ -37,6 +37,26 @@
       filter: blur(2px);
       transition: transform 0.12s ease-out;
     }
+    .mascot-question {
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--color-primary);
+      line-height: 1;
+      margin-bottom: -6px;
+      text-shadow:
+        2px 2px 0 rgba(0,102,255,0.35),
+        4px 4px 0 rgba(0,102,255,0.20),
+        6px 6px 10px rgba(0,0,0,0.15);
+      animation: q-float 2.8s ease-in-out infinite;
+      display: inline-block;
+      transform-origin: center bottom;
+    }
+    @keyframes q-float {
+      0%   { transform: translateY(0)    rotateY(0deg)   scale(1); }
+      30%  { transform: translateY(-10px) rotateY(20deg)  scale(1.05); }
+      60%  { transform: translateY(-6px)  rotateY(-15deg) scale(1.02); }
+      100% { transform: translateY(0)    rotateY(0deg)   scale(1); }
+    }
   </style>
 </head>
 <body class="page-home">
@@ -128,6 +148,7 @@
     <!-- 인사 -->
     <div class="poly-greeting">
       <div class="poly-mascot-wrap">
+        <div class="mascot-question">?</div>
         <div id="poly-mascot" class="poly-mascot"></div>
         <div class="poly-mascot-shadow"></div>
       </div>
