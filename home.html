@@ -463,8 +463,8 @@
       // 캐릭터 중심 기준 정규화 (-1 ~ 1, 500px 반경)
       const nx = Math.max(-1, Math.min(1, (e.clientX - mx) / 500));
       const ny = Math.max(-1, Math.min(1, (e.clientY - my) / 400));
-      const tiltZ = nx * 18;          // 좌우 기울기 ±18deg (가장 눈에 띔)
-      const rotY  = nx * 30;          // 3D 몸통 회전 ±30deg
+      const tiltZ = nx * 18;          // 좌우 기울기 ±18deg
+      const rotY  = nx * 10;          // 3D 깊이감만 (찌그러짐 방지)
       const rotX  = -ny * 10;         // 상하 고개 ±10deg
       el.style.transform =
         'perspective(500px) rotateY(' + rotY + 'deg) rotateZ(' + tiltZ + 'deg) rotateX(' + rotX + 'deg)';
