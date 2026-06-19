@@ -463,7 +463,7 @@
       // 캐릭터 중심 기준 정규화 (-1 ~ 1, 500px 반경)
       const nx = Math.max(-1, Math.min(1, (e.clientX - mx) / 500));
       const ny = Math.max(-1, Math.min(1, (e.clientY - my) / 400));
-      const tiltZ = nx * 18;                        // 좌우 기울기 ±18deg
+      const tiltZ = nx > 0 ? nx * 18 : nx * 5;     // 오른쪽 18°, 왼쪽 5°
       const rotY  = nx > 0 ? nx * 10 : nx * 5;    // 오른쪽 10°, 왼쪽 5°
       const rotX  = -ny * 10;         // 상하 고개 ±10deg
       el.style.transform =
