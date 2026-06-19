@@ -13,12 +13,15 @@
       flex-direction:column;
       align-items:center;
       margin-bottom:12px;
+      perspective: 400px;
     }
     .poly-mascot {
       width:130px; height:120px;
       background-repeat:no-repeat;
       background-size:780px 719px;
       image-rendering:auto;
+      transition: transform 0.12s ease-out;
+      will-change: transform;
     }
     .poly-mascot-shadow {
       width:80px; height:10px;
@@ -26,6 +29,7 @@
       margin-top:-4px;
       border-radius:50%;
       filter: blur(2px);
+      transition: transform 0.12s ease-out;
     }
   </style>
 </head>
@@ -434,12 +438,14 @@
     }
   });
 
-  /* ── 마스코트 스프라이트 애니메이션 ── */
+  /* ── 마스코트 스프라이트 애니메이션 + 마우스 트래킹 ── */
   (function () {
     const el = document.getElementById('poly-mascot');
     if (!el) return;
-    const COLS = 6, TOTAL = 36;
-    const FW = 130, FH = 120;
+    const shadow = el.nextElementSibling;
+
+    /* 스프라이트 재생 */
+    const COLS = 6, TOTAL = 36, FW = 130, FH = 120;
     el.style.backgroundImage = 'url(images/talk-c.png)';
     let frame = 0;
     setInterval(function () {
@@ -448,6 +454,28 @@
       el.style.backgroundPosition = '-' + (col * FW) + 'px -' + (row * FH) + 'px';
       frame = (frame + 1) % TOTAL;
     }, 100);
+
+    /* 마우스 트래킹 */
+    document.addEventListener('mousemove', function (e) {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      const dx = (e.clientX - cx) / cx;        // -1 ~ 1
+      const dy = (e.clientY - cy) / cy;        // -1 ~ 1
+      const rotY = dx * 28;                    // 좌우 최대 ±28deg
+      const rotX = -dy * 10;                   // 상하 최대 ±10deg
+      el.style.transform = 'rotateY(' + rotY + 'deg) rotateX(' + rotX + 'deg)';
+      if (shadow) {
+        const shiftX = dx * 10;
+        const scaleX = 1 - Math.abs(dx) * 0.25;
+        shadow.style.transform = 'translateX(' + shiftX + 'px) scaleX(' + scaleX + ')';
+      }
+    });
+
+    /* 마우스가 화면 밖으로 나가면 원위치 */
+    document.addEventListener('mouseleave', function () {
+      el.style.transform = '';
+      if (shadow) shadow.style.transform = '';
+    });
   })();
 </script>
 <script>
